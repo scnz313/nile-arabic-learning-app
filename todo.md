@@ -40,3 +40,22 @@
 - [x] Daily sync to detect new content from teacher
 - [x] Offline content caching
 - [x] Beautiful minimalistic design throughout
+
+## V3 - Full Scraper/Archiver App
+- [x] Remove ALL "Open in Browser" / "Open in Web" buttons
+- [x] Render videos in-app (no external browser)
+- [x] Render quizzes in-app via embedded WebView
+- [x] Render interactive H5P content in-app via WebView
+- [x] Render assignments in-app
+- [x] Render forums/announcements in-app
+- [x] Render all links content in-app
+- [x] Build persistent archive storage (never delete old data)
+- [x] Append-only data model: new content added, old content preserved
+- [x] Handle teacher hiding content: keep archived copy
+- [x] Track content visibility status (visible/hidden by teacher)
+- [x] Make app future-proof for any new courses (dynamic, not hardcoded)
+- [x] Auto-detect new courses when syncing
+- [x] Show "archived" badge on content hidden by teacher
+- [x] Deep-scrape all page content including embedded media
+- [x] Deep-scrape video URLs for in-app playback
+- [x] Store scraped HTML content for offline rendering

@@ -3,6 +3,8 @@ import { storageService } from "./storage";
 
 export interface SyncResult {
   coursesUpdated: number;
+  newCourses: number;
+  newSections: number;
   newActivities: number;
   errors: string[];
 }
@@ -11,21 +13,29 @@ class SyncService {
   private isSyncing = false;
 
   async syncAllCourses(): Promise<SyncResult> {
-    if (this.isSyncing) return { coursesUpdated: 0, newActivities: 0, errors: ["Sync already in progress"] };
+    if (this.isSyncing) return { coursesUpdated: 0, newCourses: 0, newSections: 0, newActivities: 0, errors: ["Sync already in progress"] };
     this.isSyncing = true;
 
-    const result: SyncResult = { coursesUpdated: 0, newActivities: 0, errors: [] };
+    const result: SyncResult = { coursesUpdated: 0, newCourses: 0, newSections: 0, newActivities: 0, errors: [] };
 
     try {
+      // Fetch current courses from website
       const courses = await moodleAPI.getUserCourses();
-      await storageService.saveCourses(courses);
+      
+      // Archive-aware save: appends new courses, marks hidden ones, never deletes
+      const { added } = await storageService.saveCourses(courses);
+      result.newCourses = added;
 
+      // Sync each visible course's full content
       for (const course of courses) {
         try {
           const fullData = await moodleAPI.getCourseFull(course.id);
-          await storageService.saveCourseData(course.id, fullData);
+          
+          // Archive-aware merge: appends new sections/activities, marks hidden ones, never deletes
+          const { newSections, newActivities } = await storageService.saveCourseData(course.id, fullData);
           result.coursesUpdated++;
-          result.newActivities += fullData.totalActivities;
+          result.newSections += newSections;
+          result.newActivities += newActivities;
         } catch (err: any) {
           result.errors.push(`Failed to sync ${course.shortname}: ${err.message}`);
         }
@@ -50,6 +60,37 @@ class SyncService {
       console.error("Sync single course error:", err);
       return null;
     }
+  }
+
+  // Deep sync: fetch and cache ALL activity content for a course
+  async deepSyncCourse(courseId: number, onProgress?: (current: number, total: number) => void): Promise<number> {
+    const courseData = await storageService.getCourseData(courseId);
+    if (!courseData) return 0;
+
+    let cached = 0;
+    const allActivities = courseData.sections.flatMap((s) => s.activities || []);
+    const total = allActivities.length;
+
+    for (let i = 0; i < allActivities.length; i++) {
+      const activity = allActivities[i];
+      if (!activity.url || activity.hidden) continue;
+
+      try {
+        // Check if already cached
+        const existing = await storageService.getCachedActivityContent(activity.id);
+        if (!existing) {
+          const content = await moodleAPI.getActivityContent(activity.url, activity.modType);
+          await storageService.cacheActivityContent(activity.id, content);
+          cached++;
+        }
+      } catch (_) {
+        // Skip failed activities
+      }
+
+      onProgress?.(i + 1, total);
+    }
+
+    return cached;
   }
 
   isSyncInProgress(): boolean {

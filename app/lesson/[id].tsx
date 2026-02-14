@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   StyleSheet,
-  Linking,
   Platform,
   useWindowDimensions,
 } from "react-native";
@@ -17,6 +16,7 @@ import { moodleAPI, type ActivityContent } from "@/lib/moodle-api";
 import { storageService } from "@/lib/storage";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Image } from "expo-image";
+import * as WebBrowser from "expo-web-browser";
 
 const MOD_ICONS: Record<string, { icon: string; color: string; label: string }> = {
   page: { icon: "description", color: "#0C6478", label: "Page" },
@@ -33,17 +33,125 @@ const MOD_ICONS: Record<string, { icon: string; color: string; label: string }> 
   feedback: { icon: "rate-review", color: "#D97706", label: "Feedback" },
 };
 
-// HTML to structured text renderer — only renders text content
-// Images, audio, and iframes are rendered separately by the parent component
-function HtmlContentRenderer({ html, colors }: { html: string; colors: any }) {
-  // Process HTML to extract only text content (images/audio/iframes handled by parent)
-  const processHtml = (rawHtml: string) => {
-    const elements: Array<{
-      type: "text" | "heading" | "list-item";
-      content: string;
-    }> = [];
+// ─── In-App Audio Player Component ───
+function AudioPlayerCard({ src, colors, proxyMedia }: { src: string; colors: any; proxyMedia: (u: string) => string }) {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [audioRef, setAudioRef] = useState<HTMLAudioElement | null>(null);
 
-    // Convert HTML to text for text content — strip media elements
+  const togglePlay = useCallback(() => {
+    if (Platform.OS === "web") {
+      if (!audioRef) {
+        const audio = new Audio(proxyMedia(src));
+        audio.onended = () => setIsPlaying(false);
+        audio.onerror = () => setIsPlaying(false);
+        setAudioRef(audio);
+        audio.play();
+        setIsPlaying(true);
+      } else if (isPlaying) {
+        audioRef.pause();
+        setIsPlaying(false);
+      } else {
+        audioRef.play();
+        setIsPlaying(true);
+      }
+    }
+  }, [audioRef, isPlaying, src]);
+
+  useEffect(() => {
+    return () => {
+      if (audioRef) {
+        audioRef.pause();
+        audioRef.src = "";
+      }
+    };
+  }, [audioRef]);
+
+  return (
+    <TouchableOpacity
+      onPress={togglePlay}
+      activeOpacity={0.7}
+      style={[styles.audioCard, { backgroundColor: "#DC262608", borderColor: "#DC262625" }]}
+    >
+      <View style={[styles.audioIconCircle, { backgroundColor: "#DC2626" }]}>
+        <MaterialIcons name="headset" size={18} color="#FFF" />
+      </View>
+      <View style={styles.audioInfo}>
+        <Text style={[styles.audioTitle, { color: colors.foreground }]}>
+          {isPlaying ? "Playing..." : "Audio Lesson"}
+        </Text>
+        <Text style={[styles.audioSubtitle, { color: colors.muted }]}>
+          {isPlaying ? "Tap to pause" : "Tap to play"}
+        </Text>
+      </View>
+      <View style={[styles.audioPlayBtn, { backgroundColor: isPlaying ? "#991B1B" : "#DC2626" }]}>
+        <MaterialIcons name={isPlaying ? "pause" : "play-arrow"} size={22} color="#FFF" />
+      </View>
+    </TouchableOpacity>
+  );
+}
+
+// ─── In-App Iframe Renderer (Google Slides, H5P, etc.) ───
+function InAppIframe({ src, colors }: { src: string; colors: any }) {
+  const { width } = useWindowDimensions();
+  const iframeWidth = width - 32;
+  const iframeHeight = Math.round(iframeWidth * 0.6);
+
+  const label = src.includes("google.com/presentation")
+    ? "Google Slides Presentation"
+    : src.includes("youtube")
+    ? "YouTube Video"
+    : src.includes("h5p")
+    ? "Interactive Activity"
+    : "Embedded Content";
+
+  const icon = src.includes("google.com/presentation")
+    ? "slideshow"
+    : src.includes("youtube")
+    ? "smart-display"
+    : "web";
+
+  if (Platform.OS === "web") {
+    return (
+      <View style={[styles.iframeContainer, { borderColor: colors.border }]}>
+        <View style={styles.iframeHeader}>
+          <MaterialIcons name={icon as any} size={18} color={colors.primary} />
+          <Text style={[styles.iframeLabel, { color: colors.foreground }]}>{label}</Text>
+        </View>
+        <View style={{ width: iframeWidth, height: iframeHeight, overflow: "hidden", borderRadius: 8 }}>
+          <iframe
+            src={src}
+            width={iframeWidth}
+            height={iframeHeight}
+            style={{ border: "none", borderRadius: 8 }}
+            allowFullScreen
+          />
+        </View>
+      </View>
+    );
+  }
+
+  // Native: open in-app browser
+  return (
+    <TouchableOpacity
+      onPress={() => WebBrowser.openBrowserAsync(src)}
+      activeOpacity={0.7}
+      style={[styles.iframeContainer, { borderColor: colors.border }]}
+    >
+      <View style={[styles.iframePlaceholder, { backgroundColor: colors.primary + "08" }]}>
+        <MaterialIcons name={icon as any} size={48} color={colors.primary} />
+        <Text style={[styles.iframeLabel, { color: colors.foreground }]}>{label}</Text>
+        <View style={[styles.iframeOpenBtn, { backgroundColor: colors.primary }]}>
+          <MaterialIcons name="fullscreen" size={18} color="#FFF" />
+          <Text style={styles.iframeOpenBtnText}>View Full Screen</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+}
+
+// ─── HTML to Native Text Renderer ───
+function HtmlContentRenderer({ html, colors }: { html: string; colors: any }) {
+  const processHtml = (rawHtml: string) => {
     let textContent = rawHtml
       .replace(/<iframe[^>]*>.*?<\/iframe>/gi, "")
       .replace(/<audio[^>]*>.*?<\/audio>/gi, "")
@@ -67,63 +175,51 @@ function HtmlContentRenderer({ html, colors }: { html: string; colors: any }) {
       .replace(/\n{3,}/g, "\n\n")
       .trim();
 
-    if (textContent) {
-      elements.push({ type: "text", content: textContent });
-    }
-
-    return elements;
+    return textContent;
   };
 
-  const elements = processHtml(html);
+  const textContent = processHtml(html);
+  if (!textContent) return null;
 
-  if (elements.length === 0) return null;
+  const parts = textContent.split("\n").filter(Boolean);
 
   return (
-    <View style={[contentStyles.container, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-      {elements.map((el, i) => {
-        if (el.type === "text") {
-          const parts = el.content.split("\n").filter(Boolean);
+    <View style={[styles.htmlCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+      {parts.map((part, j) => {
+        const headingMatch = part.match(/^##(.+)##$/);
+        if (headingMatch) {
           return (
-            <View key={`text-${i}`}>
-              {parts.map((part, j) => {
-                const headingMatch = part.match(/^##(.+)##$/);
-                if (headingMatch) {
-                  return (
-                    <Text key={j} style={[contentStyles.heading, { color: colors.foreground }]}>
-                      {headingMatch[1].trim()}
-                    </Text>
-                  );
-                }
-                if (part.startsWith("• ")) {
-                  return (
-                    <View key={j} style={contentStyles.listItem}>
-                      <Text style={[contentStyles.bullet, { color: colors.primary }]}>•</Text>
-                      <Text style={[contentStyles.listText, { color: colors.foreground }]}>{part.slice(2)}</Text>
-                    </View>
-                  );
-                }
-                if (part.startsWith(" | ")) {
-                  return (
-                    <View key={j} style={[contentStyles.tableRow, { borderColor: colors.border }]}>
-                      <Text style={[contentStyles.tableText, { color: colors.foreground }]}>{part.replace(/\s*\|\s*/g, "  •  ").trim()}</Text>
-                    </View>
-                  );
-                }
-                return (
-                  <Text key={j} style={[contentStyles.paragraph, { color: colors.foreground }]}>
-                    {part.trim()}
-                  </Text>
-                );
-              })}
+            <Text key={j} style={[styles.htmlHeading, { color: colors.foreground }]}>
+              {headingMatch[1].trim()}
+            </Text>
+          );
+        }
+        if (part.startsWith("• ")) {
+          return (
+            <View key={j} style={styles.htmlListItem}>
+              <Text style={[styles.htmlBullet, { color: colors.primary }]}>•</Text>
+              <Text style={[styles.htmlListText, { color: colors.foreground }]}>{part.slice(2)}</Text>
             </View>
           );
         }
-        return null;
+        if (part.startsWith(" | ")) {
+          return (
+            <View key={j} style={[styles.htmlTableRow, { borderColor: colors.border }]}>
+              <Text style={[styles.htmlTableText, { color: colors.foreground }]}>{part.replace(/\s*\|\s*/g, "  •  ").trim()}</Text>
+            </View>
+          );
+        }
+        return (
+          <Text key={j} style={[styles.htmlParagraph, { color: colors.foreground }]}>
+            {part.trim()}
+          </Text>
+        );
       })}
     </View>
   );
 }
 
+// ─── Main Lesson Screen ───
 export default function LessonScreen() {
   const params = useLocalSearchParams<{
     id: string;
@@ -134,6 +230,7 @@ export default function LessonScreen() {
   }>();
   const router = useRouter();
   const colors = useColors();
+  const { width } = useWindowDimensions();
 
   const activityId = params.id || "";
   const courseId = parseInt(params.courseId || "0", 10);
@@ -145,6 +242,7 @@ export default function LessonScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [isCompleted, setIsCompleted] = useState(false);
+  const [selectedChapter, setSelectedChapter] = useState(0);
 
   useEffect(() => {
     loadContent();
@@ -160,8 +258,8 @@ export default function LessonScreen() {
     try {
       setIsLoading(true);
       setError("");
-      
-      // Try cached content first for offline support
+
+      // Try cached content first
       const cached = await storageService.getCachedActivityContent(activityId);
       if (cached) {
         setContent(cached);
@@ -174,10 +272,9 @@ export default function LessonScreen() {
         } catch (_) { /* use cached */ }
         return;
       }
-      
+
       const data = await moodleAPI.getActivityContent(activityUrl, modType);
       setContent(data);
-      // Cache for offline use
       await storageService.cacheActivityContent(activityId, data);
     } catch (err: any) {
       setError(err.message || "Failed to load content");
@@ -191,255 +288,473 @@ export default function LessonScreen() {
     setIsCompleted(true);
   };
 
-  const handleOpenInBrowser = () => {
-    if (activityUrl) Linking.openURL(activityUrl);
+  const proxyMedia = (url: string) => moodleAPI.getProxyMediaUrl(url);
+  const modInfo = MOD_ICONS[modType] || { icon: "insert-drive-file", color: "#6B7280", label: modType };
+
+  // ─── Content Renderers ───
+
+  const renderPageContent = () => {
+    if (!content) return null;
+    return (
+      <View>
+        {/* Audio Players */}
+        {content.audioSources && content.audioSources.length > 0 && (
+          <View style={styles.sectionBlock}>
+            <Text style={[styles.sectionLabel, { color: colors.muted }]}>Audio</Text>
+            {content.audioSources.map((src, i) => (
+              <AudioPlayerCard key={i} src={src} colors={colors} proxyMedia={proxyMedia} />
+            ))}
+          </View>
+        )}
+
+        {/* Images - Full Width */}
+        {content.images && content.images.length > 0 && (
+          <View style={styles.sectionBlock}>
+            {content.images.map((img, i) => (
+              <View key={i} style={styles.imageWrap}>
+                <Image
+                  source={{ uri: proxyMedia(img) }}
+                  style={[styles.contentImage, { width: width - 32 }]}
+                  contentFit="contain"
+                />
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* Embedded Content (Google Slides, etc.) */}
+        {content.iframes && content.iframes.length > 0 && (
+          <View style={styles.sectionBlock}>
+            {content.iframes.map((src, i) => (
+              <InAppIframe key={i} src={src} colors={colors} />
+            ))}
+          </View>
+        )}
+
+        {/* Text Content */}
+        {content.html ? <HtmlContentRenderer html={content.html} colors={colors} /> : null}
+      </View>
+    );
   };
 
-  const proxyMedia = (url: string) => moodleAPI.getProxyMediaUrl(url);
+  const renderBookContent = () => {
+    if (!content) return null;
+    return (
+      <View>
+        {/* Chapter Navigation */}
+        {content.chapters && content.chapters.length > 0 && (
+          <View style={styles.sectionBlock}>
+            <Text style={[styles.sectionLabel, { color: colors.muted }]}>
+              Chapters ({content.chapters.length})
+            </Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chapterScroll}>
+              {content.chapters.map((ch, i) => (
+                <TouchableOpacity
+                  key={i}
+                  onPress={() => setSelectedChapter(i)}
+                  activeOpacity={0.7}
+                  style={[
+                    styles.chapterTab,
+                    {
+                      backgroundColor: selectedChapter === i ? colors.primary : colors.surface,
+                      borderColor: selectedChapter === i ? colors.primary : colors.border,
+                    },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.chapterTabText,
+                      { color: selectedChapter === i ? "#FFF" : colors.foreground },
+                    ]}
+                    numberOfLines={1}
+                  >
+                    {i + 1}. {ch.name}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
 
-  const modInfo = MOD_ICONS[modType] || { icon: "insert-drive-file", color: "#6B7280", label: modType };
+            {/* Selected Chapter Content */}
+            <View style={[styles.chapterContent, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+              <Text style={[styles.chapterTitle, { color: colors.primary }]}>
+                {content.chapters[selectedChapter]?.name}
+              </Text>
+              {content.chapters[selectedChapter]?.content ? (
+                <HtmlContentRenderer html={content.chapters[selectedChapter].content} colors={colors} />
+              ) : null}
+            </View>
+          </View>
+        )}
+
+        {/* Main HTML content */}
+        {content.html ? <HtmlContentRenderer html={content.html} colors={colors} /> : null}
+      </View>
+    );
+  };
+
+  const renderVideoContent = () => {
+    if (!content) return null;
+    const videoUrl = content.videoUrl || content.iframeSrc || content.vimeoUrl;
+
+    return (
+      <View>
+        {videoUrl ? (
+          <View style={styles.sectionBlock}>
+            {Platform.OS === "web" && (content.iframeSrc || content.vimeoUrl) ? (
+              <View style={[styles.iframeContainer, { borderColor: colors.border }]}>
+                <View style={styles.iframeHeader}>
+                  <MaterialIcons name="play-circle-filled" size={18} color="#DC2626" />
+                  <Text style={[styles.iframeLabel, { color: colors.foreground }]}>Video Lesson</Text>
+                </View>
+                <View style={{ width: width - 32, height: Math.round((width - 32) * 0.56), overflow: "hidden", borderRadius: 8 }}>
+                  <iframe
+                    src={content.iframeSrc || content.vimeoUrl || ""}
+                    width={width - 32}
+                    height={Math.round((width - 32) * 0.56)}
+                    style={{ border: "none", borderRadius: 8 }}
+                    allowFullScreen
+                    allow="autoplay; fullscreen; picture-in-picture"
+                  />
+                </View>
+              </View>
+            ) : (
+              <TouchableOpacity
+                onPress={() => {
+                  if (videoUrl) WebBrowser.openBrowserAsync(videoUrl);
+                }}
+                activeOpacity={0.7}
+                style={[styles.videoCard, { backgroundColor: "#DC262608", borderColor: "#DC262625" }]}
+              >
+                <View style={[styles.videoIconBg, { backgroundColor: "#DC262615" }]}>
+                  <MaterialIcons name="play-circle-filled" size={64} color="#DC2626" />
+                </View>
+                <Text style={[styles.videoTitle, { color: colors.foreground }]}>
+                  {content.title || activityName}
+                </Text>
+                <Text style={[styles.videoSubtitle, { color: colors.muted }]}>Tap to play video</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        ) : null}
+
+        {/* Description */}
+        {content.html ? <HtmlContentRenderer html={content.html} colors={colors} /> : null}
+      </View>
+    );
+  };
+
+  const renderInteractiveContent = () => {
+    if (!content) return null;
+    const interactiveUrl = activityUrl;
+
+    return (
+      <View>
+        {Platform.OS === "web" ? (
+          <View style={[styles.iframeContainer, { borderColor: colors.border }]}>
+            <View style={styles.iframeHeader}>
+              <MaterialIcons name="extension" size={18} color="#EA580C" />
+              <Text style={[styles.iframeLabel, { color: colors.foreground }]}>Interactive Activity</Text>
+            </View>
+            <View style={{ width: width - 32, height: Math.round((width - 32) * 0.75), overflow: "hidden", borderRadius: 8 }}>
+              <iframe
+                src={interactiveUrl}
+                width={width - 32}
+                height={Math.round((width - 32) * 0.75)}
+                style={{ border: "none", borderRadius: 8 }}
+                allowFullScreen
+              />
+            </View>
+          </View>
+        ) : (
+          <TouchableOpacity
+            onPress={() => WebBrowser.openBrowserAsync(interactiveUrl)}
+            activeOpacity={0.7}
+            style={[styles.interactiveCard, { backgroundColor: "#EA580C08", borderColor: "#EA580C25" }]}
+          >
+            <View style={[styles.videoIconBg, { backgroundColor: "#EA580C15" }]}>
+              <MaterialIcons name="extension" size={56} color="#EA580C" />
+            </View>
+            <Text style={[styles.videoTitle, { color: colors.foreground }]}>
+              {content.title || activityName}
+            </Text>
+            <Text style={[styles.videoSubtitle, { color: colors.muted }]}>Interactive H5P Activity</Text>
+            <View style={[styles.inAppBtn, { backgroundColor: "#EA580C" }]}>
+              <MaterialIcons name="fullscreen" size={18} color="#FFF" />
+              <Text style={styles.inAppBtnText}>Open Activity</Text>
+            </View>
+          </TouchableOpacity>
+        )}
+
+        {content.html ? <HtmlContentRenderer html={content.html} colors={colors} /> : null}
+      </View>
+    );
+  };
+
+  const renderQuizContent = () => {
+    if (!content) return null;
+
+    return (
+      <View>
+        {/* Quiz Info Card */}
+        <View style={[styles.quizCard, { backgroundColor: "#05966908", borderColor: "#05966925" }]}>
+          <View style={[styles.quizIconBg, { backgroundColor: "#05966915" }]}>
+            <MaterialIcons name="quiz" size={48} color="#059669" />
+          </View>
+          <Text style={[styles.videoTitle, { color: colors.foreground }]}>
+            {content.title || activityName}
+          </Text>
+          {content.description ? (
+            <Text style={[styles.quizDesc, { color: colors.muted }]}>{content.description}</Text>
+          ) : null}
+          {content.attempts !== undefined && (
+            <View style={[styles.quizMeta, { backgroundColor: colors.surface }]}>
+              <MaterialIcons name="history" size={16} color={colors.primary} />
+              <Text style={[styles.quizMetaText, { color: colors.foreground }]}>
+                {content.attempts} attempt(s)
+              </Text>
+            </View>
+          )}
+        </View>
+
+        {/* Take Quiz In-App */}
+        {Platform.OS === "web" ? (
+          <View style={[styles.iframeContainer, { borderColor: colors.border }]}>
+            <View style={styles.iframeHeader}>
+              <MaterialIcons name="quiz" size={18} color="#059669" />
+              <Text style={[styles.iframeLabel, { color: colors.foreground }]}>Quiz</Text>
+            </View>
+            <View style={{ width: width - 32, height: Math.round((width - 32) * 0.8), overflow: "hidden", borderRadius: 8 }}>
+              <iframe
+                src={activityUrl}
+                width={width - 32}
+                height={Math.round((width - 32) * 0.8)}
+                style={{ border: "none", borderRadius: 8 }}
+                allowFullScreen
+              />
+            </View>
+          </View>
+        ) : (
+          <TouchableOpacity
+            onPress={() => WebBrowser.openBrowserAsync(activityUrl)}
+            activeOpacity={0.7}
+            style={[styles.inAppBtn, { backgroundColor: "#059669", alignSelf: "stretch" }]}
+          >
+            <MaterialIcons name="quiz" size={18} color="#FFF" />
+            <Text style={styles.inAppBtnText}>Take Quiz</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    );
+  };
+
+  const renderAssignmentContent = () => {
+    if (!content) return null;
+
+    return (
+      <View>
+        {/* Assignment Instructions */}
+        {content.html ? <HtmlContentRenderer html={content.html} colors={colors} /> : null}
+
+        {/* Status */}
+        {content.status ? (
+          <View style={[styles.statusCard, { backgroundColor: "#2563EB08", borderColor: "#2563EB25" }]}>
+            <MaterialIcons name="assignment" size={20} color="#2563EB" />
+            <Text style={[styles.statusText, { color: colors.foreground }]}>{content.status}</Text>
+          </View>
+        ) : null}
+
+        {/* Due Date */}
+        {content.dueDate ? (
+          <View style={[styles.statusCard, { backgroundColor: "#D9770608", borderColor: "#D9770625" }]}>
+            <MaterialIcons name="event" size={20} color="#D97706" />
+            <Text style={[styles.statusText, { color: colors.foreground }]}>Due: {content.dueDate}</Text>
+          </View>
+        ) : null}
+
+        {/* Submit In-App */}
+        {Platform.OS === "web" ? (
+          <View style={[styles.iframeContainer, { borderColor: colors.border }]}>
+            <View style={styles.iframeHeader}>
+              <MaterialIcons name="assignment" size={18} color="#2563EB" />
+              <Text style={[styles.iframeLabel, { color: colors.foreground }]}>Assignment Submission</Text>
+            </View>
+            <View style={{ width: width - 32, height: Math.round((width - 32) * 0.7), overflow: "hidden", borderRadius: 8 }}>
+              <iframe
+                src={activityUrl}
+                width={width - 32}
+                height={Math.round((width - 32) * 0.7)}
+                style={{ border: "none", borderRadius: 8 }}
+                allowFullScreen
+              />
+            </View>
+          </View>
+        ) : (
+          <TouchableOpacity
+            onPress={() => WebBrowser.openBrowserAsync(activityUrl)}
+            activeOpacity={0.7}
+            style={[styles.inAppBtn, { backgroundColor: "#2563EB", alignSelf: "stretch" }]}
+          >
+            <MaterialIcons name="assignment" size={18} color="#FFF" />
+            <Text style={styles.inAppBtnText}>View Assignment</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    );
+  };
+
+  const renderUrlContent = () => {
+    if (!content) return null;
+    const linkUrl = content.externalUrl || activityUrl;
+
+    return (
+      <View>
+        {Platform.OS === "web" ? (
+          <View style={[styles.iframeContainer, { borderColor: colors.border }]}>
+            <View style={styles.iframeHeader}>
+              <MaterialIcons name="link" size={18} color="#6366F1" />
+              <Text style={[styles.iframeLabel, { color: colors.foreground }]}>External Resource</Text>
+            </View>
+            <View style={{ width: width - 32, height: Math.round((width - 32) * 0.7), overflow: "hidden", borderRadius: 8 }}>
+              <iframe
+                src={linkUrl}
+                width={width - 32}
+                height={Math.round((width - 32) * 0.7)}
+                style={{ border: "none", borderRadius: 8 }}
+                allowFullScreen
+              />
+            </View>
+          </View>
+        ) : (
+          <TouchableOpacity
+            onPress={() => WebBrowser.openBrowserAsync(linkUrl)}
+            activeOpacity={0.7}
+            style={[styles.urlCard, { backgroundColor: "#6366F108", borderColor: "#6366F125" }]}
+          >
+            <View style={[styles.videoIconBg, { backgroundColor: "#6366F115" }]}>
+              <MaterialIcons name="link" size={48} color="#6366F1" />
+            </View>
+            <Text style={[styles.videoTitle, { color: colors.foreground }]}>
+              {content.title || activityName}
+            </Text>
+            <View style={[styles.inAppBtn, { backgroundColor: "#6366F1" }]}>
+              <MaterialIcons name="fullscreen" size={18} color="#FFF" />
+              <Text style={styles.inAppBtnText}>Open Resource</Text>
+            </View>
+          </TouchableOpacity>
+        )}
+      </View>
+    );
+  };
+
+  const renderForumContent = () => {
+    if (!content) return null;
+
+    return (
+      <View>
+        {content.discussions && content.discussions.length > 0 ? (
+          <View style={styles.sectionBlock}>
+            <Text style={[styles.sectionLabel, { color: colors.muted }]}>
+              Discussions ({content.discussions.length})
+            </Text>
+            {content.discussions.map((d, i) => (
+              <View key={i} style={[styles.forumPost, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+                <Text style={[styles.forumSubject, { color: colors.foreground }]}>{d.subject}</Text>
+                <View style={styles.forumMeta}>
+                  <MaterialIcons name="person" size={14} color={colors.primary} />
+                  <Text style={[styles.forumAuthor, { color: colors.primary }]}>{d.author}</Text>
+                  <Text style={[styles.forumDate, { color: colors.muted }]}>{d.date}</Text>
+                </View>
+                {d.content ? (
+                  <Text style={[styles.forumBody, { color: colors.foreground }]}>{d.content}</Text>
+                ) : null}
+              </View>
+            ))}
+          </View>
+        ) : (
+          <View style={styles.emptyState}>
+            <MaterialIcons name="forum" size={40} color={colors.muted} />
+            <Text style={[styles.emptyLabel, { color: colors.muted }]}>No discussions yet</Text>
+          </View>
+        )}
+
+        {/* Embed forum in-app */}
+        {Platform.OS === "web" ? (
+          <View style={[styles.iframeContainer, { borderColor: colors.border, marginTop: 12 }]}>
+            <View style={styles.iframeHeader}>
+              <MaterialIcons name="forum" size={18} color="#0891B2" />
+              <Text style={[styles.iframeLabel, { color: colors.foreground }]}>Forum</Text>
+            </View>
+            <View style={{ width: width - 32, height: Math.round((width - 32) * 0.6), overflow: "hidden", borderRadius: 8 }}>
+              <iframe
+                src={activityUrl}
+                width={width - 32}
+                height={Math.round((width - 32) * 0.6)}
+                style={{ border: "none", borderRadius: 8 }}
+                allowFullScreen
+              />
+            </View>
+          </View>
+        ) : (
+          <TouchableOpacity
+            onPress={() => WebBrowser.openBrowserAsync(activityUrl)}
+            activeOpacity={0.7}
+            style={[styles.inAppBtn, { backgroundColor: "#0891B2", alignSelf: "stretch", marginTop: 12 }]}
+          >
+            <MaterialIcons name="forum" size={18} color="#FFF" />
+            <Text style={styles.inAppBtnText}>View Full Forum</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    );
+  };
+
+  const renderGenericContent = () => {
+    if (!content) return null;
+
+    return (
+      <View>
+        {content.html ? <HtmlContentRenderer html={content.html} colors={colors} /> : null}
+
+        {/* Embed in-app */}
+        {Platform.OS === "web" ? (
+          <View style={[styles.iframeContainer, { borderColor: colors.border }]}>
+            <View style={{ width: width - 32, height: Math.round((width - 32) * 0.6), overflow: "hidden", borderRadius: 8 }}>
+              <iframe
+                src={activityUrl}
+                width={width - 32}
+                height={Math.round((width - 32) * 0.6)}
+                style={{ border: "none", borderRadius: 8 }}
+                allowFullScreen
+              />
+            </View>
+          </View>
+        ) : (
+          <TouchableOpacity
+            onPress={() => WebBrowser.openBrowserAsync(activityUrl)}
+            activeOpacity={0.7}
+            style={[styles.inAppBtn, { backgroundColor: colors.primary, alignSelf: "stretch" }]}
+          >
+            <MaterialIcons name="fullscreen" size={18} color="#FFF" />
+            <Text style={styles.inAppBtnText}>View Content</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    );
+  };
 
   const renderContent = () => {
     if (!content) return null;
 
     switch (content.type) {
-      case "page":
-        return (
-          <View>
-            {/* Audio section */}
-            {content.audioSources && content.audioSources.length > 0 && (
-              <View style={styles.sectionBlock}>
-                {content.audioSources.map((src, i) => (
-                  <TouchableOpacity
-                    key={i}
-                    onPress={() => Linking.openURL(proxyMedia(src))}
-                    activeOpacity={0.7}
-                    style={[styles.mediaCard, { backgroundColor: "#DC2626" + "08", borderColor: "#DC2626" + "25" }]}
-                  >
-                    <View style={[styles.mediaIconCircle, { backgroundColor: "#DC2626" }]}>
-                      <MaterialIcons name="headset" size={18} color="#FFF" />
-                    </View>
-                    <View style={styles.mediaInfo}>
-                      <Text style={[styles.mediaTitle, { color: colors.foreground }]}>Audio Lesson</Text>
-                      <Text style={[styles.mediaSubtitle, { color: colors.muted }]}>Tap to listen</Text>
-                    </View>
-                    <View style={[styles.playCircle, { backgroundColor: "#DC2626" }]}>
-                      <MaterialIcons name="play-arrow" size={20} color="#FFF" />
-                    </View>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            )}
-
-            {/* Images */}
-            {content.images && content.images.length > 0 && (
-              <View style={styles.sectionBlock}>
-                {content.images.map((img, i) => (
-                  <View key={i} style={styles.imageContainer}>
-                    <Image
-                      source={{ uri: proxyMedia(img) }}
-                      style={styles.contentImage}
-                      contentFit="contain"
-                    />
-                  </View>
-                ))}
-              </View>
-            )}
-
-            {/* Iframes (Google Slides, etc.) */}
-            {content.iframes && content.iframes.length > 0 && (
-              <View style={styles.sectionBlock}>
-                {content.iframes.map((src, i) => (
-                  <TouchableOpacity
-                    key={i}
-                    onPress={() => Linking.openURL(src)}
-                    activeOpacity={0.7}
-                    style={[styles.embedCard, { borderColor: colors.primary + "30" }]}
-                  >
-                    <View style={[styles.embedPreview, { backgroundColor: colors.primary + "08" }]}>
-                      <MaterialIcons
-                        name={src.includes("google.com/presentation") ? "slideshow" : src.includes("youtube") ? "smart-display" : "web"}
-                        size={48}
-                        color={colors.primary}
-                      />
-                      <Text style={[styles.embedLabel, { color: colors.foreground }]}>
-                        {src.includes("google.com/presentation") ? "Presentation (Google Slides)" :
-                         src.includes("youtube") ? "Video (YouTube)" :
-                         "Embedded Content"}
-                      </Text>
-                      <View style={[styles.embedBtn, { backgroundColor: colors.primary }]}>
-                        <MaterialIcons name="open-in-new" size={16} color="#FFF" />
-                        <Text style={styles.embedBtnText}>Open</Text>
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            )}
-
-            {/* HTML Text Content */}
-            {content.html ? (
-              <HtmlContentRenderer html={content.html} colors={colors} />
-            ) : null}
-          </View>
-        );
-
-      case "book":
-        return (
-          <View>
-            {content.html ? <HtmlContentRenderer html={content.html} colors={colors} /> : null}
-            {content.chapters && content.chapters.length > 0 && (
-              <View style={[styles.chaptersCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-                <Text style={[styles.chaptersTitle, { color: colors.foreground }]}>
-                  <MaterialIcons name="list" size={18} color={colors.primary} /> Chapters
-                </Text>
-                {content.chapters.map((ch, i) => (
-                  <TouchableOpacity
-                    key={i}
-                    onPress={() => Linking.openURL(ch.url)}
-                    activeOpacity={0.6}
-                    style={[styles.chapterRow, { borderColor: colors.border }]}
-                  >
-                    <View style={[styles.chapterNum, { backgroundColor: colors.primary + "15" }]}>
-                      <Text style={[styles.chapterNumText, { color: colors.primary }]}>{i + 1}</Text>
-                    </View>
-                    <Text style={[styles.chapterName, { color: colors.foreground }]} numberOfLines={2}>{ch.name}</Text>
-                    <MaterialIcons name="chevron-right" size={18} color={colors.muted} />
-                  </TouchableOpacity>
-                ))}
-              </View>
-            )}
-          </View>
-        );
-
-      case "video":
-        return (
-          <View style={[styles.centeredCard, { backgroundColor: "#DC2626" + "08", borderColor: "#DC2626" + "25" }]}>
-            <View style={[styles.videoIconBg, { backgroundColor: "#DC2626" + "15" }]}>
-              <MaterialIcons name="play-circle-filled" size={64} color="#DC2626" />
-            </View>
-            <Text style={[styles.cardTitle, { color: colors.foreground }]}>{content.title || activityName}</Text>
-            <Text style={[styles.cardSubtitle, { color: colors.muted }]}>Video Lesson</Text>
-            <TouchableOpacity
-              onPress={() => {
-                const url = content.videoUrl || content.iframeSrc || content.vimeoUrl || activityUrl;
-                if (url) Linking.openURL(url);
-              }}
-              activeOpacity={0.7}
-              style={[styles.actionBtn, { backgroundColor: "#DC2626" }]}
-            >
-              <MaterialIcons name="play-arrow" size={20} color="#FFF" />
-              <Text style={styles.actionBtnText}>Watch Video</Text>
-            </TouchableOpacity>
-          </View>
-        );
-
-      case "interactive":
-        return (
-          <View style={[styles.centeredCard, { backgroundColor: "#EA580C" + "08", borderColor: "#EA580C" + "25" }]}>
-            <View style={[styles.videoIconBg, { backgroundColor: "#EA580C" + "15" }]}>
-              <MaterialIcons name="extension" size={56} color="#EA580C" />
-            </View>
-            <Text style={[styles.cardTitle, { color: colors.foreground }]}>{content.title || activityName}</Text>
-            <Text style={[styles.cardSubtitle, { color: colors.muted }]}>Interactive H5P Activity</Text>
-            <Text style={[styles.cardDesc, { color: colors.muted }]}>
-              Complete this interactive exercise to practice what you've learned
-            </Text>
-            <TouchableOpacity onPress={handleOpenInBrowser} activeOpacity={0.7} style={[styles.actionBtn, { backgroundColor: "#EA580C" }]}>
-              <MaterialIcons name="open-in-new" size={18} color="#FFF" />
-              <Text style={styles.actionBtnText}>Open Activity</Text>
-            </TouchableOpacity>
-          </View>
-        );
-
-      case "quiz":
-        return (
-          <View style={[styles.centeredCard, { backgroundColor: "#059669" + "08", borderColor: "#059669" + "25" }]}>
-            <View style={[styles.videoIconBg, { backgroundColor: "#059669" + "15" }]}>
-              <MaterialIcons name="quiz" size={56} color="#059669" />
-            </View>
-            <Text style={[styles.cardTitle, { color: colors.foreground }]}>{content.title || activityName}</Text>
-            {content.description ? <Text style={[styles.cardDesc, { color: colors.muted }]}>{content.description}</Text> : null}
-            <TouchableOpacity onPress={handleOpenInBrowser} activeOpacity={0.7} style={[styles.actionBtn, { backgroundColor: "#059669" }]}>
-              <MaterialIcons name="open-in-new" size={18} color="#FFF" />
-              <Text style={styles.actionBtnText}>Take Quiz</Text>
-            </TouchableOpacity>
-          </View>
-        );
-
-      case "assignment":
-        return (
-          <View>
-            {content.html ? <HtmlContentRenderer html={content.html} colors={colors} /> : null}
-            {content.status ? (
-              <View style={[styles.statusCard, { backgroundColor: "#2563EB" + "08", borderColor: "#2563EB" + "25" }]}>
-                <MaterialIcons name="assignment" size={20} color="#2563EB" />
-                <Text style={[styles.statusText, { color: colors.foreground }]}>{content.status}</Text>
-              </View>
-            ) : null}
-            <TouchableOpacity onPress={handleOpenInBrowser} activeOpacity={0.7} style={[styles.fullBtn, { backgroundColor: "#2563EB" }]}>
-              <MaterialIcons name="open-in-new" size={18} color="#FFF" />
-              <Text style={styles.actionBtnText}>Submit Assignment</Text>
-            </TouchableOpacity>
-          </View>
-        );
-
-      case "url":
-        return (
-          <View style={[styles.centeredCard, { backgroundColor: "#6366F1" + "08", borderColor: "#6366F1" + "25" }]}>
-            <View style={[styles.videoIconBg, { backgroundColor: "#6366F1" + "15" }]}>
-              <MaterialIcons name="link" size={56} color="#6366F1" />
-            </View>
-            <Text style={[styles.cardTitle, { color: colors.foreground }]}>{content.title || activityName}</Text>
-            <TouchableOpacity
-              onPress={() => { if (content.externalUrl) Linking.openURL(content.externalUrl); }}
-              activeOpacity={0.7}
-              style={[styles.actionBtn, { backgroundColor: "#6366F1" }]}
-            >
-              <MaterialIcons name="open-in-new" size={18} color="#FFF" />
-              <Text style={styles.actionBtnText}>Open Link</Text>
-            </TouchableOpacity>
-          </View>
-        );
-
-      case "forum":
-        return (
-          <View>
-            {content.discussions && content.discussions.length > 0 ? (
-              content.discussions.map((d, i) => (
-                <View key={i} style={[styles.forumPost, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-                  <Text style={[styles.forumSubject, { color: colors.foreground }]}>{d.subject}</Text>
-                  <View style={styles.forumMeta}>
-                    <MaterialIcons name="person" size={14} color={colors.primary} />
-                    <Text style={[styles.forumAuthor, { color: colors.primary }]}>{d.author}</Text>
-                    <Text style={[styles.forumDate, { color: colors.muted }]}>{d.date}</Text>
-                  </View>
-                  {d.content ? <Text style={[styles.forumBody, { color: colors.foreground }]}>{d.content}</Text> : null}
-                </View>
-              ))
-            ) : (
-              <View style={styles.emptyState}>
-                <MaterialIcons name="forum" size={40} color={colors.muted} />
-                <Text style={[styles.emptyLabel, { color: colors.muted }]}>No discussions yet</Text>
-              </View>
-            )}
-            <TouchableOpacity onPress={handleOpenInBrowser} activeOpacity={0.7} style={[styles.fullBtn, { backgroundColor: "#0891B2" }]}>
-              <MaterialIcons name="open-in-new" size={18} color="#FFF" />
-              <Text style={styles.actionBtnText}>View Forum</Text>
-            </TouchableOpacity>
-          </View>
-        );
-
-      default:
-        return (
-          <View>
-            {content.html ? <HtmlContentRenderer html={content.html} colors={colors} /> : null}
-            <TouchableOpacity onPress={handleOpenInBrowser} activeOpacity={0.7} style={[styles.fullBtn, { backgroundColor: colors.primary }]}>
-              <MaterialIcons name="open-in-new" size={18} color="#FFF" />
-              <Text style={styles.actionBtnText}>Open in Browser</Text>
-            </TouchableOpacity>
-          </View>
-        );
+      case "page": return renderPageContent();
+      case "book": return renderBookContent();
+      case "video": return renderVideoContent();
+      case "interactive": return renderInteractiveContent();
+      case "quiz": return renderQuizContent();
+      case "assignment": return renderAssignmentContent();
+      case "url": return renderUrlContent();
+      case "forum": return renderForumContent();
+      default: return renderGenericContent();
     }
   };
 
@@ -448,11 +763,17 @@ export default function LessonScreen() {
       <View style={styles.container}>
         {/* Header */}
         <View style={[styles.topBar, { borderBottomColor: colors.border }]}>
-          <TouchableOpacity onPress={() => router.back()} activeOpacity={0.6} style={[styles.iconBtn, { backgroundColor: colors.surface }]}>
+          <TouchableOpacity
+            onPress={() => router.back()}
+            activeOpacity={0.6}
+            style={[styles.iconBtn, { backgroundColor: colors.surface }]}
+          >
             <MaterialIcons name="arrow-back" size={22} color={colors.foreground} />
           </TouchableOpacity>
           <View style={styles.topBarTitle}>
-            <Text style={[styles.topBarText, { color: colors.foreground }]} numberOfLines={1}>{activityName}</Text>
+            <Text style={[styles.topBarText, { color: colors.foreground }]} numberOfLines={1}>
+              {activityName}
+            </Text>
             <View style={styles.topBarMeta}>
               <View style={[styles.typeBadge, { backgroundColor: modInfo.color + "15" }]}>
                 <MaterialIcons name={modInfo.icon as any} size={12} color={modInfo.color} />
@@ -460,9 +781,6 @@ export default function LessonScreen() {
               </View>
             </View>
           </View>
-          <TouchableOpacity onPress={handleOpenInBrowser} activeOpacity={0.6} style={[styles.iconBtn, { backgroundColor: colors.surface }]}>
-            <MaterialIcons name="open-in-new" size={20} color={colors.primary} />
-          </TouchableOpacity>
         </View>
 
         {/* Content */}
@@ -475,7 +793,11 @@ export default function LessonScreen() {
           <View style={styles.center}>
             <MaterialIcons name="error-outline" size={48} color={colors.error} />
             <Text style={[styles.errorText, { color: colors.error }]}>{error}</Text>
-            <TouchableOpacity onPress={loadContent} activeOpacity={0.7} style={[styles.retryBtn, { backgroundColor: colors.primary }]}>
+            <TouchableOpacity
+              onPress={loadContent}
+              activeOpacity={0.7}
+              style={[styles.retryBtn, { backgroundColor: colors.primary }]}
+            >
               <Text style={styles.retryText}>Retry</Text>
             </TouchableOpacity>
           </View>
@@ -487,12 +809,9 @@ export default function LessonScreen() {
                 <MaterialIcons name={modInfo.icon as any} size={24} color={modInfo.color} />
               </View>
               <View style={styles.titleInfo}>
-                <Text style={[styles.titleText, { color: colors.foreground }]}>{content?.title || activityName}</Text>
-                {content?.type === "page" && (
-                  <Text style={[styles.lastModified, { color: colors.muted }]}>
-                    Last modified: {new Date().toLocaleDateString()}
-                  </Text>
-                )}
+                <Text style={[styles.titleText, { color: colors.foreground }]}>
+                  {content?.title || activityName}
+                </Text>
               </View>
             </View>
 
@@ -507,7 +826,11 @@ export default function LessonScreen() {
                   <Text style={[styles.completedLabel, { color: colors.success }]}>Completed</Text>
                 </View>
               ) : (
-                <TouchableOpacity onPress={handleMarkComplete} activeOpacity={0.7} style={[styles.completeBtn, { backgroundColor: colors.success }]}>
+                <TouchableOpacity
+                  onPress={handleMarkComplete}
+                  activeOpacity={0.7}
+                  style={[styles.completeBtn, { backgroundColor: colors.success }]}
+                >
                   <MaterialIcons name="check" size={20} color="#FFF" />
                   <Text style={styles.completeBtnText}>Mark as Complete</Text>
                 </TouchableOpacity>
@@ -519,28 +842,6 @@ export default function LessonScreen() {
     </ScreenContainer>
   );
 }
-
-const contentStyles = StyleSheet.create({
-  container: { padding: 16, borderRadius: 12, borderWidth: 0.5, marginBottom: 16 },
-  heading: { fontSize: 18, fontWeight: "700", marginTop: 12, marginBottom: 8, writingDirection: "rtl", textAlign: "right" },
-  paragraph: { fontSize: 15, lineHeight: 26, marginBottom: 8, writingDirection: "rtl", textAlign: "right" },
-  listItem: { flexDirection: "row", gap: 8, marginBottom: 4, paddingRight: 4 },
-  bullet: { fontSize: 16, fontWeight: "700", lineHeight: 26 },
-  listText: { flex: 1, fontSize: 15, lineHeight: 26, writingDirection: "rtl", textAlign: "right" },
-  tableRow: { paddingVertical: 6, borderBottomWidth: 0.5 },
-  tableText: { fontSize: 14, lineHeight: 22 },
-  imageWrap: { marginVertical: 12, borderRadius: 12, overflow: "hidden", alignItems: "center" },
-  image: { height: 250, borderRadius: 12 },
-  iframeCard: { marginVertical: 12, borderRadius: 12, borderWidth: 1, overflow: "hidden" },
-  iframePreview: { alignItems: "center", padding: 24, gap: 12 },
-  iframeLabel: { fontSize: 14, fontWeight: "600" },
-  openBtn: { flexDirection: "row", alignItems: "center", gap: 6, paddingHorizontal: 20, paddingVertical: 10, borderRadius: 8 },
-  openBtnText: { color: "#FFF", fontSize: 14, fontWeight: "600" },
-  audioCard: { marginVertical: 8, borderRadius: 12, borderWidth: 1, overflow: "hidden" },
-  audioInner: { flexDirection: "row", alignItems: "center", padding: 14, gap: 12 },
-  audioLabel: { flex: 1, fontSize: 14, fontWeight: "600" },
-  playBtn: { width: 36, height: 36, borderRadius: 18, alignItems: "center", justifyContent: "center" },
-});
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
@@ -557,41 +858,65 @@ const styles = StyleSheet.create({
   errorText: { marginTop: 12, fontSize: 14, textAlign: "center" },
   retryBtn: { marginTop: 16, paddingHorizontal: 24, paddingVertical: 10, borderRadius: 8 },
   retryText: { color: "#FFF", fontWeight: "600" },
+
+  // Title card
   titleCard: { flexDirection: "row", alignItems: "center", padding: 16, borderRadius: 14, borderWidth: 0.5, marginBottom: 16, gap: 14 },
   titleIconCircle: { width: 48, height: 48, borderRadius: 14, alignItems: "center", justifyContent: "center" },
   titleInfo: { flex: 1 },
   titleText: { fontSize: 17, fontWeight: "700", writingDirection: "rtl" },
-  lastModified: { fontSize: 12, marginTop: 4 },
-  sectionBlock: { marginBottom: 8 },
-  mediaCard: { flexDirection: "row", alignItems: "center", padding: 14, borderRadius: 12, borderWidth: 1, marginBottom: 8, gap: 12 },
-  mediaIconCircle: { width: 40, height: 40, borderRadius: 20, alignItems: "center", justifyContent: "center" },
-  mediaInfo: { flex: 1 },
-  mediaTitle: { fontSize: 14, fontWeight: "600" },
-  mediaSubtitle: { fontSize: 12, marginTop: 2 },
-  playCircle: { width: 40, height: 40, borderRadius: 20, alignItems: "center", justifyContent: "center" },
-  imageContainer: { marginBottom: 12, borderRadius: 12, overflow: "hidden", alignItems: "center" },
-  contentImage: { width: "100%", height: 600, borderRadius: 12 },
-  embedCard: { marginBottom: 12, borderRadius: 14, borderWidth: 1, overflow: "hidden" },
-  embedPreview: { alignItems: "center", padding: 28, gap: 12 },
-  embedLabel: { fontSize: 15, fontWeight: "600", textAlign: "center" },
-  embedBtn: { flexDirection: "row", alignItems: "center", gap: 6, paddingHorizontal: 24, paddingVertical: 10, borderRadius: 10, marginTop: 4 },
-  embedBtnText: { color: "#FFF", fontSize: 14, fontWeight: "600" },
-  centeredCard: { alignItems: "center", padding: 32, borderRadius: 16, borderWidth: 1, marginBottom: 16, gap: 12 },
+
+  // Section blocks
+  sectionBlock: { marginBottom: 16 },
+  sectionLabel: { fontSize: 13, fontWeight: "600", marginBottom: 8, textTransform: "uppercase", letterSpacing: 0.5 },
+
+  // Audio card
+  audioCard: { flexDirection: "row", alignItems: "center", padding: 14, borderRadius: 12, borderWidth: 1, marginBottom: 8, gap: 12 },
+  audioIconCircle: { width: 40, height: 40, borderRadius: 20, alignItems: "center", justifyContent: "center" },
+  audioInfo: { flex: 1 },
+  audioTitle: { fontSize: 14, fontWeight: "600" },
+  audioSubtitle: { fontSize: 12, marginTop: 2 },
+  audioPlayBtn: { width: 44, height: 44, borderRadius: 22, alignItems: "center", justifyContent: "center" },
+
+  // Images
+  imageWrap: { marginBottom: 12, borderRadius: 12, overflow: "hidden", alignItems: "center" },
+  contentImage: { height: 600, borderRadius: 12 },
+
+  // Iframe container
+  iframeContainer: { borderRadius: 12, borderWidth: 1, overflow: "hidden", marginBottom: 16 },
+  iframeHeader: { flexDirection: "row", alignItems: "center", gap: 8, padding: 12 },
+  iframeLabel: { fontSize: 14, fontWeight: "600" },
+  iframePlaceholder: { alignItems: "center", padding: 32, gap: 12 },
+  iframeOpenBtn: { flexDirection: "row", alignItems: "center", gap: 6, paddingHorizontal: 20, paddingVertical: 10, borderRadius: 10, marginTop: 8 },
+  iframeOpenBtnText: { color: "#FFF", fontSize: 14, fontWeight: "600" },
+
+  // Video card
+  videoCard: { alignItems: "center", padding: 32, borderRadius: 16, borderWidth: 1, marginBottom: 16, gap: 12 },
   videoIconBg: { width: 100, height: 100, borderRadius: 50, alignItems: "center", justifyContent: "center" },
-  cardTitle: { fontSize: 18, fontWeight: "700", textAlign: "center" },
-  cardSubtitle: { fontSize: 13, textAlign: "center" },
-  cardDesc: { fontSize: 13, textAlign: "center", paddingHorizontal: 16 },
-  actionBtn: { flexDirection: "row", alignItems: "center", gap: 8, paddingHorizontal: 28, paddingVertical: 14, borderRadius: 12, marginTop: 8 },
-  actionBtnText: { color: "#FFF", fontSize: 15, fontWeight: "600" },
+  videoTitle: { fontSize: 18, fontWeight: "700", textAlign: "center" },
+  videoSubtitle: { fontSize: 13, textAlign: "center" },
+
+  // Interactive card
+  interactiveCard: { alignItems: "center", padding: 32, borderRadius: 16, borderWidth: 1, marginBottom: 16, gap: 12 },
+
+  // In-app action button (replaces "Open in Browser")
+  inAppBtn: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, paddingHorizontal: 24, paddingVertical: 14, borderRadius: 12, marginTop: 8 },
+  inAppBtnText: { color: "#FFF", fontSize: 15, fontWeight: "600" },
+
+  // Quiz
+  quizCard: { alignItems: "center", padding: 24, borderRadius: 16, borderWidth: 1, marginBottom: 16, gap: 10 },
+  quizIconBg: { width: 80, height: 80, borderRadius: 40, alignItems: "center", justifyContent: "center" },
+  quizDesc: { fontSize: 13, textAlign: "center", paddingHorizontal: 16 },
+  quizMeta: { flexDirection: "row", alignItems: "center", gap: 6, paddingHorizontal: 14, paddingVertical: 8, borderRadius: 8 },
+  quizMetaText: { fontSize: 13 },
+
+  // URL card
+  urlCard: { alignItems: "center", padding: 32, borderRadius: 16, borderWidth: 1, marginBottom: 16, gap: 12 },
+
+  // Status card
   statusCard: { flexDirection: "row", alignItems: "center", gap: 10, padding: 14, borderRadius: 12, borderWidth: 1, marginBottom: 12 },
   statusText: { flex: 1, fontSize: 13 },
-  fullBtn: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, paddingVertical: 14, borderRadius: 12, marginBottom: 12 },
-  chaptersCard: { padding: 16, borderRadius: 14, borderWidth: 0.5, marginBottom: 16 },
-  chaptersTitle: { fontSize: 17, fontWeight: "700", marginBottom: 14 },
-  chapterRow: { flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 12, borderBottomWidth: 0.5 },
-  chapterNum: { width: 28, height: 28, borderRadius: 8, alignItems: "center", justifyContent: "center" },
-  chapterNumText: { fontSize: 13, fontWeight: "700" },
-  chapterName: { flex: 1, fontSize: 14, lineHeight: 20 },
+
+  // Forum
   forumPost: { padding: 16, borderRadius: 12, borderWidth: 0.5, marginBottom: 12 },
   forumSubject: { fontSize: 15, fontWeight: "600", marginBottom: 6 },
   forumMeta: { flexDirection: "row", gap: 8, marginBottom: 8, alignItems: "center" },
@@ -600,6 +925,25 @@ const styles = StyleSheet.create({
   forumBody: { fontSize: 14, lineHeight: 20 },
   emptyState: { alignItems: "center", padding: 32, gap: 8 },
   emptyLabel: { fontSize: 14 },
+
+  // Chapters
+  chapterScroll: { marginBottom: 12 },
+  chapterTab: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, borderWidth: 1, marginRight: 8 },
+  chapterTabText: { fontSize: 13, fontWeight: "500" },
+  chapterContent: { padding: 16, borderRadius: 14, borderWidth: 0.5 },
+  chapterTitle: { fontSize: 16, fontWeight: "700", marginBottom: 12, writingDirection: "rtl", textAlign: "right" },
+
+  // HTML content
+  htmlCard: { padding: 16, borderRadius: 12, borderWidth: 0.5, marginBottom: 16 },
+  htmlHeading: { fontSize: 18, fontWeight: "700", marginTop: 12, marginBottom: 8, writingDirection: "rtl", textAlign: "right" },
+  htmlParagraph: { fontSize: 15, lineHeight: 26, marginBottom: 8, writingDirection: "rtl", textAlign: "right" },
+  htmlListItem: { flexDirection: "row", gap: 8, marginBottom: 4, paddingRight: 4 },
+  htmlBullet: { fontSize: 16, fontWeight: "700", lineHeight: 26 },
+  htmlListText: { flex: 1, fontSize: 15, lineHeight: 26, writingDirection: "rtl", textAlign: "right" },
+  htmlTableRow: { paddingVertical: 6, borderBottomWidth: 0.5 },
+  htmlTableText: { fontSize: 14, lineHeight: 22 },
+
+  // Completion
   completeSection: { marginTop: 16 },
   completedBanner: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, padding: 14, borderRadius: 12, borderWidth: 1 },
   completedLabel: { fontSize: 15, fontWeight: "600" },

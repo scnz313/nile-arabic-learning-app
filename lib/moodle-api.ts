@@ -8,6 +8,7 @@ export interface MoodleCourse {
   shortname: string;
   fullname: string;
   url?: string;
+  hidden?: boolean;
 }
 
 export interface MoodleActivity {
@@ -16,11 +17,15 @@ export interface MoodleActivity {
   modType: string;
   url: string;
   icon?: string;
+  hidden?: boolean;
+  firstSeen?: number;
 }
 
 export interface MoodleSection {
   name: string;
   activities: MoodleActivity[];
+  hidden?: boolean;
+  firstSeen?: number;
 }
 
 export interface CourseFullData {
@@ -30,6 +35,7 @@ export interface CourseFullData {
   sections: MoodleSection[];
   totalSections: number;
   totalActivities: number;
+  lastUpdated?: number;
 }
 
 export interface ActivityContent {
@@ -39,7 +45,7 @@ export interface ActivityContent {
   audioSources?: string[];
   images?: string[];
   iframes?: string[];
-  chapters?: { name: string; url: string }[];
+  chapters?: { name: string; url: string; content?: string }[];
   videoUrl?: string;
   iframeSrc?: string;
   vimeoUrl?: string;
@@ -49,6 +55,8 @@ export interface ActivityContent {
   discussions?: { subject: string; author: string; date: string; content: string }[];
   status?: string;
   attemptsHtml?: string;
+  attempts?: number;
+  dueDate?: string;
 }
 
 class MoodleAPI {
