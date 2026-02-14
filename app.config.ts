@@ -32,7 +32,7 @@ const env = {
   appSlug: "nile-arabic-learning-app",
   // S3 URL of the app logo - set this to the URL returned by generate_image when creating custom logo
   // Leave empty to use the default icon from assets/images/icon.png
-  logoUrl: "",
+  logoUrl: "https://private-us-east-1.manuscdn.com/sessionFile/onhXGn3F8uTEpmfKenn0Yu/sandbox/O7WZDC7tt9V8XJ9ROPJhCs-img-1_1771103077000_na1fn_bmlsZS1hcmFiaWMtaWNvbg.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvb25oWEduM0Y4dVRFcG1mS2VubjBZdS9zYW5kYm94L083V1pEQzd0dDlWOFhKOVJPUEpoQ3MtaW1nLTFfMTc3MTEwMzA3NzAwMF9uYTFmbl9ibWxzWlMxaGNtRmlhV010YVdOdmJnLnBuZz94LW9zcy1wcm9jZXNzPWltYWdlL3Jlc2l6ZSx3XzE5MjAsaF8xOTIwL2Zvcm1hdCx3ZWJwL3F1YWxpdHkscV84MCIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc5ODc2MTYwMH19fV19&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=XAS~nwNkXfWX-Rsoxv992dT-FLdV0a-mzrS0YJ8x9~~~SRckD9SAQy9FjurrenMahmbuNkEYHolCe~jXPRw7CHRVUib62g0ALUwhMvbtTrQmHvvYnx0EpR5YBqjZRLuor47lHihsv-JEWMqBJo5g4ZEszXxOtqDLOQWqS0AqwWN1Q2Wumj6mjQgG73bcUvBsznpVjlQWYVS6VwQ1g91LSy2cqDhsPEu6G0rk3IQKszkWntgVzjhfQmnZ-qahkBfxWFQX4ZL50GpWCY5dW3zlEw9oAsBnrHY1bcuFi1sjmnkqBsCAt61MH7tE39y-kaWlfjUWSuYbUuimL9WxGjpvwQ__",
   scheme: schemeFromBundleId,
   iosBundleId: bundleId,
   androidPackage: bundleId,
