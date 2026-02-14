@@ -13,8 +13,19 @@ import { useRouter } from "expo-router";
 import { ScreenContainer } from "@/components/screen-container";
 import { useColors } from "@/hooks/use-colors";
 import { useAuthContext } from "@/lib/auth-context";
-import { storage, type UserSettings } from "@/lib/storage";
-import * as Haptics from "expo-haptics";
+import { storageService, type UserSettings } from "@/lib/storage";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+
+function confirmAction(title: string, message: string, onConfirm: () => void) {
+  if (Platform.OS === "web") {
+    if (window.confirm(`${title}\n\n${message}`)) onConfirm();
+  } else {
+    Alert.alert(title, message, [
+      { text: "Cancel", style: "cancel" },
+      { text: "Confirm", style: "destructive", onPress: onConfirm },
+    ]);
+  }
+}
 
 export default function SettingsScreen() {
   const router = useRouter();
@@ -22,12 +33,9 @@ export default function SettingsScreen() {
   const { user, logout } = useAuthContext();
 
   const [settings, setSettings] = useState<UserSettings>({
-    autoDownloadNewContent: false,
-    wifiOnlyDownload: true,
-    videoQuality: "auto",
     notificationsEnabled: true,
+    autoSync: true,
     theme: "auto",
-    language: "en",
   });
   const [lastSync, setLastSync] = useState<string>("");
 
@@ -36,84 +44,50 @@ export default function SettingsScreen() {
   }, []);
 
   const loadSettings = async () => {
-    const userSettings = await storage.getUserSettings();
+    const userSettings = await storageService.getUserSettings();
     setSettings(userSettings);
-    const syncTime = await storage.getLastSyncTime();
+    const syncTime = await storageService.getLastSyncTime();
     if (syncTime) setLastSync(new Date(syncTime).toLocaleString());
   };
 
   const updateSetting = async (key: keyof UserSettings, value: boolean | string) => {
-    if (Platform.OS !== "web") {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    }
     const updated = { ...settings, [key]: value };
     setSettings(updated);
-    await storage.setUserSettings({ [key]: value });
+    await storageService.setUserSettings({ [key]: value });
   };
 
   const handleLogout = () => {
-    Alert.alert(
+    confirmAction(
       "Sign Out",
       "Are you sure you want to sign out? Your cached data will be cleared.",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Sign Out",
-          style: "destructive",
-          onPress: async () => {
-            if (Platform.OS !== "web") {
-              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-            }
-            await logout();
-            router.replace("/login");
-          },
-        },
-      ]
+      async () => {
+        await logout();
+        router.replace("/login");
+      }
     );
   };
 
   const handleClearCache = () => {
-    Alert.alert(
+    confirmAction(
       "Clear Cache",
       "This will remove all cached course data. You will need to sync again.",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Clear",
-          style: "destructive",
-          onPress: async () => {
-            await storage.clearAll();
-            Alert.alert("Done", "Cache cleared successfully.");
-          },
-        },
-      ]
+      async () => {
+        await storageService.clearAll();
+        setLastSync("");
+      }
     );
   };
 
-  const renderSettingRow = (
-    label: string,
-    subtitle: string | undefined,
-    right: React.ReactNode
-  ) => (
-    <View style={[styles.settingRow, { borderBottomColor: colors.border }]}>
-      <View style={styles.settingInfo}>
-        <Text className="text-sm font-semibold text-foreground">{label}</Text>
-        {subtitle ? <Text className="text-xs text-muted mt-1">{subtitle}</Text> : null}
-      </View>
-      {right}
-    </View>
-  );
-
   return (
     <ScreenContainer>
-      <View className="px-6 pt-4 pb-2">
-        <Text className="text-2xl font-bold text-foreground">Settings</Text>
+      <View style={styles.headerContainer}>
+        <Text style={[styles.headerTitle, { color: colors.foreground }]}>Settings</Text>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {/* Profile Section */}
         <View style={styles.sectionContainer}>
-          <Text className="text-xs font-bold text-muted uppercase mb-2 px-4">Profile</Text>
+          <Text style={[styles.sectionLabel, { color: colors.muted }]}>PROFILE</Text>
           <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <View style={styles.profileRow}>
               <View style={[styles.avatar, { backgroundColor: colors.primary }]}>
@@ -122,10 +96,10 @@ export default function SettingsScreen() {
                 </Text>
               </View>
               <View style={styles.profileInfo}>
-                <Text className="text-base font-bold text-foreground">
+                <Text style={[styles.profileName, { color: colors.foreground }]}>
                   {user?.fullName || "Student"}
                 </Text>
-                <Text className="text-sm text-muted">{user?.email || ""}</Text>
+                <Text style={[styles.profileEmail, { color: colors.muted }]}>{user?.username || ""}</Text>
               </View>
             </View>
           </View>
@@ -133,63 +107,63 @@ export default function SettingsScreen() {
 
         {/* Sync Section */}
         <View style={styles.sectionContainer}>
-          <Text className="text-xs font-bold text-muted uppercase mb-2 px-4">Sync</Text>
+          <Text style={[styles.sectionLabel, { color: colors.muted }]}>SYNC</Text>
           <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-            {renderSettingRow(
-              "Auto-download new content",
-              "Download new lessons automatically",
+            <View style={[styles.settingRow, { borderBottomColor: colors.border }]}>
+              <View style={styles.settingInfo}>
+                <Text style={[styles.settingLabelText, { color: colors.foreground }]}>Auto-sync courses</Text>
+                <Text style={[styles.settingSubtitle, { color: colors.muted }]}>Sync courses when app opens</Text>
+              </View>
               <Switch
-                value={settings.autoDownloadNewContent}
-                onValueChange={(v) => updateSetting("autoDownloadNewContent", v)}
+                value={settings.autoSync}
+                onValueChange={(v) => updateSetting("autoSync", v)}
                 trackColor={{ false: colors.border, true: colors.primary }}
                 thumbColor="#FFFFFF"
               />
-            )}
-            {renderSettingRow(
-              "Wi-Fi only downloads",
-              "Only download content on Wi-Fi",
-              <Switch
-                value={settings.wifiOnlyDownload}
-                onValueChange={(v) => updateSetting("wifiOnlyDownload", v)}
-                trackColor={{ false: colors.border, true: colors.primary }}
-                thumbColor="#FFFFFF"
-              />
-            )}
-            {renderSettingRow(
-              "Last synced",
-              lastSync || "Never",
-              null
-            )}
+            </View>
+            <View style={[styles.settingRow, { borderBottomWidth: 0 }]}>
+              <View style={styles.settingInfo}>
+                <Text style={[styles.settingLabelText, { color: colors.foreground }]}>Last synced</Text>
+                <Text style={[styles.settingSubtitle, { color: colors.muted }]}>{lastSync || "Never"}</Text>
+              </View>
+              <MaterialIcons name="sync" size={20} color={colors.muted} />
+            </View>
           </View>
         </View>
 
         {/* Notifications */}
         <View style={styles.sectionContainer}>
-          <Text className="text-xs font-bold text-muted uppercase mb-2 px-4">Notifications</Text>
+          <Text style={[styles.sectionLabel, { color: colors.muted }]}>NOTIFICATIONS</Text>
           <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-            {renderSettingRow(
-              "Push notifications",
-              "Get notified about new content",
+            <View style={[styles.settingRow, { borderBottomWidth: 0 }]}>
+              <View style={styles.settingInfo}>
+                <Text style={[styles.settingLabelText, { color: colors.foreground }]}>Push notifications</Text>
+                <Text style={[styles.settingSubtitle, { color: colors.muted }]}>Get notified about new content</Text>
+              </View>
               <Switch
                 value={settings.notificationsEnabled}
                 onValueChange={(v) => updateSetting("notificationsEnabled", v)}
                 trackColor={{ false: colors.border, true: colors.primary }}
                 thumbColor="#FFFFFF"
               />
-            )}
+            </View>
           </View>
         </View>
 
         {/* Data */}
         <View style={styles.sectionContainer}>
-          <Text className="text-xs font-bold text-muted uppercase mb-2 px-4">Data</Text>
+          <Text style={[styles.sectionLabel, { color: colors.muted }]}>DATA</Text>
           <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <TouchableOpacity
               onPress={handleClearCache}
               activeOpacity={0.7}
-              style={[styles.settingRow, { borderBottomColor: colors.border }]}
+              style={[styles.settingRow, { borderBottomWidth: 0 }]}
             >
-              <Text className="text-sm font-semibold text-error">Clear Cache</Text>
+              <View style={styles.settingInfo}>
+                <Text style={[styles.settingLabelText, { color: colors.error }]}>Clear Cache</Text>
+                <Text style={[styles.settingSubtitle, { color: colors.muted }]}>Remove all cached course data</Text>
+              </View>
+              <MaterialIcons name="delete-outline" size={20} color={colors.error} />
             </TouchableOpacity>
           </View>
         </View>
@@ -201,14 +175,15 @@ export default function SettingsScreen() {
             activeOpacity={0.8}
             style={[styles.logoutButton, { backgroundColor: colors.error + "12", borderColor: colors.error }]}
           >
+            <MaterialIcons name="logout" size={18} color={colors.error} />
             <Text style={[styles.logoutText, { color: colors.error }]}>Sign Out</Text>
           </TouchableOpacity>
         </View>
 
         {/* App Info */}
         <View style={styles.footer}>
-          <Text className="text-xs text-muted text-center">Nile Arabic Learning v1.0.0</Text>
-          <Text className="text-xs text-muted text-center mt-1">nilecenter.online</Text>
+          <Text style={[styles.footerText, { color: colors.muted }]}>Nile Arabic Learning v1.0.0</Text>
+          <Text style={[styles.footerText, { color: colors.muted, marginTop: 4 }]}>nilecenter.online</Text>
         </View>
       </ScrollView>
     </ScreenContainer>
@@ -216,16 +191,24 @@ export default function SettingsScreen() {
 }
 
 const styles = StyleSheet.create({
+  headerContainer: { paddingHorizontal: 24, paddingTop: 16, paddingBottom: 8 },
+  headerTitle: { fontSize: 24, fontWeight: "700" },
   scrollContent: { paddingBottom: 40 },
   sectionContainer: { paddingHorizontal: 16, marginBottom: 20 },
+  sectionLabel: { fontSize: 12, fontWeight: "700", marginBottom: 8, paddingHorizontal: 4, letterSpacing: 0.5 },
   card: { borderRadius: 14, borderWidth: 1, overflow: "hidden" },
   profileRow: { flexDirection: "row", alignItems: "center", padding: 16 },
   avatar: { width: 48, height: 48, borderRadius: 24, alignItems: "center", justifyContent: "center", marginRight: 14 },
   avatarText: { color: "#FFFFFF", fontSize: 20, fontWeight: "700" },
   profileInfo: { flex: 1 },
+  profileName: { fontSize: 16, fontWeight: "700" },
+  profileEmail: { fontSize: 14, marginTop: 2 },
   settingRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: 0.5 },
   settingInfo: { flex: 1, marginRight: 12 },
-  logoutButton: { borderRadius: 14, paddingVertical: 16, alignItems: "center", borderWidth: 1 },
+  settingLabelText: { fontSize: 14, fontWeight: "600" },
+  settingSubtitle: { fontSize: 12, marginTop: 4 },
+  logoutButton: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, borderRadius: 14, paddingVertical: 16, borderWidth: 1 },
   logoutText: { fontSize: 16, fontWeight: "700" },
   footer: { paddingVertical: 24, alignItems: "center" },
+  footerText: { fontSize: 12, textAlign: "center" },
 });

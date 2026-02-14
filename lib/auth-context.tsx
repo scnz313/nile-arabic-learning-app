@@ -1,6 +1,11 @@
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 import { moodleAPI } from "./moodle-api";
-import { storage, type UserInfo } from "./storage";
+import { storageService } from "./storage";
+
+interface UserInfo {
+  username: string;
+  fullName: string;
+}
 
 interface AuthContextType {
   user: UserInfo | null;
@@ -28,28 +33,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const checkAuth = async () => {
     try {
-      const hasToken = await moodleAPI.init();
-      if (hasToken) {
-        const userInfo = await storage.getUserInfo();
-        if (userInfo) {
-          setUser(userInfo);
-        } else {
-          // Token exists but no user info, try to fetch
-          try {
-            const siteInfo = await moodleAPI.getSiteInfo();
-            const newUserInfo: UserInfo = {
-              userId: siteInfo.userid,
-              username: siteInfo.username,
-              fullName: siteInfo.fullname,
-              email: siteInfo.username,
-            };
-            await storage.setUserInfo(newUserInfo);
-            setUser(newUserInfo);
-          } catch {
-            // Token is invalid, clear it
-            await moodleAPI.logout();
-          }
-        }
+      const hasCredentials = await moodleAPI.init();
+      if (hasCredentials) {
+        setUser({
+          username: moodleAPI.getUsername(),
+          fullName: moodleAPI.getFullName(),
+        });
       }
     } catch (error) {
       console.error("Auth check failed:", error);
@@ -61,18 +50,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (username: string, password: string) => {
     try {
       setIsLoading(true);
-      await moodleAPI.login(username, password);
-      const siteInfo = await moodleAPI.getSiteInfo();
-      const userInfo: UserInfo = {
-        userId: siteInfo.userid,
-        username: siteInfo.username,
-        fullName: siteInfo.fullname,
-        email: username,
-      };
-      await storage.setUserInfo(userInfo);
-      setUser(userInfo);
+      const result = await moodleAPI.login(username, password);
+      setUser({ username, fullName: result.fullName });
     } catch (error) {
-      console.error("Login failed:", error);
       throw error;
     } finally {
       setIsLoading(false);
@@ -83,7 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       setIsLoading(true);
       await moodleAPI.logout();
-      await storage.clearAll();
+      await storageService.clearAll();
       setUser(null);
     } catch (error) {
       console.error("Logout failed:", error);

@@ -3,13 +3,13 @@ import { twMerge } from "tailwind-merge";
 
 /**
  * Combines class names using clsx and tailwind-merge.
- * This ensures Tailwind classes are properly merged without conflicts.
- *
- * Usage:
- * ```tsx
- * cn("px-4 py-2", isActive && "bg-primary", className)
- * ```
+ * Filters out non-string values to prevent runtime crashes.
  */
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+  // Filter to only allow string, boolean, undefined, null values
+  // This prevents StyleSheet objects from crashing twMerge
+  const safeInputs = inputs.filter(
+    (v) => v === undefined || v === null || typeof v === "string" || typeof v === "boolean"
+  );
+  return twMerge(clsx(safeInputs));
 }

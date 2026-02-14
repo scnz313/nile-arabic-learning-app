@@ -1,241 +1,239 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
-  SectionList,
+  FlatList,
   TouchableOpacity,
   ActivityIndicator,
-  Alert,
-  RefreshControl,
   StyleSheet,
-  Platform,
+  RefreshControl,
 } from "react-native";
-import { useLocalSearchParams, useRouter, Stack } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import { ScreenContainer } from "@/components/screen-container";
 import { useColors } from "@/hooks/use-colors";
-import { storage, type CourseData, type LessonData } from "@/lib/storage";
+import { storageService } from "@/lib/storage";
 import { syncService } from "@/lib/sync-service";
-import * as Haptics from "expo-haptics";
+import { type MoodleActivity } from "@/lib/moodle-api";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
-interface SectionData {
-  title: string;
-  data: LessonData[];
-}
+const MOD_ICONS: Record<string, { icon: string; color: string; label: string }> = {
+  page: { icon: "description", color: "#0C6478", label: "Page" },
+  book: { icon: "menu-book", color: "#7C3AED", label: "Book" },
+  videotime: { icon: "play-circle-filled", color: "#DC2626", label: "Video" },
+  hvp: { icon: "extension", color: "#EA580C", label: "Interactive" },
+  h5pactivity: { icon: "extension", color: "#EA580C", label: "Interactive" },
+  quiz: { icon: "quiz", color: "#059669", label: "Quiz" },
+  assign: { icon: "assignment", color: "#2563EB", label: "Assignment" },
+  url: { icon: "link", color: "#6366F1", label: "Link" },
+  forum: { icon: "forum", color: "#0891B2", label: "Forum" },
+  attendance: { icon: "event-available", color: "#65A30D", label: "Attendance" },
+  resource: { icon: "attach-file", color: "#9333EA", label: "Resource" },
+  feedback: { icon: "rate-review", color: "#D97706", label: "Feedback" },
+};
+
+type ListItem =
+  | { type: "header"; name: string; activityCount: number; key: string }
+  | { type: "activity"; activity: MoodleActivity; isCompleted: boolean; key: string };
 
 export default function CourseDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const courseId = parseInt(id || "0", 10);
   const router = useRouter();
   const colors = useColors();
 
-  const [course, setCourse] = useState<CourseData | null>(null);
-  const [sections, setSections] = useState<SectionData[]>([]);
+  const [courseName, setCourseName] = useState("");
+  const [items, setItems] = useState<ListItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [totalActivities, setTotalActivities] = useState(0);
+  const [completedCount, setCompletedCount] = useState(0);
 
-  useEffect(() => {
-    if (id) loadCourseData();
-  }, [id]);
+  useFocusEffect(
+    useCallback(() => {
+      loadCourseData();
+    }, [courseId])
+  );
 
   const loadCourseData = async () => {
-    if (!id) return;
     try {
-      const courseId = parseInt(id, 10);
-      const courseData = await storage.getCourse(courseId);
-      if (courseData) setCourse(courseData);
-
-      const lessonsBySection = await syncService.getCourseLessonsBySection(courseId);
-      const sectionData: SectionData[] = [];
-      for (const [title, lessons] of lessonsBySection) {
-        if (lessons.length > 0) {
-          sectionData.push({ title, data: lessons });
-        }
+      setIsLoading(true);
+      const courses = await storageService.getCourses();
+      const course = courses.find((c) => c.id === courseId);
+      if (course) {
+        // Clean up course name for display
+        const match = (course.fullname || "").match(/Arabic Language.*?Level\s*\d+/i);
+        setCourseName(match ? match[0] : course.fullname.replace(/^[A-Za-z]+-[A-Za-z0-9]+-\d+\s*-\s*/, "").replace(/\s*Onsite.*$/, "").trim() || course.fullname);
       }
-      setSections(sectionData);
-    } catch (error) {
-      console.error("Failed to load course:", error);
-      Alert.alert("Error", "Failed to load course data");
+
+      const data = await storageService.getCourseData(courseId);
+      const completed = await storageService.getCompletedActivities(courseId);
+      const completedSet = new Set(completed);
+
+      if (data) {
+        setTotalActivities(data.totalActivities);
+        setCompletedCount(completed.length);
+
+        const allItems: ListItem[] = [];
+
+        if (data.intro && data.intro.activities.length > 0) {
+          allItems.push({ type: "header", name: "Introduction", activityCount: data.intro.activities.length, key: "h-intro" });
+          for (const act of data.intro.activities) {
+            allItems.push({ type: "activity", activity: act, isCompleted: completedSet.has(act.id), key: `a-${act.id}` });
+          }
+        }
+
+        for (let i = 0; i < data.sections.length; i++) {
+          const section = data.sections[i];
+          allItems.push({ type: "header", name: section.name, activityCount: section.activities.length, key: `h-${i}` });
+          for (const act of section.activities) {
+            allItems.push({ type: "activity", activity: act, isCompleted: completedSet.has(act.id), key: `a-${act.id}` });
+          }
+        }
+
+        setItems(allItems);
+      }
+    } catch (err) {
+      console.error("Load course data error:", err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleRefresh = useCallback(async () => {
-    if (!id) return;
-    setIsRefreshing(true);
+  const handleRefresh = async () => {
     try {
-      await syncService.syncCourse(parseInt(id, 10));
+      setIsSyncing(true);
+      await syncService.syncSingleCourse(courseId);
       await loadCourseData();
-      if (Platform.OS !== "web") {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      }
-    } catch (error) {
-      Alert.alert("Sync Failed", "Could not refresh course content.");
+    } catch (err) {
+      console.error("Refresh error:", err);
     } finally {
-      setIsRefreshing(false);
-    }
-  }, [id]);
-
-  const handleLessonPress = (lesson: LessonData) => {
-    if (Platform.OS !== "web") {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    }
-    router.push(`/lesson/${lesson.id}?courseId=${id}` as any);
-  };
-
-  const getTypeIcon = (type: string): string => {
-    switch (type) {
-      case "video": return "🎬";
-      case "pdf": return "📄";
-      case "text": return "📝";
-      case "url": return "🔗";
-      case "assignment": return "✍️";
-      case "quiz": return "📋";
-      case "forum": return "💬";
-      case "book": return "📖";
-      case "image": return "🖼️";
-      case "audio": return "🎵";
-      default: return "📚";
+      setIsSyncing(false);
     }
   };
 
-  const renderLesson = ({ item }: { item: LessonData }) => (
-    <TouchableOpacity
-      onPress={() => handleLessonPress(item)}
-      activeOpacity={0.7}
-      style={[styles.lessonCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
-    >
-      <View style={[styles.lessonIcon, { backgroundColor: colors.primary + "12" }]}>
-        <Text style={styles.lessonIconText}>{getTypeIcon(item.contentType)}</Text>
-      </View>
-      <View style={styles.lessonInfo}>
-        <Text className="text-sm font-semibold text-foreground" numberOfLines={2}>
-          {item.name}
-        </Text>
-        <Text className="text-xs text-muted mt-1 capitalize">{item.contentType}</Text>
-      </View>
-      {item.isCompleted ? (
-        <View style={[styles.checkCircle, { backgroundColor: colors.success }]}>
-          <Text style={styles.checkMark}>✓</Text>
-        </View>
-      ) : (
-        <View style={[styles.emptyCircle, { borderColor: colors.border }]} />
-      )}
-    </TouchableOpacity>
-  );
-
-  const renderSectionHeader = ({ section }: { section: SectionData }) => (
-    <View style={[styles.sectionHeader, { backgroundColor: colors.background }]}>
-      <View style={[styles.sectionDot, { backgroundColor: colors.primary }]} />
-      <Text className="text-sm font-bold text-foreground flex-1" numberOfLines={1}>
-        {section.title}
-      </Text>
-      <Text className="text-xs text-muted">{section.data.length} items</Text>
-    </View>
-  );
-
-  if (isLoading) {
-    return (
-      <ScreenContainer className="items-center justify-center">
-        <Stack.Screen options={{ headerShown: true, title: "Loading..." }} />
-        <ActivityIndicator size="large" color={colors.primary} />
-      </ScreenContainer>
+  const handleActivityPress = (activity: MoodleActivity) => {
+    router.push(
+      `/lesson/${activity.id}?courseId=${courseId}&modType=${activity.modType}&url=${encodeURIComponent(activity.url)}&name=${encodeURIComponent(activity.name)}` as any
     );
-  }
+  };
 
-  const totalLessons = sections.reduce((sum, s) => sum + s.data.length, 0);
-  const completedLessons = sections.reduce(
-    (sum, s) => sum + s.data.filter((l) => l.isCompleted).length,
-    0
-  );
-  const progress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+  const progress = totalActivities > 0 ? Math.round((completedCount / totalActivities) * 100) : 0;
+
+  const renderItem = ({ item }: { item: ListItem }) => {
+    if (item.type === "header") {
+      return (
+        <View style={[styles.sectionHeader, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <View style={styles.sectionHeaderLeft}>
+            <View style={[styles.sectionDot, { backgroundColor: colors.primary }]} />
+            <Text style={[styles.sectionName, { color: colors.foreground }]} numberOfLines={2}>
+              {item.name}
+            </Text>
+          </View>
+          <View style={[styles.countBadge, { backgroundColor: colors.primary + "15" }]}>
+            <Text style={[styles.countText, { color: colors.primary }]}>{item.activityCount}</Text>
+          </View>
+        </View>
+      );
+    }
+
+    const modInfo = MOD_ICONS[item.activity.modType] || { icon: "insert-drive-file", color: "#6B7280", label: item.activity.modType };
+
+    return (
+      <TouchableOpacity
+        onPress={() => handleActivityPress(item.activity)}
+        activeOpacity={0.6}
+        style={[styles.activityRow, { borderColor: colors.border }]}
+      >
+        <View style={[styles.activityIcon, { backgroundColor: modInfo.color + "12" }]}>
+          <MaterialIcons name={modInfo.icon as any} size={20} color={modInfo.color} />
+        </View>
+        <View style={styles.activityInfo}>
+          <Text style={[styles.activityName, { color: colors.foreground }]} numberOfLines={2}>
+            {item.activity.name}
+          </Text>
+          <Text style={[styles.activityType, { color: modInfo.color }]}>{modInfo.label}</Text>
+        </View>
+        {item.isCompleted ? (
+          <MaterialIcons name="check-circle" size={20} color={colors.success} />
+        ) : (
+          <MaterialIcons name="chevron-right" size={20} color={colors.muted} />
+        )}
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <ScreenContainer>
-      <Stack.Screen
-        options={{
-          headerShown: true,
-          title: course?.displayName || "Course",
-          headerBackTitle: "Home",
-        }}
-      />
+      <View style={styles.container}>
+        {/* Top bar */}
+        <View style={[styles.topBar, { borderBottomColor: colors.border }]}>
+          <TouchableOpacity onPress={() => router.back()} activeOpacity={0.6} style={[styles.iconBtn, { backgroundColor: colors.surface }]}>
+            <MaterialIcons name="arrow-back" size={22} color={colors.foreground} />
+          </TouchableOpacity>
+          <View style={styles.topBarTitle}>
+            <Text style={[styles.topBarText, { color: colors.foreground }]} numberOfLines={1}>{courseName || "Course"}</Text>
+          </View>
+          <TouchableOpacity onPress={handleRefresh} disabled={isSyncing} activeOpacity={0.6} style={[styles.iconBtn, { backgroundColor: colors.surface }]}>
+            {isSyncing ? <ActivityIndicator size="small" color={colors.primary} /> : <MaterialIcons name="sync" size={22} color={colors.primary} />}
+          </TouchableOpacity>
+        </View>
 
-      {/* Course Header */}
-      <View style={[styles.header, { borderBottomColor: colors.border }]}>
-        <View style={styles.statsRow}>
-          <View style={styles.statItem}>
-            <Text className="text-2xl font-bold text-foreground">{totalLessons}</Text>
-            <Text className="text-xs text-muted">Total</Text>
+        {/* Progress */}
+        <View style={[styles.progressSummary, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <View style={styles.progressRow}>
+            <Text style={[styles.progressLabel, { color: colors.muted }]}>Progress</Text>
+            <Text style={[styles.progressValue, { color: colors.foreground }]}>{completedCount}/{totalActivities} ({progress}%)</Text>
           </View>
-          <View style={styles.statItem}>
-            <Text className="text-2xl font-bold text-success">{completedLessons}</Text>
-            <Text className="text-xs text-muted">Done</Text>
-          </View>
-          <View style={styles.statItem}>
-            <Text className="text-2xl font-bold text-primary">{progress}%</Text>
-            <Text className="text-xs text-muted">Progress</Text>
+          <View style={[styles.progressBarOuter, { backgroundColor: colors.border }]}>
+            <View style={[styles.progressBarInner, { width: `${progress}%`, backgroundColor: colors.primary }]} />
           </View>
         </View>
-        <View style={[styles.progressBg, { backgroundColor: colors.border }]}>
-          <View
-            style={[styles.progressFill, { backgroundColor: colors.primary, width: `${progress}%` }]}
+
+        {isLoading ? (
+          <View style={styles.center}>
+            <ActivityIndicator size="large" color={colors.primary} />
+            <Text style={[styles.loadingText, { color: colors.muted }]}>Loading course content...</Text>
+          </View>
+        ) : (
+          <FlatList
+            data={items}
+            keyExtractor={(item) => item.key}
+            renderItem={renderItem}
+            contentContainerStyle={styles.list}
+            refreshControl={<RefreshControl refreshing={isSyncing} onRefresh={handleRefresh} tintColor={colors.primary} />}
+            showsVerticalScrollIndicator={false}
           />
-        </View>
+        )}
       </View>
-
-      {/* Lessons */}
-      {sections.length === 0 ? (
-        <View className="flex-1 items-center justify-center px-8">
-          <Text style={styles.emptyIcon}>📚</Text>
-          <Text className="text-lg font-bold text-foreground mb-2">No lessons yet</Text>
-          <Text className="text-sm text-muted text-center">
-            Pull down to sync lessons from the server
-          </Text>
-        </View>
-      ) : (
-        <SectionList
-          sections={sections}
-          keyExtractor={(item) => item.id}
-          renderItem={renderLesson}
-          renderSectionHeader={renderSectionHeader}
-          contentContainerStyle={styles.listContent}
-          showsVerticalScrollIndicator={false}
-          stickySectionHeadersEnabled={false}
-          refreshControl={
-            <RefreshControl
-              refreshing={isRefreshing}
-              onRefresh={handleRefresh}
-              tintColor={colors.primary}
-              colors={[colors.primary]}
-            />
-          }
-        />
-      )}
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  header: { paddingHorizontal: 24, paddingVertical: 16, borderBottomWidth: 1 },
-  statsRow: { flexDirection: "row", justifyContent: "space-around", marginBottom: 12 },
-  statItem: { alignItems: "center" },
-  progressBg: { height: 6, borderRadius: 3, overflow: "hidden" },
-  progressFill: { height: "100%", borderRadius: 3 },
-  sectionHeader: { flexDirection: "row", alignItems: "center", paddingVertical: 12, paddingHorizontal: 4, gap: 8 },
-  sectionDot: { width: 8, height: 8, borderRadius: 4 },
-  lessonCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 14,
-    borderRadius: 14,
-    borderWidth: 1,
-    marginBottom: 8,
-  },
-  lessonIcon: { width: 40, height: 40, borderRadius: 12, alignItems: "center", justifyContent: "center", marginRight: 12 },
-  lessonIconText: { fontSize: 18 },
-  lessonInfo: { flex: 1 },
-  checkCircle: { width: 24, height: 24, borderRadius: 12, alignItems: "center", justifyContent: "center", marginLeft: 8 },
-  checkMark: { color: "#FFFFFF", fontSize: 12, fontWeight: "700" },
-  emptyCircle: { width: 24, height: 24, borderRadius: 12, borderWidth: 2, marginLeft: 8 },
-  listContent: { paddingHorizontal: 24, paddingTop: 8, paddingBottom: 24 },
-  emptyIcon: { fontSize: 64, marginBottom: 16 },
+  container: { flex: 1 },
+  center: { flex: 1, alignItems: "center", justifyContent: "center" },
+  topBar: { flexDirection: "row", alignItems: "center", paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 0.5, gap: 12 },
+  iconBtn: { width: 38, height: 38, borderRadius: 19, alignItems: "center", justifyContent: "center" },
+  topBarTitle: { flex: 1 },
+  topBarText: { fontSize: 17, fontWeight: "600" },
+  progressSummary: { marginHorizontal: 16, marginTop: 12, padding: 14, borderRadius: 12, borderWidth: 0.5 },
+  progressRow: { flexDirection: "row", justifyContent: "space-between", marginBottom: 8 },
+  progressLabel: { fontSize: 13 },
+  progressValue: { fontSize: 13, fontWeight: "600" },
+  progressBarOuter: { height: 6, borderRadius: 3, overflow: "hidden" },
+  progressBarInner: { height: "100%", borderRadius: 3 },
+  list: { paddingBottom: 32 },
+  sectionHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 16, paddingVertical: 14, marginTop: 8, borderBottomWidth: 0.5 },
+  sectionHeaderLeft: { flex: 1, flexDirection: "row", alignItems: "center", gap: 10 },
+  sectionDot: { width: 6, height: 6, borderRadius: 3 },
+  sectionName: { fontSize: 14, fontWeight: "700", flex: 1 },
+  countBadge: { paddingHorizontal: 10, paddingVertical: 3, borderRadius: 10 },
+  countText: { fontSize: 12, fontWeight: "600" },
+  activityRow: { flexDirection: "row", alignItems: "center", paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 0.5, gap: 12 },
+  activityIcon: { width: 40, height: 40, borderRadius: 10, alignItems: "center", justifyContent: "center" },
+  activityInfo: { flex: 1 },
+  activityName: { fontSize: 14, fontWeight: "500", lineHeight: 19, marginBottom: 2 },
+  activityType: { fontSize: 11, fontWeight: "500" },
+  loadingText: { marginTop: 12, fontSize: 14 },
 });

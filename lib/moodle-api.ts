@@ -1,64 +1,73 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getApiBaseUrl } from "@/constants/oauth";
 
-const MOODLE_BASE_URL = "https://nilecenter.online";
-const MOODLE_WS_URL = `${MOODLE_BASE_URL}/webservice/rest/server.php`;
-const MOODLE_LOGIN_URL = `${MOODLE_BASE_URL}/login/token.php`;
-const TOKEN_KEY = "@nile_moodle_token";
+const CREDENTIALS_KEY = "@nile_credentials";
 
 export interface MoodleCourse {
   id: number;
   shortname: string;
   fullname: string;
-  displayname: string;
-  summary: string;
-  progress: number | null;
-  overviewfiles?: { fileurl: string; filename: string }[];
+  url?: string;
+}
+
+export interface MoodleActivity {
+  id: string;
+  name: string;
+  modType: string;
+  url: string;
+  icon?: string;
 }
 
 export interface MoodleSection {
-  id: number;
   name: string;
-  summary: string;
-  visible: number;
-  modules: MoodleModule[];
+  activities: MoodleActivity[];
 }
 
-export interface MoodleModule {
-  id: number;
-  name: string;
-  modname: string;
-  url?: string;
-  description?: string;
-  visible: number;
-  uservisible?: boolean;
-  contents?: MoodleContent[];
+export interface CourseFullData {
+  courseId: number;
+  tabs: string[];
+  intro: MoodleSection;
+  sections: MoodleSection[];
+  totalSections: number;
+  totalActivities: number;
 }
 
-export interface MoodleContent {
+export interface ActivityContent {
   type: string;
-  filename: string;
-  fileurl: string;
-  filesize: number;
-  mimetype?: string;
-  timecreated?: number;
-  timemodified?: number;
-}
-
-export interface MoodleSiteInfo {
-  userid: number;
-  username: string;
-  fullname: string;
-  sitename: string;
+  title: string;
+  html?: string;
+  audioSources?: string[];
+  images?: string[];
+  iframes?: string[];
+  chapters?: { name: string; url: string }[];
+  videoUrl?: string;
+  iframeSrc?: string;
+  vimeoUrl?: string;
+  externalUrl?: string;
+  downloadUrl?: string;
+  description?: string;
+  discussions?: { subject: string; author: string; date: string; content: string }[];
+  status?: string;
+  attemptsHtml?: string;
 }
 
 class MoodleAPI {
-  private token: string | null = null;
+  private username: string | null = null;
+  private password: string | null = null;
+  private fullName: string | null = null;
+
+  private getProxyBaseUrl(): string {
+    return getApiBaseUrl();
+  }
 
   async init(): Promise<boolean> {
     try {
-      const stored = await AsyncStorage.getItem(TOKEN_KEY);
+      const stored = await AsyncStorage.getItem(CREDENTIALS_KEY);
       if (stored) {
-        this.token = stored;
+        const creds = JSON.parse(stored);
+        this.username = creds.username;
+        this.password = creds.password;
+        this.fullName = creds.fullName || null;
         return true;
       }
       return false;
@@ -67,84 +76,107 @@ class MoodleAPI {
     }
   }
 
-  async login(username: string, password: string): Promise<string> {
-    const params = new URLSearchParams({
-      username,
-      password,
-      service: "moodle_mobile_app",
+  async login(username: string, password: string): Promise<{ fullName: string }> {
+    const proxyUrl = `${this.getProxyBaseUrl()}/api/moodle/login`;
+    const response = await fetch(proxyUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
     });
 
-    const response = await fetch(`${MOODLE_LOGIN_URL}?${params.toString()}`);
     const data = await response.json();
-
-    if (data.error) {
-      throw new Error(data.error);
-    }
-    if (!data.token) {
-      throw new Error("Login failed: no token received");
+    if (!response.ok || data.error) {
+      throw new Error(data.error || "Login failed");
     }
 
-    this.token = data.token;
-    await AsyncStorage.setItem(TOKEN_KEY, data.token);
-    return data.token;
+    this.username = username;
+    this.password = password;
+    this.fullName = data.user?.fullName || username;
+
+    await AsyncStorage.setItem(
+      CREDENTIALS_KEY,
+      JSON.stringify({ username, password, fullName: this.fullName })
+    );
+
+    return { fullName: this.fullName || username };
   }
 
   async logout(): Promise<void> {
-    this.token = null;
-    await AsyncStorage.removeItem(TOKEN_KEY);
+    this.username = null;
+    this.password = null;
+    this.fullName = null;
+    await AsyncStorage.removeItem(CREDENTIALS_KEY);
   }
 
   isAuthenticated(): boolean {
-    return this.token !== null;
+    return this.username !== null && this.password !== null;
   }
 
-  private async callWS<T>(wsfunction: string, params: Record<string, string | number> = {}): Promise<T> {
-    if (!this.token) {
-      throw new Error("Not authenticated");
-    }
+  getFullName(): string {
+    return this.fullName || this.username || "Student";
+  }
 
-    const urlParams = new URLSearchParams({
-      wstoken: this.token,
-      wsfunction,
-      moodlewsrestformat: "json",
+  getUsername(): string {
+    return this.username || "";
+  }
+
+  async getUserCourses(): Promise<MoodleCourse[]> {
+    if (!this.username || !this.password) throw new Error("Not authenticated");
+
+    const response = await fetch(`${this.getProxyBaseUrl()}/api/moodle/courses`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: this.username, password: this.password }),
     });
 
-    for (const [key, value] of Object.entries(params)) {
-      urlParams.append(key, String(value));
-    }
-
-    const response = await fetch(`${MOODLE_WS_URL}?${urlParams.toString()}`);
     const data = await response.json();
+    if (data.error) throw new Error(data.error);
 
-    if (data.exception) {
-      throw new Error(data.message || data.exception);
-    }
-
-    return data as T;
+    return (data.courses || []).map((c: any) => ({
+      id: c.id,
+      shortname: c.shortname || c.fullname,
+      fullname: c.fullname,
+      url: c.url,
+    }));
   }
 
-  async getSiteInfo(): Promise<MoodleSiteInfo> {
-    return this.callWS<MoodleSiteInfo>("core_webservice_get_site_info");
-  }
+  async getCourseFull(courseId: number): Promise<CourseFullData> {
+    if (!this.username || !this.password) throw new Error("Not authenticated");
 
-  async getUserCourses(userId?: number): Promise<MoodleCourse[]> {
-    const params: Record<string, string | number> = {};
-    if (userId) {
-      params.userid = userId;
-    }
-    return this.callWS<MoodleCourse[]>("core_enrol_get_users_courses", params);
-  }
-
-  async getCourseContents(courseId: number): Promise<MoodleSection[]> {
-    return this.callWS<MoodleSection[]>("core_course_get_contents", {
-      courseid: courseId,
+    const response = await fetch(`${this.getProxyBaseUrl()}/api/moodle/course-full`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: this.username, password: this.password, courseId }),
     });
+
+    const data = await response.json();
+    if (data.error) throw new Error(data.error);
+    return data;
   }
 
-  getFileUrl(fileUrl: string): string {
-    if (!this.token) return fileUrl;
-    const separator = fileUrl.includes("?") ? "&" : "?";
-    return `${fileUrl}${separator}token=${this.token}`;
+  async getActivityContent(activityUrl: string, modType: string): Promise<ActivityContent> {
+    if (!this.username || !this.password) throw new Error("Not authenticated");
+
+    const response = await fetch(`${this.getProxyBaseUrl()}/api/moodle/activity-content`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: this.username,
+        password: this.password,
+        activityUrl,
+        modType,
+      }),
+    });
+
+    const data = await response.json();
+    if (data.error) throw new Error(data.error);
+    return data;
+  }
+
+  getProxyMediaUrl(url: string): string {
+    if (!url) return "";
+    const base = this.getProxyBaseUrl();
+    return `${base}/api/moodle/proxy-media?url=${encodeURIComponent(url)}&username=${encodeURIComponent(this.username || "")}&password=${encodeURIComponent(this.password || "")}`;
   }
 }
 
