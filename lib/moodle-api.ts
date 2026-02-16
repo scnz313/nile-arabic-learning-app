@@ -9,6 +9,9 @@ export interface MoodleCourse {
   fullname: string;
   url?: string;
   hidden?: boolean;
+  totalSections?: number;
+  totalActivities?: number;
+  completedActivities?: number;
 }
 
 export interface MoodleActivity {

@@ -17,6 +17,7 @@ import { storageService } from "@/lib/storage";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Image } from "expo-image";
 import * as WebBrowser from "expo-web-browser";
+import { VideoView, useVideoPlayer } from "expo-video";
 
 const MOD_ICONS: Record<string, { icon: string; color: string; label: string }> = {
   page: { icon: "description", color: "#0C6478", label: "Page" },
@@ -418,21 +419,23 @@ export default function LessonScreen() {
                 </View>
               </View>
             ) : (
-              <TouchableOpacity
-                onPress={() => {
-                  if (videoUrl) WebBrowser.openBrowserAsync(videoUrl);
-                }}
-                activeOpacity={0.7}
-                style={[styles.videoCard, { backgroundColor: "#DC262608", borderColor: "#DC262625" }]}
-              >
-                <View style={[styles.videoIconBg, { backgroundColor: "#DC262615" }]}>
-                  <MaterialIcons name="play-circle-filled" size={64} color="#DC2626" />
+              <View style={[styles.videoPlayerContainer, { borderColor: colors.border }]}>
+                <VideoView
+                  style={styles.videoPlayer}
+                  player={useVideoPlayer(videoUrl, (player) => {
+                    player.loop = false;
+                  })}
+                  allowsFullscreen
+                  allowsPictureInPicture
+                  contentFit="contain"
+                />
+                <View style={styles.videoInfo}>
+                  <MaterialIcons name="play-circle-filled" size={18} color="#DC2626" />
+                  <Text style={[styles.videoInfoText, { color: colors.foreground }]}>
+                    {content.title || activityName}
+                  </Text>
                 </View>
-                <Text style={[styles.videoTitle, { color: colors.foreground }]}>
-                  {content.title || activityName}
-                </Text>
-                <Text style={[styles.videoSubtitle, { color: colors.muted }]}>Tap to play video</Text>
-              </TouchableOpacity>
+              </View>
             )}
           </View>
         ) : null}
@@ -878,8 +881,8 @@ const styles = StyleSheet.create({
   audioPlayBtn: { width: 44, height: 44, borderRadius: 22, alignItems: "center", justifyContent: "center" },
 
   // Images
-  imageWrap: { marginBottom: 12, borderRadius: 12, overflow: "hidden", alignItems: "center" },
-  contentImage: { height: 600, borderRadius: 12 },
+  imageWrap: { marginBottom: 16, borderRadius: 12, overflow: "hidden", alignItems: "center", backgroundColor: "#F3F4F6" },
+  contentImage: { minHeight: 200, maxHeight: 800, borderRadius: 12 },
 
   // Iframe container
   iframeContainer: { borderRadius: 12, borderWidth: 1, overflow: "hidden", marginBottom: 16 },
@@ -901,6 +904,12 @@ const styles = StyleSheet.create({
   // In-app action button (replaces "Open in Browser")
   inAppBtn: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, paddingHorizontal: 24, paddingVertical: 14, borderRadius: 12, marginTop: 8 },
   inAppBtnText: { color: "#FFF", fontSize: 15, fontWeight: "600" },
+
+  // Video player (in-app)
+  videoPlayerContainer: { borderRadius: 12, borderWidth: 1, overflow: "hidden", marginBottom: 16 },
+  videoPlayer: { width: "100%", height: 240 },
+  videoInfo: { flexDirection: "row", alignItems: "center", gap: 8, padding: 12, backgroundColor: "#F9FAFB" },
+  videoInfoText: { fontSize: 14, fontWeight: "500", flex: 1 },
 
   // Quiz
   quizCard: { alignItems: "center", padding: 24, borderRadius: 16, borderWidth: 1, marginBottom: 16, gap: 10 },
