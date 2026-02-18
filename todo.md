@@ -63,15 +63,15 @@
 ## V4 - Modern UI Redesign & Bug Fixes
 - [x] Research modern learning app UI patterns (Duolingo, Coursera, Khan Academy)
 - [x] Redesign dashboard with modern card layouts
-- [ ] Add smooth animations and transitions
-- [ ] Add loading skeletons for better UX
-- [ ] Redesign course detail screen with proper spacing
-- [ ] Redesign lesson viewer with modern typography
+- [x] Add smooth animations and transitions
+- [x] Add loading skeletons for better UX
+- [x] Redesign course detail screen with proper spacing
+- [x] Redesign lesson viewer with modern typography
 - [x] Fix video playback — videos must play in-app with native player
 - [x] Fix image visibility — proper sizing, aspect ratios, loading states
-- [ ] Add haptic feedback throughout
-- [ ] Make all interactions smooth and responsive
-- [ ] Add pull-to-refresh animations
+- [x] Add haptic feedback throughout
+- [x] Make all interactions smooth and responsive
+- [x] Add pull-to-refresh animations
 - [ ] Add empty states and error states
 - [ ] Improve color palette and contrast
-- [ ] Add proper loading indicators
+- [x] Add proper loading indicators

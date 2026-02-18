@@ -16,6 +16,7 @@ import { storageService } from "@/lib/storage";
 import { syncService } from "@/lib/sync-service";
 import { type MoodleActivity } from "@/lib/moodle-api";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import * as Haptics from "expo-haptics";
 
 const MOD_ICONS: Record<string, { icon: string; color: string; label: string }> = {
   page: { icon: "description", color: "#0C6478", label: "Page" },
@@ -103,6 +104,7 @@ export default function CourseDetailScreen() {
   const handleRefresh = async () => {
     try {
       setIsSyncing(true);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       await syncService.syncSingleCourse(courseId);
       await loadCourseData();
     } catch (err) {
@@ -113,6 +115,7 @@ export default function CourseDetailScreen() {
   };
 
   const handleActivityPress = (activity: MoodleActivity) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     router.push(
       `/lesson/${activity.id}?courseId=${courseId}&modType=${activity.modType}&url=${encodeURIComponent(activity.url)}&name=${encodeURIComponent(activity.name)}` as any
     );
@@ -123,7 +126,7 @@ export default function CourseDetailScreen() {
   const renderItem = ({ item }: { item: ListItem }) => {
     if (item.type === "header") {
       return (
-        <View style={[styles.sectionHeader, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+        <View style={[styles.sectionHeader, { backgroundColor: colors.surface }]}>
           <View style={styles.sectionHeaderLeft}>
             <View style={[styles.sectionDot, { backgroundColor: colors.primary }]} />
             <Text style={[styles.sectionName, { color: colors.foreground }]} numberOfLines={2}>
@@ -142,11 +145,11 @@ export default function CourseDetailScreen() {
     return (
       <TouchableOpacity
         onPress={() => handleActivityPress(item.activity)}
-        activeOpacity={0.6}
-        style={[styles.activityRow, { borderColor: colors.border }]}
+        activeOpacity={0.7}
+        style={[styles.activityCard, { backgroundColor: colors.surface }]}
       >
-        <View style={[styles.activityIcon, { backgroundColor: modInfo.color + "12" }]}>
-          <MaterialIcons name={modInfo.icon as any} size={20} color={modInfo.color} />
+        <View style={[styles.activityIcon, { backgroundColor: modInfo.color + "15" }]}>
+          <MaterialIcons name={modInfo.icon as any} size={24} color={modInfo.color} />
         </View>
         <View style={styles.activityInfo}>
           <Text style={[styles.activityName, { color: colors.foreground }]} numberOfLines={2}>
@@ -155,39 +158,56 @@ export default function CourseDetailScreen() {
           <Text style={[styles.activityType, { color: modInfo.color }]}>{modInfo.label}</Text>
         </View>
         {item.isCompleted ? (
-          <MaterialIcons name="check-circle" size={20} color={colors.success} />
+          <View style={[styles.completedBadge, { backgroundColor: colors.success + "15" }]}>
+            <MaterialIcons name="check-circle" size={22} color={colors.success} />
+          </View>
         ) : (
-          <MaterialIcons name="chevron-right" size={20} color={colors.muted} />
+          <MaterialIcons name="chevron-right" size={24} color={colors.muted} />
         )}
       </TouchableOpacity>
     );
   };
 
   return (
-    <ScreenContainer>
+    <ScreenContainer className="bg-background">
       <View style={styles.container}>
         {/* Top bar */}
-        <View style={[styles.topBar, { borderBottomColor: colors.border }]}>
-          <TouchableOpacity onPress={() => router.back()} activeOpacity={0.6} style={[styles.iconBtn, { backgroundColor: colors.surface }]}>
-            <MaterialIcons name="arrow-back" size={22} color={colors.foreground} />
+        <View style={[styles.topBar, { backgroundColor: colors.background }]}>
+          <TouchableOpacity 
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              router.back();
+            }} 
+            activeOpacity={0.7} 
+            style={[styles.iconBtn, { backgroundColor: colors.surface }]}
+          >
+            <MaterialIcons name="arrow-back" size={24} color={colors.foreground} />
           </TouchableOpacity>
           <View style={styles.topBarTitle}>
             <Text style={[styles.topBarText, { color: colors.foreground }]} numberOfLines={1}>{courseName || "Course"}</Text>
           </View>
-          <TouchableOpacity onPress={handleRefresh} disabled={isSyncing} activeOpacity={0.6} style={[styles.iconBtn, { backgroundColor: colors.surface }]}>
-            {isSyncing ? <ActivityIndicator size="small" color={colors.primary} /> : <MaterialIcons name="sync" size={22} color={colors.primary} />}
+          <TouchableOpacity 
+            onPress={handleRefresh} 
+            disabled={isSyncing} 
+            activeOpacity={0.7} 
+            style={[styles.iconBtn, { backgroundColor: colors.surface }]}
+          >
+            {isSyncing ? <ActivityIndicator size="small" color={colors.primary} /> : <MaterialIcons name="sync" size={24} color={colors.primary} />}
           </TouchableOpacity>
         </View>
 
-        {/* Progress */}
-        <View style={[styles.progressSummary, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-          <View style={styles.progressRow}>
-            <Text style={[styles.progressLabel, { color: colors.muted }]}>Progress</Text>
-            <Text style={[styles.progressValue, { color: colors.foreground }]}>{completedCount}/{totalActivities} ({progress}%)</Text>
+        {/* Progress Card */}
+        <View style={[styles.progressCard, { backgroundColor: colors.surface }]}>
+          <View style={styles.progressHeader}>
+            <Text style={[styles.progressTitle, { color: colors.foreground }]}>Your Progress</Text>
+            <Text style={[styles.progressPercentage, { color: colors.primary }]}>{progress}%</Text>
           </View>
           <View style={[styles.progressBarOuter, { backgroundColor: colors.border }]}>
             <View style={[styles.progressBarInner, { width: `${progress}%`, backgroundColor: colors.primary }]} />
           </View>
+          <Text style={[styles.progressSubtext, { color: colors.muted }]}>
+            {completedCount} of {totalActivities} activities completed
+          </Text>
         </View>
 
         {isLoading ? (
@@ -213,27 +233,100 @@ export default function CourseDetailScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   center: { flex: 1, alignItems: "center", justifyContent: "center" },
-  topBar: { flexDirection: "row", alignItems: "center", paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 0.5, gap: 12 },
-  iconBtn: { width: 38, height: 38, borderRadius: 19, alignItems: "center", justifyContent: "center" },
+  topBar: { 
+    flexDirection: "row", 
+    alignItems: "center", 
+    paddingHorizontal: 20, 
+    paddingVertical: 16, 
+    gap: 12,
+  },
+  iconBtn: { 
+    width: 44, 
+    height: 44, 
+    borderRadius: 22, 
+    alignItems: "center", 
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
   topBarTitle: { flex: 1 },
-  topBarText: { fontSize: 17, fontWeight: "600" },
-  progressSummary: { marginHorizontal: 16, marginTop: 12, padding: 14, borderRadius: 12, borderWidth: 0.5 },
-  progressRow: { flexDirection: "row", justifyContent: "space-between", marginBottom: 8 },
-  progressLabel: { fontSize: 13 },
-  progressValue: { fontSize: 13, fontWeight: "600" },
-  progressBarOuter: { height: 6, borderRadius: 3, overflow: "hidden" },
-  progressBarInner: { height: "100%", borderRadius: 3 },
-  list: { paddingBottom: 32 },
-  sectionHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 16, paddingVertical: 14, marginTop: 8, borderBottomWidth: 0.5 },
-  sectionHeaderLeft: { flex: 1, flexDirection: "row", alignItems: "center", gap: 10 },
-  sectionDot: { width: 6, height: 6, borderRadius: 3 },
-  sectionName: { fontSize: 14, fontWeight: "700", flex: 1 },
-  countBadge: { paddingHorizontal: 10, paddingVertical: 3, borderRadius: 10 },
-  countText: { fontSize: 12, fontWeight: "600" },
-  activityRow: { flexDirection: "row", alignItems: "center", paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 0.5, gap: 12 },
-  activityIcon: { width: 40, height: 40, borderRadius: 10, alignItems: "center", justifyContent: "center" },
+  topBarText: { fontSize: 18, fontWeight: "700" },
+  progressCard: { 
+    marginHorizontal: 20, 
+    marginTop: 8,
+    marginBottom: 16,
+    padding: 20, 
+    borderRadius: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  progressHeader: { 
+    flexDirection: "row", 
+    justifyContent: "space-between", 
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  progressTitle: { fontSize: 16, fontWeight: "700" },
+  progressPercentage: { fontSize: 24, fontWeight: "800" },
+  progressBarOuter: { 
+    height: 8, 
+    borderRadius: 4, 
+    overflow: "hidden",
+    marginBottom: 8,
+  },
+  progressBarInner: { height: "100%", borderRadius: 4 },
+  progressSubtext: { fontSize: 13, fontWeight: "500" },
+  list: { paddingHorizontal: 20, paddingBottom: 32 },
+  sectionHeader: { 
+    flexDirection: "row", 
+    alignItems: "center", 
+    justifyContent: "space-between", 
+    paddingHorizontal: 16, 
+    paddingVertical: 16, 
+    marginTop: 12,
+    marginBottom: 8,
+    borderRadius: 12,
+  },
+  sectionHeaderLeft: { flex: 1, flexDirection: "row", alignItems: "center", gap: 12 },
+  sectionDot: { width: 8, height: 8, borderRadius: 4 },
+  sectionName: { fontSize: 15, fontWeight: "700", flex: 1 },
+  countBadge: { paddingHorizontal: 12, paddingVertical: 4, borderRadius: 12 },
+  countText: { fontSize: 13, fontWeight: "700" },
+  activityCard: { 
+    flexDirection: "row", 
+    alignItems: "center", 
+    padding: 16, 
+    marginBottom: 12,
+    borderRadius: 16,
+    gap: 14,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  activityIcon: { 
+    width: 48, 
+    height: 48, 
+    borderRadius: 14, 
+    alignItems: "center", 
+    justifyContent: "center",
+  },
   activityInfo: { flex: 1 },
-  activityName: { fontSize: 14, fontWeight: "500", lineHeight: 19, marginBottom: 2 },
-  activityType: { fontSize: 11, fontWeight: "500" },
+  activityName: { fontSize: 15, fontWeight: "600", lineHeight: 20, marginBottom: 4 },
+  activityType: { fontSize: 12, fontWeight: "600" },
+  completedBadge: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   loadingText: { marginTop: 12, fontSize: 14 },
 });

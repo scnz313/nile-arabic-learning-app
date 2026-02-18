@@ -18,6 +18,8 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Image } from "expo-image";
 import * as WebBrowser from "expo-web-browser";
 import { VideoView, useVideoPlayer } from "expo-video";
+import * as Haptics from "expo-haptics";
+import { LoadingSkeleton } from "@/components/loading-skeleton";
 
 const MOD_ICONS: Record<string, { icon: string; color: string; label: string }> = {
   page: { icon: "description", color: "#0C6478", label: "Page" },
@@ -40,6 +42,7 @@ function AudioPlayerCard({ src, colors, proxyMedia }: { src: string; colors: any
   const [audioRef, setAudioRef] = useState<HTMLAudioElement | null>(null);
 
   const togglePlay = useCallback(() => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     if (Platform.OS === "web") {
       if (!audioRef) {
         const audio = new Audio(proxyMedia(src));
@@ -134,7 +137,10 @@ function InAppIframe({ src, colors }: { src: string; colors: any }) {
   // Native: open in-app browser
   return (
     <TouchableOpacity
-      onPress={() => WebBrowser.openBrowserAsync(src)}
+      onPress={() => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        WebBrowser.openBrowserAsync(src);
+      }}
       activeOpacity={0.7}
       style={[styles.iframeContainer, { borderColor: colors.border }]}
     >
@@ -317,6 +323,8 @@ export default function LessonScreen() {
                   source={{ uri: proxyMedia(img) }}
                   style={[styles.contentImage, { width: width - 32 }]}
                   contentFit="contain"
+                  placeholder={{ blurhash: "L6PZfSi_.AyE_3t7t7R**0o#DgR4" }}
+                  transition={200}
                 />
               </View>
             ))}
@@ -767,11 +775,14 @@ export default function LessonScreen() {
         {/* Header */}
         <View style={[styles.topBar, { borderBottomColor: colors.border }]}>
           <TouchableOpacity
-            onPress={() => router.back()}
-            activeOpacity={0.6}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              router.back();
+            }}
+            activeOpacity={0.7}
             style={[styles.iconBtn, { backgroundColor: colors.surface }]}
           >
-            <MaterialIcons name="arrow-back" size={22} color={colors.foreground} />
+            <MaterialIcons name="arrow-back" size={24} color={colors.foreground} />
           </TouchableOpacity>
           <View style={styles.topBarTitle}>
             <Text style={[styles.topBarText, { color: colors.foreground }]} numberOfLines={1}>
@@ -830,7 +841,10 @@ export default function LessonScreen() {
                 </View>
               ) : (
                 <TouchableOpacity
-                  onPress={handleMarkComplete}
+                  onPress={() => {
+                    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+                    handleMarkComplete();
+                  }}
                   activeOpacity={0.7}
                   style={[styles.completeBtn, { backgroundColor: colors.success }]}
                 >
@@ -849,24 +863,55 @@ export default function LessonScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 32 },
-  topBar: { flexDirection: "row", alignItems: "center", paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 0.5, gap: 12 },
-  iconBtn: { width: 38, height: 38, borderRadius: 19, alignItems: "center", justifyContent: "center" },
+  topBar: { 
+    flexDirection: "row", 
+    alignItems: "center", 
+    paddingHorizontal: 20, 
+    paddingVertical: 16, 
+    borderBottomWidth: 0.5, 
+    gap: 12,
+  },
+  iconBtn: { 
+    width: 44, 
+    height: 44, 
+    borderRadius: 22, 
+    alignItems: "center", 
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
   topBarTitle: { flex: 1 },
-  topBarText: { fontSize: 16, fontWeight: "600" },
+  topBarText: { fontSize: 17, fontWeight: "700" },
   topBarMeta: { flexDirection: "row", marginTop: 4 },
   typeBadge: { flexDirection: "row", alignItems: "center", gap: 4, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6 },
   typeBadgeText: { fontSize: 11, fontWeight: "600" },
-  scrollContent: { padding: 16, paddingBottom: 40 },
+  scrollContent: { padding: 20, paddingBottom: 40 },
   loadingText: { marginTop: 12, fontSize: 14 },
   errorText: { marginTop: 12, fontSize: 14, textAlign: "center" },
   retryBtn: { marginTop: 16, paddingHorizontal: 24, paddingVertical: 10, borderRadius: 8 },
   retryText: { color: "#FFF", fontWeight: "600" },
 
   // Title card
-  titleCard: { flexDirection: "row", alignItems: "center", padding: 16, borderRadius: 14, borderWidth: 0.5, marginBottom: 16, gap: 14 },
-  titleIconCircle: { width: 48, height: 48, borderRadius: 14, alignItems: "center", justifyContent: "center" },
+  titleCard: { 
+    flexDirection: "row", 
+    alignItems: "center", 
+    padding: 20, 
+    borderRadius: 20, 
+    borderWidth: 0.5, 
+    marginBottom: 20, 
+    gap: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  titleIconCircle: { width: 56, height: 56, borderRadius: 16, alignItems: "center", justifyContent: "center" },
   titleInfo: { flex: 1 },
-  titleText: { fontSize: 17, fontWeight: "700", writingDirection: "rtl" },
+  titleText: { fontSize: 19, fontWeight: "800", writingDirection: "rtl", lineHeight: 26 },
 
   // Section blocks
   sectionBlock: { marginBottom: 16 },
@@ -943,9 +988,19 @@ const styles = StyleSheet.create({
   chapterTitle: { fontSize: 16, fontWeight: "700", marginBottom: 12, writingDirection: "rtl", textAlign: "right" },
 
   // HTML content
-  htmlCard: { padding: 16, borderRadius: 12, borderWidth: 0.5, marginBottom: 16 },
-  htmlHeading: { fontSize: 18, fontWeight: "700", marginTop: 12, marginBottom: 8, writingDirection: "rtl", textAlign: "right" },
-  htmlParagraph: { fontSize: 15, lineHeight: 26, marginBottom: 8, writingDirection: "rtl", textAlign: "right" },
+  htmlCard: { 
+    padding: 20, 
+    borderRadius: 16, 
+    borderWidth: 0.5, 
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  htmlHeading: { fontSize: 20, fontWeight: "800", marginTop: 16, marginBottom: 12, writingDirection: "rtl", textAlign: "right", lineHeight: 28 },
+  htmlParagraph: { fontSize: 16, lineHeight: 28, marginBottom: 12, writingDirection: "rtl", textAlign: "right" },
   htmlListItem: { flexDirection: "row", gap: 8, marginBottom: 4, paddingRight: 4 },
   htmlBullet: { fontSize: 16, fontWeight: "700", lineHeight: 26 },
   htmlListText: { flex: 1, fontSize: 15, lineHeight: 26, writingDirection: "rtl", textAlign: "right" },
