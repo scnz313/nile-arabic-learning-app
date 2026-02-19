@@ -20,6 +20,11 @@ import * as WebBrowser from "expo-web-browser";
 import { VideoView, useVideoPlayer } from "expo-video";
 import * as Haptics from "expo-haptics";
 import { LoadingSkeleton } from "@/components/loading-skeleton";
+import { TextInput } from "react-native";
+import { bookmarksService } from "@/lib/bookmarks-service";
+import { notesService, type Note } from "@/lib/notes-service";
+import { progressService } from "@/lib/progress-service";
+import { settingsService } from "@/lib/settings-service";
 
 const MOD_ICONS: Record<string, { icon: string; color: string; label: string }> = {
   page: { icon: "description", color: "#0C6478", label: "Page" },
@@ -250,11 +255,61 @@ export default function LessonScreen() {
   const [error, setError] = useState("");
   const [isCompleted, setIsCompleted] = useState(false);
   const [selectedChapter, setSelectedChapter] = useState(0);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [newNote, setNewNote] = useState("");
+  const [showNotes, setShowNotes] = useState(false);
 
   useEffect(() => {
     loadContent();
     checkCompletion();
+    checkBookmark();
+    loadNotes();
   }, [activityId]);
+
+  const checkBookmark = async () => {
+    const bookmarked = await bookmarksService.isBookmarked(courseId, parseInt(activityId));
+    setIsBookmarked(bookmarked);
+  };
+
+  const loadNotes = async () => {
+    const activityNotes = await notesService.getNotes(courseId, parseInt(activityId));
+    setNotes(activityNotes);
+  };
+
+  const toggleBookmark = async () => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    if (isBookmarked) {
+      await bookmarksService.removeBookmark(courseId, parseInt(activityId));
+      setIsBookmarked(false);
+    } else {
+      await bookmarksService.addBookmark({
+        courseId,
+        activityId: parseInt(activityId),
+        activityName,
+        courseName: `Course ${courseId}`,
+      });
+      setIsBookmarked(true);
+    }
+  };
+
+  const handleAddNote = async () => {
+    if (newNote.trim()) {
+      await notesService.addNote(courseId, parseInt(activityId), newNote.trim());
+      setNewNote("");
+      await loadNotes();
+      if (Platform.OS !== "web") {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      }
+    }
+  };
+
+  const handleDeleteNote = async (noteId: string) => {
+    await notesService.deleteNote(noteId);
+    await loadNotes();
+  };
 
   const checkCompletion = async () => {
     const completed = await storageService.getCompletedActivities(courseId);
@@ -292,6 +347,7 @@ export default function LessonScreen() {
 
   const handleMarkComplete = async () => {
     await storageService.markActivityComplete(courseId, activityId);
+    await progressService.updateCourseProgress(courseId, parseInt(activityId), 100);
     setIsCompleted(true);
   };
 
@@ -795,6 +851,13 @@ export default function LessonScreen() {
               </View>
             </View>
           </View>
+          <TouchableOpacity
+            onPress={toggleBookmark}
+            activeOpacity={0.7}
+            style={[styles.iconBtn, { backgroundColor: colors.surface, marginLeft: 8 }]}
+          >
+            <MaterialIcons name={isBookmarked ? "bookmark" : "bookmark-border"} size={24} color={isBookmarked ? colors.primary : colors.foreground} />
+          </TouchableOpacity>
         </View>
 
         {/* Content */}
@@ -851,6 +914,66 @@ export default function LessonScreen() {
                   <MaterialIcons name="check" size={20} color="#FFF" />
                   <Text style={styles.completeBtnText}>Mark as Complete</Text>
                 </TouchableOpacity>
+              )}
+            </View>
+
+            {/* Notes Section */}
+            <View style={[styles.notesSection, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+              <TouchableOpacity
+                onPress={() => setShowNotes(!showNotes)}
+                activeOpacity={0.7}
+                style={styles.notesHeader}
+              >
+                <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+                  <MaterialIcons name="notes" size={20} color={colors.primary} />
+                  <Text style={[styles.notesTitle, { color: colors.foreground }]}>Notes ({notes.length})</Text>
+                </View>
+                <MaterialIcons name={showNotes ? "expand-less" : "expand-more"} size={24} color={colors.muted} />
+              </TouchableOpacity>
+
+              {showNotes && (
+                <View style={styles.notesContent}>
+                  {/* Add Note Input */}
+                  <View style={styles.addNoteContainer}>
+                    <TextInput
+                      value={newNote}
+                      onChangeText={setNewNote}
+                      placeholder="Add a note..."
+                      placeholderTextColor={colors.muted}
+                      multiline
+                      style={[styles.noteInput, { color: colors.foreground, borderColor: colors.border }]}
+                    />
+                    <TouchableOpacity
+                      onPress={handleAddNote}
+                      disabled={!newNote.trim()}
+                      activeOpacity={0.7}
+                      style={[styles.addNoteBtn, { backgroundColor: newNote.trim() ? colors.primary : colors.border }]}
+                    >
+                      <MaterialIcons name="add" size={20} color="#FFF" />
+                    </TouchableOpacity>
+                  </View>
+
+                  {/* Notes List */}
+                  {notes.length === 0 ? (
+                    <Text style={[styles.emptyNotes, { color: colors.muted }]}>No notes yet</Text>
+                  ) : (
+                    <View style={styles.notesList}>
+                      {notes.map((note) => (
+                        <View key={note.id} style={[styles.noteCard, { backgroundColor: colors.background, borderColor: colors.border }]}>
+                          <Text style={[styles.noteContent, { color: colors.foreground }]}>{note.content}</Text>
+                          <View style={styles.noteFooter}>
+                            <Text style={[styles.noteDate, { color: colors.muted }]}>
+                              {new Date(note.timestamp).toLocaleDateString()}
+                            </Text>
+                            <TouchableOpacity onPress={() => handleDeleteNote(note.id)} activeOpacity={0.7}>
+                              <MaterialIcons name="delete-outline" size={18} color={colors.error} />
+                            </TouchableOpacity>
+                          </View>
+                        </View>
+                      ))}
+                    </View>
+                  )}
+                </View>
               )}
             </View>
           </ScrollView>
@@ -1013,4 +1136,19 @@ const styles = StyleSheet.create({
   completedLabel: { fontSize: 15, fontWeight: "600" },
   completeBtn: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, paddingVertical: 14, borderRadius: 12 },
   completeBtnText: { color: "#FFF", fontSize: 15, fontWeight: "600" },
+
+  // Notes
+  notesSection: { marginTop: 20, borderRadius: 16, borderWidth: 1, overflow: "hidden" },
+  notesHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: 16 },
+  notesTitle: { fontSize: 16, fontWeight: "600" },
+  notesContent: { paddingHorizontal: 16, paddingBottom: 16 },
+  addNoteContainer: { flexDirection: "row", gap: 8, marginBottom: 12 },
+  noteInput: { flex: 1, borderWidth: 1, borderRadius: 10, padding: 12, fontSize: 14, minHeight: 60, textAlignVertical: "top" },
+  addNoteBtn: { width: 44, height: 44, borderRadius: 22, alignItems: "center", justifyContent: "center" },
+  emptyNotes: { textAlign: "center", padding: 20, fontSize: 14 },
+  notesList: { gap: 8 },
+  noteCard: { padding: 12, borderRadius: 10, borderWidth: 1 },
+  noteContent: { fontSize: 14, lineHeight: 20, marginBottom: 8 },
+  noteFooter: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  noteDate: { fontSize: 12 },
 });

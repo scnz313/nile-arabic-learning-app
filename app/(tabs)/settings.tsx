@@ -14,6 +14,7 @@ import { ScreenContainer } from "@/components/screen-container";
 import { useColors } from "@/hooks/use-colors";
 import { useAuthContext } from "@/lib/auth-context";
 import { storageService, type UserSettings } from "@/lib/storage";
+import { settingsService, type AppSettings } from "@/lib/settings-service";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 function confirmAction(title: string, message: string, onConfirm: () => void) {
@@ -37,6 +38,7 @@ export default function SettingsScreen() {
     autoSync: true,
     theme: "auto",
   });
+  const [appSettings, setAppSettings] = useState<AppSettings | null>(null);
   const [lastSync, setLastSync] = useState<string>("");
 
   useEffect(() => {
@@ -46,6 +48,8 @@ export default function SettingsScreen() {
   const loadSettings = async () => {
     const userSettings = await storageService.getUserSettings();
     setSettings(userSettings);
+    const appSetts = await settingsService.getSettings();
+    setAppSettings(appSetts);
     const syncTime = await storageService.getLastSyncTime();
     if (syncTime) setLastSync(new Date(syncTime).toLocaleString());
   };
@@ -54,6 +58,11 @@ export default function SettingsScreen() {
     const updated = { ...settings, [key]: value };
     setSettings(updated);
     await storageService.setUserSettings({ [key]: value });
+  };
+
+  const updateAppSetting = async (key: keyof AppSettings, value: any) => {
+    await settingsService.updateSettings({ [key]: value });
+    setAppSettings((prev) => (prev ? { ...prev, [key]: value } : null));
   };
 
   const handleLogout = () => {
@@ -127,6 +136,71 @@ export default function SettingsScreen() {
                 <Text style={[styles.settingSubtitle, { color: colors.muted }]}>{lastSync || "Never"}</Text>
               </View>
               <MaterialIcons name="sync" size={20} color={colors.muted} />
+            </View>
+          </View>
+        </View>
+
+        {/* Display Settings */}
+        <View style={styles.sectionContainer}>
+          <Text style={[styles.sectionLabel, { color: colors.muted }]}>DISPLAY</Text>
+          <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <View style={[styles.settingRow, { borderBottomColor: colors.border }]}>
+              <View style={styles.settingInfo}>
+                <Text style={[styles.settingLabelText, { color: colors.foreground }]}>Font Size</Text>
+                <View style={{ flexDirection: "row", gap: 8, marginTop: 8 }}>
+                  {["small", "medium", "large"].map((size) => (
+                    <TouchableOpacity
+                      key={size}
+                      onPress={() => updateAppSetting("fontSize", size)}
+                      style={{
+                        paddingHorizontal: 16,
+                        paddingVertical: 8,
+                        borderRadius: 8,
+                        borderWidth: 2,
+                        borderColor: appSettings?.fontSize === size ? colors.primary : colors.border,
+                        backgroundColor: appSettings?.fontSize === size ? colors.primary : "transparent",
+                      }}
+                    >
+                      <Text style={{ color: appSettings?.fontSize === size ? "#FFFFFF" : colors.foreground, fontWeight: "600", textTransform: "capitalize" }}>{size}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+            </View>
+            <View style={[styles.settingRow, { borderBottomColor: colors.border }]}>
+              <View style={styles.settingInfo}>
+                <Text style={[styles.settingLabelText, { color: colors.foreground }]}>Show Diacritics</Text>
+                <Text style={[styles.settingSubtitle, { color: colors.muted }]}>Display Arabic vowel marks</Text>
+              </View>
+              <Switch
+                value={appSettings?.showDiacritics ?? true}
+                onValueChange={(v) => updateAppSetting("showDiacritics", v)}
+                trackColor={{ false: colors.border, true: colors.primary }}
+                thumbColor="#FFFFFF"
+              />
+            </View>
+            <View style={[styles.settingRow, { borderBottomWidth: 0 }]}>
+              <View style={styles.settingInfo}>
+                <Text style={[styles.settingLabelText, { color: colors.foreground }]}>Audio Playback Speed</Text>
+                <View style={{ flexDirection: "row", gap: 8, marginTop: 8, flexWrap: "wrap" }}>
+                  {[0.5, 0.75, 1.0, 1.25, 1.5, 2.0].map((speed) => (
+                    <TouchableOpacity
+                      key={speed}
+                      onPress={() => updateAppSetting("audioPlaybackSpeed", speed)}
+                      style={{
+                        paddingHorizontal: 12,
+                        paddingVertical: 6,
+                        borderRadius: 8,
+                        borderWidth: 2,
+                        borderColor: appSettings?.audioPlaybackSpeed === speed ? colors.primary : colors.border,
+                        backgroundColor: appSettings?.audioPlaybackSpeed === speed ? colors.primary : "transparent",
+                      }}
+                    >
+                      <Text style={{ color: appSettings?.audioPlaybackSpeed === speed ? "#FFFFFF" : colors.foreground, fontWeight: "600" }}>{speed}x</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
             </View>
           </View>
         </View>

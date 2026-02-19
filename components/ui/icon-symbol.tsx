@@ -30,6 +30,8 @@ const MAPPING = {
   "folder.fill": "folder",
   "video.fill": "videocam",
   "globe": "language",
+  "bookmark.fill": "bookmark",
+  "chart.bar.fill": "bar-chart",
 } as IconMapping;
 
 export function IconSymbol({

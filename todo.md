@@ -75,3 +75,26 @@
 - [ ] Add empty states and error states
 - [ ] Improve color palette and contrast
 - [x] Add proper loading indicators
+
+## Course Enrollment Investigation
+- [ ] Investigate Moodle course catalog and available courses
+- [ ] Test self-enrollment endpoints
+- [ ] Check for guest access options
+- [ ] Find enrollment keys or automatic enrollment methods
+- [ ] Implement bulk enrollment feature in app
+- [ ] Update sync service to discover and enroll in new courses automatically
+
+## V5 - Comprehensive Learning Features
+- [x] Flashcard system for vocabulary practice (service created)
+- [ ] Quiz mode with multiple choice questions
+- [x] Progress tracking with statistics and charts
+- [x] Bookmarking favorite lessons
+- [x] Note-taking within lessons
+- [ ] Search functionality across all courses
+- [x] Audio playback speed control (in settings)
+- [ ] Repeat/loop audio sections
+- [ ] Offline download manager for lessons
+- [ ] Dark mode toggle
+- [x] Font size adjustment
+- [x] Arabic text display options (with/without diacritics)
+- [ ] Custom study schedules
