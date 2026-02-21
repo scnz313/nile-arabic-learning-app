@@ -25,6 +25,7 @@ import { bookmarksService } from "@/lib/bookmarks-service";
 import { notesService, type Note } from "@/lib/notes-service";
 import { progressService } from "@/lib/progress-service";
 import { settingsService } from "@/lib/settings-service";
+import { downloadManager } from "@/lib/download-manager";
 
 const MOD_ICONS: Record<string, { icon: string; color: string; label: string }> = {
   page: { icon: "description", color: "#0C6478", label: "Page" },
@@ -259,13 +260,21 @@ export default function LessonScreen() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [newNote, setNewNote] = useState("");
   const [showNotes, setShowNotes] = useState(false);
+  const [isDownloaded, setIsDownloaded] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   useEffect(() => {
     loadContent();
     checkCompletion();
     checkBookmark();
     loadNotes();
+    checkDownload();
   }, [activityId]);
+
+  const checkDownload = async () => {
+    const downloaded = await downloadManager.isDownloaded(activityId);
+    setIsDownloaded(downloaded);
+  };
 
   const checkBookmark = async () => {
     const bookmarked = await bookmarksService.isBookmarked(courseId, parseInt(activityId));
@@ -309,6 +318,54 @@ export default function LessonScreen() {
   const handleDeleteNote = async (noteId: string) => {
     await notesService.deleteNote(noteId);
     await loadNotes();
+  };
+
+  const handleDownload = async () => {
+    if (isDownloaded || isDownloading || !content) return;
+
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    }
+
+    setIsDownloading(true);
+    try {
+      await downloadManager.downloadLesson(
+        activityId,
+        courseId,
+        activityName,
+        `Course ${courseId}`,
+        content
+      );
+      setIsDownloaded(true);
+      if (Platform.OS !== "web") {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      }
+    } catch (error) {
+      console.error("Download error:", error);
+      if (Platform.OS !== "web") {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      }
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  const handleDeleteDownload = async () => {
+    if (!isDownloaded) return;
+
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    }
+
+    try {
+      await downloadManager.deleteDownload(activityId);
+      setIsDownloaded(false);
+      if (Platform.OS !== "web") {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      }
+    } catch (error) {
+      console.error("Delete download error:", error);
+    }
   };
 
   const checkCompletion = async () => {
@@ -851,13 +908,31 @@ export default function LessonScreen() {
               </View>
             </View>
           </View>
-          <TouchableOpacity
-            onPress={toggleBookmark}
-            activeOpacity={0.7}
-            style={[styles.iconBtn, { backgroundColor: colors.surface, marginLeft: 8 }]}
-          >
-            <MaterialIcons name={isBookmarked ? "bookmark" : "bookmark-border"} size={24} color={isBookmarked ? colors.primary : colors.foreground} />
-          </TouchableOpacity>
+          <View style={{ flexDirection: "row", gap: 8 }}>
+            <TouchableOpacity
+              onPress={toggleBookmark}
+              activeOpacity={0.7}
+              style={[styles.iconBtn, { backgroundColor: colors.surface }]}
+            >
+              <MaterialIcons name={isBookmarked ? "bookmark" : "bookmark-border"} size={24} color={isBookmarked ? colors.primary : colors.foreground} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={isDownloaded ? handleDeleteDownload : handleDownload}
+              activeOpacity={0.7}
+              disabled={isDownloading}
+              style={[styles.iconBtn, { backgroundColor: isDownloaded ? colors.success + "15" : colors.surface }]}
+            >
+              {isDownloading ? (
+                <ActivityIndicator size="small" color={colors.primary} />
+              ) : (
+                <MaterialIcons
+                  name={isDownloaded ? "cloud-done" : "cloud-download"}
+                  size={24}
+                  color={isDownloaded ? colors.success : colors.foreground}
+                />
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* Content */}

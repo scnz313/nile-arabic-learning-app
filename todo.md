@@ -98,3 +98,14 @@
 - [x] Font size adjustment
 - [x] Arabic text display options (with/without diacritics)
 - [ ] Custom study schedules
+
+## V6 - Search, Flashcards, and Offline Downloads
+- [x] Add search bar to dashboard
+- [x] Implement search filtering for courses and lessons
+- [x] Create flashcard practice screen
+- [x] Implement spaced repetition algorithm
+- [x] Add flashcard flip animation
+- [x] Build offline download manager service
+- [x] Add download progress indicators
+- [x] Implement offline content viewer
+- [x] Add download/delete buttons to lessons

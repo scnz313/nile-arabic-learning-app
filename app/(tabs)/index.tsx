@@ -1,4 +1,4 @@
-import { ScrollView, Text, View, RefreshControl, Pressable, ActivityIndicator } from "react-native";
+import { ScrollView, Text, View, RefreshControl, Pressable, ActivityIndicator, TextInput, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
@@ -11,10 +11,13 @@ import { syncService } from "@/lib/sync-service";
 import type { MoodleCourse } from "@/lib/moodle-api";
 import { useColors } from "@/hooks/use-colors";
 import { IconSymbol } from "@/components/ui/icon-symbol";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 export default function HomeScreen() {
   const { user } = useAuthContext();
   const [courses, setCourses] = useState<MoodleCourse[]>([]);
+  const [filteredCourses, setFilteredCourses] = useState<MoodleCourse[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [lastSynced, setLastSynced] = useState<string | null>(null);
@@ -24,6 +27,7 @@ export default function HomeScreen() {
     try {
       const cached = await storageService.getCourses();
       setCourses(cached);
+      setFilteredCourses(cached);
       const lastSync = await storageService.getLastSyncTime();
       if (lastSync) {
         setLastSynced(new Date(lastSync).toLocaleString());
@@ -33,6 +37,20 @@ export default function HomeScreen() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    if (!query.trim()) {
+      setFilteredCourses(courses);
+      return;
+    }
+    const lowercaseQuery = query.toLowerCase();
+    const filtered = courses.filter((course) =>
+      course.fullname.toLowerCase().includes(lowercaseQuery) ||
+      course.shortname?.toLowerCase().includes(lowercaseQuery)
+    );
+    setFilteredCourses(filtered);
   };
 
   const handleSync = async () => {
@@ -95,6 +113,60 @@ export default function HomeScreen() {
           )}
         </View>
 
+        {/* Quick Actions */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 20, gap: 12 }}>
+          {/* Search Bar */}
+          <View style={{ flexDirection: "row", alignItems: "center", backgroundColor: colors.surface, borderRadius: 12, paddingHorizontal: 16, paddingVertical: 12, borderWidth: 1, borderColor: colors.border }}>
+            <MaterialIcons name="search" size={20} color={colors.muted} />
+            <TextInput
+              value={searchQuery}
+              onChangeText={handleSearch}
+              placeholder="Search courses..."
+              placeholderTextColor={colors.muted}
+              style={{ flex: 1, marginLeft: 12, fontSize: 15, color: colors.foreground }}
+            />
+            {searchQuery.length > 0 && (
+              <TouchableOpacity onPress={() => handleSearch("")} activeOpacity={0.7}>
+                <MaterialIcons name="close" size={20} color={colors.muted} />
+              </TouchableOpacity>
+            )}
+          </View>
+
+          {/* Flashcards Button */}
+          <TouchableOpacity
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              router.push("/flashcards");
+            }}
+            activeOpacity={0.7}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              backgroundColor: colors.primary,
+              borderRadius: 16,
+              paddingHorizontal: 20,
+              paddingVertical: 16,
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 8,
+              elevation: 3,
+            }}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+              <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: "rgba(255,255,255,0.2)", alignItems: "center", justifyContent: "center" }}>
+                <MaterialIcons name="style" size={22} color="#FFF" />
+              </View>
+              <View>
+                <Text style={{ fontSize: 16, fontWeight: "700", color: "#FFF" }}>Practice Flashcards</Text>
+                <Text style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", marginTop: 2 }}>Review vocabulary</Text>
+              </View>
+            </View>
+            <MaterialIcons name="chevron-right" size={24} color="#FFF" />
+          </TouchableOpacity>
+        </View>
+
         {/* My Courses Section */}
         <View style={{ paddingHorizontal: 20 }}>
           <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
@@ -114,7 +186,7 @@ export default function HomeScreen() {
           </View>
 
           {/* Course Cards */}
-          {courses.length === 0 ? (
+          {filteredCourses.length === 0 ? (
             <View style={{ 
               backgroundColor: colors.surface,
               borderRadius: 20,
@@ -136,7 +208,7 @@ export default function HomeScreen() {
             </View>
           ) : (
             <View style={{ gap: 16 }}>
-              {courses.map((course) => (
+              {filteredCourses.map((course) => (
                 <CourseCard
                   key={course.id}
                   course={course}
