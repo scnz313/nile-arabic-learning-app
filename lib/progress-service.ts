@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { reminderService } from "./reminder-service";
 
 const PROGRESS_KEY = "nile_progress_stats";
 const STUDY_SESSIONS_KEY = "nile_study_sessions";
@@ -89,6 +90,9 @@ class ProgressService {
       
       stats.lastStudyDate = today;
       stats.longestStreak = Math.max(stats.longestStreak, stats.currentStreak);
+
+      // Update reminder service streak
+      await reminderService.updateStreak();
 
       await AsyncStorage.setItem(PROGRESS_KEY, JSON.stringify(stats));
     } catch (error) {

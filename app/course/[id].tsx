@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   StyleSheet,
   RefreshControl,
+  Platform,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useFocusEffect } from "@react-navigation/native";
@@ -210,6 +211,27 @@ export default function CourseDetailScreen() {
           </Text>
         </View>
 
+        {/* Quiz Button */}
+        <TouchableOpacity
+          onPress={() => {
+            if (Platform.OS !== "web") {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+            }
+            router.push(`/quiz/${courseId}` as any);
+          }}
+          activeOpacity={0.7}
+          style={[styles.quizButton, { backgroundColor: colors.success + "15", borderColor: colors.success }]}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+            <MaterialIcons name="quiz" size={24} color={colors.success} />
+            <View style={{ flex: 1 }}>
+              <Text style={[styles.quizButtonTitle, { color: colors.success }]}>Take a Quiz</Text>
+              <Text style={[styles.quizButtonSubtext, { color: colors.muted }]}>Test your knowledge</Text>
+            </View>
+            <MaterialIcons name="chevron-right" size={24} color={colors.success} />
+          </View>
+        </TouchableOpacity>
+
         {isLoading ? (
           <View style={styles.center}>
             <ActivityIndicator size="large" color={colors.primary} />
@@ -329,4 +351,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   loadingText: { marginTop: 12, fontSize: 14 },
+  quizButton: { marginHorizontal: 20, marginBottom: 16, padding: 16, borderRadius: 16, borderWidth: 2, shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 3 },
+  quizButtonTitle: { fontSize: 17, fontWeight: "700" },
+  quizButtonSubtext: { fontSize: 13, marginTop: 2 },
 });

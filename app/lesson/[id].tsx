@@ -26,6 +26,7 @@ import { notesService, type Note } from "@/lib/notes-service";
 import { progressService } from "@/lib/progress-service";
 import { settingsService } from "@/lib/settings-service";
 import { downloadManager } from "@/lib/download-manager";
+import { vocabularyService, type VocabularyWord } from "@/lib/vocabulary-service";
 
 const MOD_ICONS: Record<string, { icon: string; color: string; label: string }> = {
   page: { icon: "description", color: "#0C6478", label: "Page" },
@@ -262,6 +263,9 @@ export default function LessonScreen() {
   const [showNotes, setShowNotes] = useState(false);
   const [isDownloaded, setIsDownloaded] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [vocabularyWords, setVocabularyWords] = useState<VocabularyWord[]>([]);
+  const [isExtractingVocab, setIsExtractingVocab] = useState(false);
+  const [showVocabulary, setShowVocabulary] = useState(false);
 
   useEffect(() => {
     loadContent();
@@ -269,7 +273,13 @@ export default function LessonScreen() {
     checkBookmark();
     loadNotes();
     checkDownload();
+    loadVocabulary();
   }, [activityId]);
+
+  const loadVocabulary = async () => {
+    const words = await vocabularyService.getWordsForLesson(courseId, parseInt(activityId));
+    setVocabularyWords(words);
+  };
 
   const checkDownload = async () => {
     const downloaded = await downloadManager.isDownloaded(activityId);
@@ -365,6 +375,36 @@ export default function LessonScreen() {
       }
     } catch (error) {
       console.error("Delete download error:", error);
+    }
+  };
+
+  const handleExtractVocabulary = async () => {
+    if (!content || isExtractingVocab) return;
+
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    }
+
+    setIsExtractingVocab(true);
+    try {
+      const htmlContent = content.html || "";
+      const extracted = await vocabularyService.extractAndSaveFromLesson(
+        htmlContent,
+        courseId,
+        parseInt(activityId),
+        activityName
+      );
+      
+      await loadVocabulary();
+      setShowVocabulary(true);
+
+      if (Platform.OS !== "web") {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      }
+    } catch (error) {
+      console.error("Vocabulary extraction error:", error);
+    } finally {
+      setIsExtractingVocab(false);
     }
   };
 
@@ -992,6 +1032,57 @@ export default function LessonScreen() {
               )}
             </View>
 
+            {/* Vocabulary Extraction */}
+            <View style={{ marginBottom: 20 }}>
+              <TouchableOpacity
+                onPress={handleExtractVocabulary}
+                disabled={isExtractingVocab}
+                activeOpacity={0.7}
+                style={[styles.vocabBtn, { backgroundColor: colors.primary + "15", borderColor: colors.primary }]}
+              >
+                {isExtractingVocab ? (
+                  <ActivityIndicator size="small" color={colors.primary} />
+                ) : (
+                  <MaterialIcons name="translate" size={20} color={colors.primary} />
+                )}
+                <Text style={[styles.vocabBtnText, { color: colors.primary }]}>
+                  {vocabularyWords.length > 0 ? `View Vocabulary (${vocabularyWords.length})` : "Extract Vocabulary"}
+                </Text>
+              </TouchableOpacity>
+
+              {vocabularyWords.length > 0 && showVocabulary && (
+                <View style={[styles.vocabList, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+                  <View style={styles.vocabListHeader}>
+                    <Text style={[styles.vocabListTitle, { color: colors.foreground }]}>Arabic Words</Text>
+                    <TouchableOpacity onPress={() => setShowVocabulary(false)}>
+                      <MaterialIcons name="close" size={20} color={colors.muted} />
+                    </TouchableOpacity>
+                  </View>
+                  {vocabularyWords.slice(0, 10).map((word) => (
+                    <View key={word.id} style={[styles.vocabWordCard, { borderColor: colors.border }]}>
+                      <Text style={[styles.vocabWord, { color: colors.foreground }]}>{word.word}</Text>
+                      {word.hasFlashcard && (
+                        <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+                          <MaterialIcons name="check-circle" size={14} color={colors.success} />
+                          <Text style={[styles.vocabStatus, { color: colors.success }]}>Flashcard</Text>
+                        </View>
+                      )}
+                    </View>
+                  ))}
+                  {vocabularyWords.length > 10 && (
+                    <TouchableOpacity
+                      onPress={() => router.push("/vocabulary" as any)}
+                      style={styles.viewAllBtn}
+                    >
+                      <Text style={[styles.viewAllText, { color: colors.primary }]}>
+                        View All {vocabularyWords.length} Words →
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              )}
+            </View>
+
             {/* Notes Section */}
             <View style={[styles.notesSection, { backgroundColor: colors.surface, borderColor: colors.border }]}>
               <TouchableOpacity
@@ -1226,4 +1317,16 @@ const styles = StyleSheet.create({
   noteContent: { fontSize: 14, lineHeight: 20, marginBottom: 8 },
   noteFooter: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   noteDate: { fontSize: 12 },
+
+  // Vocabulary
+  vocabBtn: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, paddingVertical: 14, borderRadius: 12, borderWidth: 1 },
+  vocabBtnText: { fontSize: 15, fontWeight: "600" },
+  vocabList: { marginTop: 12, borderRadius: 12, borderWidth: 1, overflow: "hidden" },
+  vocabListHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: 12, borderBottomWidth: 1 },
+  vocabListTitle: { fontSize: 14, fontWeight: "600" },
+  vocabWordCard: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: 12, borderBottomWidth: 0.5 },
+  vocabWord: { fontSize: 18, fontWeight: "600", fontFamily: "System" },
+  vocabStatus: { fontSize: 12, fontWeight: "500" },
+  viewAllBtn: { padding: 12, alignItems: "center" },
+  viewAllText: { fontSize: 14, fontWeight: "600" },
 });

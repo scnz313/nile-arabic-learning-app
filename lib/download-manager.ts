@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as FileSystem from "expo-file-system/legacy";
+import { Platform } from "react-native";
 
 const DOWNLOADS_KEY = "nile_downloads";
 const DOWNLOAD_DIR = `${FileSystem.documentDirectory}offline/`;
@@ -31,6 +32,7 @@ class DownloadManager {
   }
 
   private async ensureDownloadDir() {
+    if (Platform.OS === "web") return; // Skip on web
     const dirInfo = await FileSystem.getInfoAsync(DOWNLOAD_DIR);
     if (!dirInfo.exists) {
       await FileSystem.makeDirectoryAsync(DOWNLOAD_DIR, { intermediates: true });
@@ -73,6 +75,9 @@ class DownloadManager {
     courseName: string,
     content: any
   ): Promise<void> {
+    if (Platform.OS === "web") {
+      throw new Error("Downloads are not supported on web");
+    }
     // Set initial progress
     this.downloadQueue.set(activityId, {
       activityId,

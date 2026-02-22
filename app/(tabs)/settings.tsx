@@ -209,6 +209,19 @@ export default function SettingsScreen() {
         <View style={styles.sectionContainer}>
           <Text style={[styles.sectionLabel, { color: colors.muted }]}>NOTIFICATIONS</Text>
           <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <TouchableOpacity
+              onPress={() => router.push("/reminders" as any)}
+              style={[styles.settingRow, { borderBottomColor: colors.border }]}
+            >
+              <View style={styles.settingInfo}>
+                <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+                  <MaterialIcons name="notifications-active" size={20} color={colors.primary} />
+                  <Text style={[styles.settingLabelText, { color: colors.foreground }]}>Study Reminders</Text>
+                </View>
+                <Text style={[styles.settingSubtitle, { color: colors.muted }]}>Set daily study notifications</Text>
+              </View>
+              <MaterialIcons name="chevron-right" size={24} color={colors.muted} />
+            </TouchableOpacity>
             <View style={[styles.settingRow, { borderBottomWidth: 0 }]}>
               <View style={styles.settingInfo}>
                 <Text style={[styles.settingLabelText, { color: colors.foreground }]}>Push notifications</Text>

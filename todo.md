@@ -109,3 +109,19 @@
 - [x] Add download progress indicators
 - [x] Implement offline content viewer
 - [x] Add download/delete buttons to lessons
+
+## V7 - Vocabulary Extraction, Study Reminders, and Quiz Mode
+- [x] Implement Arabic word extraction from lesson content
+- [x] Create vocabulary service to manage extracted words
+- [x] Add one-tap "Create Flashcard" button for vocabulary
+- [x] Build vocabulary list view in lessons
+- [x] Implement study reminder service with notifications
+- [x] Add reminder settings screen (time, frequency, days)
+- [x] Create notification scheduler for daily reminders
+- [x] Add streak tracking and motivation messages
+- [x] Build quiz mode service with question generation
+- [x] Create quiz screen with multiple choice questions
+- [x] Add true/false question type
+- [x] Add fill-in-the-blank question type
+- [x] Implement quiz scoring and results screen
+- [x] Add quiz history and progress tracking
