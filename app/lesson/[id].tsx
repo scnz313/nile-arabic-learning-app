@@ -27,6 +27,9 @@ import { progressService } from "@/lib/progress-service";
 import { settingsService } from "@/lib/settings-service";
 import { downloadManager } from "@/lib/download-manager";
 import { vocabularyService, type VocabularyWord } from "@/lib/vocabulary-service";
+import { prefetchService } from "@/lib/prefetch-service";
+import { webViewCacheService } from "@/lib/webview-cache-service";
+import { DownloadProgress } from "@/components/download-progress";
 
 const MOD_ICONS: Record<string, { icon: string; color: string; label: string }> = {
   page: { icon: "description", color: "#0C6478", label: "Page" },
@@ -445,6 +448,9 @@ export default function LessonScreen() {
     await storageService.markActivityComplete(courseId, activityId);
     await progressService.updateCourseProgress(courseId, parseInt(activityId), 100);
     setIsCompleted(true);
+    
+    // Prefetch next lesson in background
+    prefetchService.prefetchNextLesson(courseId.toString(), activityId).catch(console.error);
   };
 
   const proxyMedia = (url: string) => moodleAPI.getProxyMediaUrl(url);

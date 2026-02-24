@@ -135,3 +135,18 @@
 - [x] Handle interactive H5P content in-app (WebView with JavaScript enabled)
 - [x] Install react-native-webview package
 - [x] Verify no external browser opens for any content
+
+## V9 - Performance Optimizations (Caching, Progress, Prefetching)
+- [x] Implement WebView caching service
+- [x] Add cache storage management (max 100MB, 7-day expiry)
+- [x] Enable offline access for cached content
+- [x] Add download progress indicator component
+- [x] Show file size estimates for media
+- [x] Add cancel button for downloads
+- [x] Implement content prefetching service
+- [x] Automatically preload next lesson in background (triggered on completion)
+- [x] Add prefetch queue with priority system
+- [x] Integrate prefetching into lesson completion flow
+- [ ] Test caching performance
+- [ ] Test offline access
+- [ ] Test prefetching behavior
