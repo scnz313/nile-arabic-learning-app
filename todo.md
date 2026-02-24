@@ -125,3 +125,13 @@
 - [x] Add fill-in-the-blank question type
 - [x] Implement quiz scoring and results screen
 - [x] Add quiz history and progress tracking
+
+## V8 - Fix In-App Content Display (Critical Bug Fixes)
+- [x] Fix video playback - videos must play in-app, not open browser
+- [x] Remove all WebBrowser.openBrowserAsync calls (replaced with WebView)
+- [x] Replace external links with in-app viewers
+- [x] Add WebView for all content types on native (videos, H5P, quizzes, assignments, forums, URLs)
+- [x] Ensure images display in-app (using expo-image with blurhash)
+- [x] Handle interactive H5P content in-app (WebView with JavaScript enabled)
+- [x] Install react-native-webview package
+- [x] Verify no external browser opens for any content

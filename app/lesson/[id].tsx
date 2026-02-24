@@ -16,7 +16,7 @@ import { moodleAPI, type ActivityContent } from "@/lib/moodle-api";
 import { storageService } from "@/lib/storage";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Image } from "expo-image";
-import * as WebBrowser from "expo-web-browser";
+import WebView from "react-native-webview";
 import { VideoView, useVideoPlayer } from "expo-video";
 import * as Haptics from "expo-haptics";
 import { LoadingSkeleton } from "@/components/loading-skeleton";
@@ -141,25 +141,24 @@ function InAppIframe({ src, colors }: { src: string; colors: any }) {
     );
   }
 
-  // Native: open in-app browser
+  // Native: display in-app with WebView
   return (
-    <TouchableOpacity
-      onPress={() => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        WebBrowser.openBrowserAsync(src);
-      }}
-      activeOpacity={0.7}
-      style={[styles.iframeContainer, { borderColor: colors.border }]}
-    >
-      <View style={[styles.iframePlaceholder, { backgroundColor: colors.primary + "08" }]}>
-        <MaterialIcons name={icon as any} size={48} color={colors.primary} />
+    <View style={[styles.iframeContainer, { borderColor: colors.border }]}>
+      <View style={styles.iframeHeader}>
+        <MaterialIcons name={icon as any} size={18} color={colors.primary} />
         <Text style={[styles.iframeLabel, { color: colors.foreground }]}>{label}</Text>
-        <View style={[styles.iframeOpenBtn, { backgroundColor: colors.primary }]}>
-          <MaterialIcons name="fullscreen" size={18} color="#FFF" />
-          <Text style={styles.iframeOpenBtnText}>View Full Screen</Text>
-        </View>
       </View>
-    </TouchableOpacity>
+      <View style={{ width: iframeWidth, height: iframeHeight, overflow: "hidden", borderRadius: 8 }}>
+        <WebView
+          source={{ uri: src }}
+          style={{ width: iframeWidth, height: iframeHeight }}
+          allowsFullscreenVideo
+          mediaPlaybackRequiresUserAction={false}
+          javaScriptEnabled
+          domStorageEnabled
+        />
+      </View>
+    </View>
   );
 }
 
@@ -630,23 +629,22 @@ export default function LessonScreen() {
             </View>
           </View>
         ) : (
-          <TouchableOpacity
-            onPress={() => WebBrowser.openBrowserAsync(interactiveUrl)}
-            activeOpacity={0.7}
-            style={[styles.interactiveCard, { backgroundColor: "#EA580C08", borderColor: "#EA580C25" }]}
-          >
-            <View style={[styles.videoIconBg, { backgroundColor: "#EA580C15" }]}>
-              <MaterialIcons name="extension" size={56} color="#EA580C" />
+          <View style={[styles.iframeContainer, { borderColor: colors.border }]}>
+            <View style={styles.iframeHeader}>
+              <MaterialIcons name="extension" size={18} color="#EA580C" />
+              <Text style={[styles.iframeLabel, { color: colors.foreground }]}>Interactive Activity</Text>
             </View>
-            <Text style={[styles.videoTitle, { color: colors.foreground }]}>
-              {content.title || activityName}
-            </Text>
-            <Text style={[styles.videoSubtitle, { color: colors.muted }]}>Interactive H5P Activity</Text>
-            <View style={[styles.inAppBtn, { backgroundColor: "#EA580C" }]}>
-              <MaterialIcons name="fullscreen" size={18} color="#FFF" />
-              <Text style={styles.inAppBtnText}>Open Activity</Text>
+            <View style={{ width: width - 32, height: Math.round((width - 32) * 0.75), overflow: "hidden", borderRadius: 8 }}>
+              <WebView
+                source={{ uri: interactiveUrl }}
+                style={{ width: width - 32, height: Math.round((width - 32) * 0.75) }}
+                allowsFullscreenVideo
+                mediaPlaybackRequiresUserAction={false}
+                javaScriptEnabled
+                domStorageEnabled
+              />
             </View>
-          </TouchableOpacity>
+          </View>
         )}
 
         {content.html ? <HtmlContentRenderer html={content.html} colors={colors} /> : null}
@@ -698,14 +696,22 @@ export default function LessonScreen() {
             </View>
           </View>
         ) : (
-          <TouchableOpacity
-            onPress={() => WebBrowser.openBrowserAsync(activityUrl)}
-            activeOpacity={0.7}
-            style={[styles.inAppBtn, { backgroundColor: "#059669", alignSelf: "stretch" }]}
-          >
-            <MaterialIcons name="quiz" size={18} color="#FFF" />
-            <Text style={styles.inAppBtnText}>Take Quiz</Text>
-          </TouchableOpacity>
+          <View style={[styles.iframeContainer, { borderColor: colors.border }]}>
+            <View style={styles.iframeHeader}>
+              <MaterialIcons name="quiz" size={18} color="#059669" />
+              <Text style={[styles.iframeLabel, { color: colors.foreground }]}>Quiz</Text>
+            </View>
+            <View style={{ width: width - 32, height: Math.round((width - 32) * 0.8), overflow: "hidden", borderRadius: 8 }}>
+              <WebView
+                source={{ uri: activityUrl }}
+                style={{ width: width - 32, height: Math.round((width - 32) * 0.8) }}
+                allowsFullscreenVideo
+                mediaPlaybackRequiresUserAction={false}
+                javaScriptEnabled
+                domStorageEnabled
+              />
+            </View>
+          </View>
         )}
       </View>
     );
@@ -753,14 +759,22 @@ export default function LessonScreen() {
             </View>
           </View>
         ) : (
-          <TouchableOpacity
-            onPress={() => WebBrowser.openBrowserAsync(activityUrl)}
-            activeOpacity={0.7}
-            style={[styles.inAppBtn, { backgroundColor: "#2563EB", alignSelf: "stretch" }]}
-          >
-            <MaterialIcons name="assignment" size={18} color="#FFF" />
-            <Text style={styles.inAppBtnText}>View Assignment</Text>
-          </TouchableOpacity>
+          <View style={[styles.iframeContainer, { borderColor: colors.border }]}>
+            <View style={styles.iframeHeader}>
+              <MaterialIcons name="assignment" size={18} color="#2563EB" />
+              <Text style={[styles.iframeLabel, { color: colors.foreground }]}>Assignment Submission</Text>
+            </View>
+            <View style={{ width: width - 32, height: Math.round((width - 32) * 0.7), overflow: "hidden", borderRadius: 8 }}>
+              <WebView
+                source={{ uri: activityUrl }}
+                style={{ width: width - 32, height: Math.round((width - 32) * 0.7) }}
+                allowsFullscreenVideo
+                mediaPlaybackRequiresUserAction={false}
+                javaScriptEnabled
+                domStorageEnabled
+              />
+            </View>
+          </View>
         )}
       </View>
     );
@@ -789,22 +803,22 @@ export default function LessonScreen() {
             </View>
           </View>
         ) : (
-          <TouchableOpacity
-            onPress={() => WebBrowser.openBrowserAsync(linkUrl)}
-            activeOpacity={0.7}
-            style={[styles.urlCard, { backgroundColor: "#6366F108", borderColor: "#6366F125" }]}
-          >
-            <View style={[styles.videoIconBg, { backgroundColor: "#6366F115" }]}>
-              <MaterialIcons name="link" size={48} color="#6366F1" />
+          <View style={[styles.iframeContainer, { borderColor: colors.border }]}>
+            <View style={styles.iframeHeader}>
+              <MaterialIcons name="link" size={18} color="#6366F1" />
+              <Text style={[styles.iframeLabel, { color: colors.foreground }]}>External Resource</Text>
             </View>
-            <Text style={[styles.videoTitle, { color: colors.foreground }]}>
-              {content.title || activityName}
-            </Text>
-            <View style={[styles.inAppBtn, { backgroundColor: "#6366F1" }]}>
-              <MaterialIcons name="fullscreen" size={18} color="#FFF" />
-              <Text style={styles.inAppBtnText}>Open Resource</Text>
+            <View style={{ width: width - 32, height: Math.round((width - 32) * 0.7), overflow: "hidden", borderRadius: 8 }}>
+              <WebView
+                source={{ uri: linkUrl }}
+                style={{ width: width - 32, height: Math.round((width - 32) * 0.7) }}
+                allowsFullscreenVideo
+                mediaPlaybackRequiresUserAction={false}
+                javaScriptEnabled
+                domStorageEnabled
+              />
             </View>
-          </TouchableOpacity>
+          </View>
         )}
       </View>
     );
@@ -859,14 +873,22 @@ export default function LessonScreen() {
             </View>
           </View>
         ) : (
-          <TouchableOpacity
-            onPress={() => WebBrowser.openBrowserAsync(activityUrl)}
-            activeOpacity={0.7}
-            style={[styles.inAppBtn, { backgroundColor: "#0891B2", alignSelf: "stretch", marginTop: 12 }]}
-          >
-            <MaterialIcons name="forum" size={18} color="#FFF" />
-            <Text style={styles.inAppBtnText}>View Full Forum</Text>
-          </TouchableOpacity>
+          <View style={[styles.iframeContainer, { borderColor: colors.border }]}>
+            <View style={styles.iframeHeader}>
+              <MaterialIcons name="forum" size={18} color="#0891B2" />
+              <Text style={[styles.iframeLabel, { color: colors.foreground }]}>Forum</Text>
+            </View>
+            <View style={{ width: width - 32, height: Math.round((width - 32) * 0.6), overflow: "hidden", borderRadius: 8 }}>
+              <WebView
+                source={{ uri: activityUrl }}
+                style={{ width: width - 32, height: Math.round((width - 32) * 0.6) }}
+                allowsFullscreenVideo
+                mediaPlaybackRequiresUserAction={false}
+                javaScriptEnabled
+                domStorageEnabled
+              />
+            </View>
+          </View>
         )}
       </View>
     );
@@ -893,14 +915,18 @@ export default function LessonScreen() {
             </View>
           </View>
         ) : (
-          <TouchableOpacity
-            onPress={() => WebBrowser.openBrowserAsync(activityUrl)}
-            activeOpacity={0.7}
-            style={[styles.inAppBtn, { backgroundColor: colors.primary, alignSelf: "stretch" }]}
-          >
-            <MaterialIcons name="fullscreen" size={18} color="#FFF" />
-            <Text style={styles.inAppBtnText}>View Content</Text>
-          </TouchableOpacity>
+          <View style={[styles.iframeContainer, { borderColor: colors.border }]}>
+            <View style={{ width: width - 32, height: Math.round((width - 32) * 0.6), overflow: "hidden", borderRadius: 8 }}>
+              <WebView
+                source={{ uri: activityUrl }}
+                style={{ width: width - 32, height: Math.round((width - 32) * 0.6) }}
+                allowsFullscreenVideo
+                mediaPlaybackRequiresUserAction={false}
+                javaScriptEnabled
+                domStorageEnabled
+              />
+            </View>
+          </View>
         )}
       </View>
     );
