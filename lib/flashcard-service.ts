@@ -41,7 +41,7 @@ class FlashcardService {
       const allCards = await this.getFlashcards();
       const newCard: Flashcard = {
         ...card,
-        id: Date.now().toString(),
+        id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         createdAt: Date.now(),
       };
       allCards.push(newCard);
@@ -72,7 +72,7 @@ class FlashcardService {
     }
   }
 
-  async updateFlashcardProgress(flashcardId: string, isCorrect: boolean): Promise<void> {
+  async updateFlashcardProgress(flashcardId: string, quality: number): Promise<void> {
     try {
       const data = await AsyncStorage.getItem(FLASHCARD_PROGRESS_KEY);
       const allProgress: FlashcardProgress[] = data ? JSON.parse(data) : [];
@@ -94,6 +94,8 @@ class FlashcardService {
       }
 
       // Update stats
+      const isCorrect = quality >= 3; // Quality 3-5 is correct, 0-2 is incorrect
+      
       if (isCorrect) {
         progress.correct++;
         progress.repetitions++;
@@ -107,7 +109,8 @@ class FlashcardService {
           progress.interval = Math.round(progress.interval * progress.easeFactor);
         }
         
-        progress.easeFactor = Math.max(1.3, progress.easeFactor + (0.1 - (5 - 4) * (0.08 + (5 - 4) * 0.02)));
+        // Correct SM-2 formula with actual quality (0-5)
+        progress.easeFactor = Math.max(1.3, progress.easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)));
       } else {
         progress.incorrect++;
         progress.repetitions = 0;

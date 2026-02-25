@@ -52,7 +52,7 @@ export default function FlashcardsScreen() {
     }
 
     const currentCard = flashcards[currentIndex];
-    await flashcardService.updateFlashcardProgress(currentCard.id, quality >= 3);
+    await flashcardService.updateFlashcardProgress(currentCard.id, quality);
 
     // Move to next card
     if (currentIndex < flashcards.length - 1) {
