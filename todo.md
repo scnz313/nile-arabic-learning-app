@@ -150,3 +150,20 @@
 - [ ] Test caching performance
 - [ ] Test offline access
 - [ ] Test prefetching behavior
+
+## V10 - Cache Management UI, Background Sync, and Prefetch Indicators
+- [x] Create cache management screen
+- [x] Show total cache size with visual progress bar
+- [x] List all cached lessons with individual sizes
+- [x] Add clear individual cache item button
+- [x] Add clear all cache button with confirmation
+- [x] Show storage usage visualization (progress bar with stats)
+- [x] Implement background sync service
+- [x] Detect WiFi connection for sync
+- [x] Refresh cached content in background
+- [x] Add sync settings (enabled, WiFi-only, interval)
+- [x] Add prefetch badges to lesson cards
+- [x] Show "Ready" indicator with cloud-done icon
+- [x] Add isPrefetched check to activity list
+- [x] Link cache management from settings
+- [x] Install expo-network package for WiFi detection

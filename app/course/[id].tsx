@@ -18,6 +18,7 @@ import { syncService } from "@/lib/sync-service";
 import { type MoodleActivity } from "@/lib/moodle-api";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import * as Haptics from "expo-haptics";
+import { prefetchService } from "@/lib/prefetch-service";
 
 const MOD_ICONS: Record<string, { icon: string; color: string; label: string }> = {
   page: { icon: "description", color: "#0C6478", label: "Page" },
@@ -36,7 +37,7 @@ const MOD_ICONS: Record<string, { icon: string; color: string; label: string }> 
 
 type ListItem =
   | { type: "header"; name: string; activityCount: number; key: string }
-  | { type: "activity"; activity: MoodleActivity; isCompleted: boolean; key: string };
+  | { type: "activity"; activity: MoodleActivity; isCompleted: boolean; isPrefetched: boolean; key: string };
 
 export default function CourseDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -81,7 +82,8 @@ export default function CourseDetailScreen() {
         if (data.intro && data.intro.activities.length > 0) {
           allItems.push({ type: "header", name: "Introduction", activityCount: data.intro.activities.length, key: "h-intro" });
           for (const act of data.intro.activities) {
-            allItems.push({ type: "activity", activity: act, isCompleted: completedSet.has(act.id), key: `a-${act.id}` });
+            const isPrefetched = await prefetchService.isPrefetched(courseId.toString(), act.id);
+            allItems.push({ type: "activity", activity: act, isCompleted: completedSet.has(act.id), isPrefetched, key: `a-${act.id}` });
           }
         }
 
@@ -89,7 +91,8 @@ export default function CourseDetailScreen() {
           const section = data.sections[i];
           allItems.push({ type: "header", name: section.name, activityCount: section.activities.length, key: `h-${i}` });
           for (const act of section.activities) {
-            allItems.push({ type: "activity", activity: act, isCompleted: completedSet.has(act.id), key: `a-${act.id}` });
+            const isPrefetched = await prefetchService.isPrefetched(courseId.toString(), act.id);
+            allItems.push({ type: "activity", activity: act, isCompleted: completedSet.has(act.id), isPrefetched, key: `a-${act.id}` });
           }
         }
 
@@ -156,7 +159,15 @@ export default function CourseDetailScreen() {
           <Text style={[styles.activityName, { color: colors.foreground }]} numberOfLines={2}>
             {item.activity.name}
           </Text>
-          <Text style={[styles.activityType, { color: modInfo.color }]}>{modInfo.label}</Text>
+          <View style={styles.activityMeta}>
+            <Text style={[styles.activityType, { color: modInfo.color }]}>{modInfo.label}</Text>
+            {item.isPrefetched && (
+              <View style={[styles.prefetchBadge, { backgroundColor: colors.primary + "15" }]}>
+                <MaterialIcons name="cloud-done" size={14} color={colors.primary} />
+                <Text style={[styles.prefetchText, { color: colors.primary }]}>Ready</Text>
+              </View>
+            )}
+          </View>
         </View>
         {item.isCompleted ? (
           <View style={[styles.completedBadge, { backgroundColor: colors.success + "15" }]}>
@@ -342,7 +353,10 @@ const styles = StyleSheet.create({
   },
   activityInfo: { flex: 1 },
   activityName: { fontSize: 15, fontWeight: "600", lineHeight: 20, marginBottom: 4 },
+  activityMeta: { flexDirection: "row", alignItems: "center", gap: 8 },
   activityType: { fontSize: 12, fontWeight: "600" },
+  prefetchBadge: { flexDirection: "row", alignItems: "center", paddingHorizontal: 6, paddingVertical: 2, borderRadius: 8, gap: 4 },
+  prefetchText: { fontSize: 11, fontWeight: "600" },
   completedBadge: {
     width: 36,
     height: 36,

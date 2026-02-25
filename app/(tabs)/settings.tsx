@@ -242,6 +242,17 @@ export default function SettingsScreen() {
           <Text style={[styles.sectionLabel, { color: colors.muted }]}>DATA</Text>
           <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <TouchableOpacity
+              onPress={() => router.push("/cache-management" as any)}
+              activeOpacity={0.7}
+              style={[styles.settingRow, { borderBottomWidth: 1, borderBottomColor: colors.border }]}
+            >
+              <View style={styles.settingInfo}>
+                <Text style={[styles.settingLabelText, { color: colors.foreground }]}>Cache Management</Text>
+                <Text style={[styles.settingSubtitle, { color: colors.muted }]}>View and manage cached content</Text>
+              </View>
+              <MaterialIcons name="chevron-right" size={20} color={colors.muted} />
+            </TouchableOpacity>
+            <TouchableOpacity
               onPress={handleClearCache}
               activeOpacity={0.7}
               style={[styles.settingRow, { borderBottomWidth: 0 }]}
