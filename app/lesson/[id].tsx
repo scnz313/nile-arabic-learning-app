@@ -161,73 +161,196 @@ function InAppIframe({ src, colors }: { src: string; colors: any }) {
   );
 }
 
-// ─── HTML to Native Text Renderer ───
+// ─── Rich HTML Content Renderer ───
 function HtmlContentRenderer({ html, colors }: { html: string; colors: any }) {
-  const processHtml = (rawHtml: string) => {
-    let textContent = rawHtml
-      .replace(/<iframe[^>]*>.*?<\/iframe>/gi, "")
-      .replace(/<audio[^>]*>.*?<\/audio>/gi, "")
-      .replace(/<img[^>]*>/gi, "")
-      .replace(/<h([1-6])[^>]*>(.*?)<\/h[1-6]>/gi, "\n##$2##\n")
-      .replace(/<br\s*\/?>/gi, "\n")
-      .replace(/<\/p>/gi, "\n\n")
-      .replace(/<\/div>/gi, "\n")
-      .replace(/<li[^>]*>/gi, "\n• ")
-      .replace(/<\/li>/gi, "")
-      .replace(/<\/tr>/gi, "\n")
-      .replace(/<td[^>]*>/gi, " | ")
-      .replace(/<th[^>]*>/gi, " | ")
-      .replace(/<[^>]+>/g, "")
-      .replace(/&nbsp;/g, " ")
-      .replace(/&amp;/g, "&")
-      .replace(/&lt;/g, "<")
-      .replace(/&gt;/g, ">")
-      .replace(/&quot;/g, '"')
-      .replace(/&#39;/g, "'")
-      .replace(/\n{3,}/g, "\n\n")
-      .trim();
+  const { width } = useWindowDimensions();
 
-    return textContent;
+  const cleanHtml = (rawHtml: string): string => {
+    return rawHtml
+      // Remove script tags
+      .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
+      // Remove Moodle-specific chrome
+      .replace(/<div class="modified">.*?<\/div>/gi, "")
+      .replace(/<span id="maincontent"><\/span>/gi, "")
+      // Remove standalone h2 that duplicates the title
+      .replace(/^<h2[^>]*>.*?<\/h2>/i, "")
+      .trim();
   };
 
-  const textContent = processHtml(html);
-  if (!textContent) return null;
+  const cleaned = cleanHtml(html);
+  if (!cleaned) return null;
 
-  const parts = textContent.split("\n").filter(Boolean);
+  if (Platform.OS === "web") {
+    const styledHtml = `
+      <div style="
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        color: ${colors.foreground};
+        font-size: 16px;
+        line-height: 1.8;
+        direction: auto;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+      ">
+        <style>
+          .lesson-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            margin: 12px 0;
+            display: block;
+          }
+          .lesson-content h1, .lesson-content h2, .lesson-content h3, .lesson-content h4 {
+            color: ${colors.foreground};
+            font-weight: 700;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            line-height: 1.3;
+          }
+          .lesson-content h1 { font-size: 24px; }
+          .lesson-content h2 { font-size: 20px; }
+          .lesson-content h3 { font-size: 18px; }
+          .lesson-content p {
+            margin-bottom: 12px;
+            line-height: 1.8;
+          }
+          .lesson-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 15px;
+          }
+          .lesson-content table th, .lesson-content table td {
+            border: 1px solid ${colors.border};
+            padding: 10px 14px;
+            text-align: right;
+            vertical-align: top;
+          }
+          .lesson-content table th {
+            background-color: ${colors.primary}10;
+            font-weight: 700;
+            color: ${colors.primary};
+          }
+          .lesson-content table tr:nth-child(even) {
+            background-color: ${colors.background};
+          }
+          .lesson-content ul, .lesson-content ol {
+            padding-right: 24px;
+            padding-left: 24px;
+            margin-bottom: 12px;
+          }
+          .lesson-content li {
+            margin-bottom: 6px;
+            line-height: 1.7;
+          }
+          .lesson-content a {
+            color: ${colors.primary};
+            text-decoration: none;
+            font-weight: 500;
+          }
+          .lesson-content a:hover {
+            text-decoration: underline;
+          }
+          .lesson-content blockquote {
+            border-left: 4px solid ${colors.primary};
+            padding-left: 16px;
+            margin: 16px 0;
+            color: ${colors.muted};
+            font-style: italic;
+          }
+          .lesson-content audio {
+            width: 100%;
+            margin: 12px 0;
+          }
+          .lesson-content video {
+            width: 100%;
+            max-width: 100%;
+            border-radius: 12px;
+            margin: 12px 0;
+          }
+          .lesson-content iframe {
+            width: 100%;
+            min-height: 400px;
+            border: none;
+            border-radius: 12px;
+            margin: 12px 0;
+          }
+          .lesson-content .no-overflow {
+            overflow-x: auto;
+          }
+          .lesson-content pre, .lesson-content code {
+            background: ${colors.background};
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 14px;
+            overflow-x: auto;
+          }
+        </style>
+        <div class="lesson-content">${cleaned}</div>
+      </div>
+    `;
+
+    return (
+      <View style={[styles.htmlCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+        <div
+          style={{ width: "100%", maxWidth: width - 72 }}
+          dangerouslySetInnerHTML={{ __html: styledHtml }}
+        />
+      </View>
+    );
+  }
+
+  // Native: use WebView for rich HTML rendering
+  const nativeHtml = `
+    <!DOCTYPE html>
+    <html dir="auto">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <style>
+        * { box-sizing: border-box; }
+        body {
+          font-family: system-ui, -apple-system, sans-serif;
+          color: ${colors.foreground};
+          background: ${colors.surface};
+          font-size: 16px;
+          line-height: 1.8;
+          padding: 16px;
+          margin: 0;
+          direction: auto;
+        }
+        img { max-width: 100%; height: auto; border-radius: 8px; margin: 8px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+        th, td { border: 1px solid ${colors.border}; padding: 8px; text-align: right; }
+        th { background: ${colors.primary}15; font-weight: 700; }
+        a { color: ${colors.primary}; }
+        h1, h2, h3 { color: ${colors.foreground}; margin-top: 16px; }
+      </style>
+    </head>
+    <body>${cleaned}</body>
+    </html>
+  `;
 
   return (
-    <View style={[styles.htmlCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-      {parts.map((part, j) => {
-        const headingMatch = part.match(/^##(.+)##$/);
-        if (headingMatch) {
-          return (
-            <Text key={j} style={[styles.htmlHeading, { color: colors.foreground }]}>
-              {headingMatch[1].trim()}
-            </Text>
-          );
-        }
-        if (part.startsWith("• ")) {
-          return (
-            <View key={j} style={styles.htmlListItem}>
-              <Text style={[styles.htmlBullet, { color: colors.primary }]}>•</Text>
-              <Text style={[styles.htmlListText, { color: colors.foreground }]}>{part.slice(2)}</Text>
-            </View>
-          );
-        }
-        if (part.startsWith(" | ")) {
-          return (
-            <View key={j} style={[styles.htmlTableRow, { borderColor: colors.border }]}>
-              <Text style={[styles.htmlTableText, { color: colors.foreground }]}>{part.replace(/\s*\|\s*/g, "  •  ").trim()}</Text>
-            </View>
-          );
-        }
-        return (
-          <Text key={j} style={[styles.htmlParagraph, { color: colors.foreground }]}>
-            {part.trim()}
-          </Text>
-        );
-      })}
+    <View style={[styles.htmlCard, { backgroundColor: colors.surface, borderColor: colors.border, minHeight: 200 }]}>
+      <WebView
+        source={{ html: nativeHtml }}
+        style={{ width: width - 72, minHeight: 300 }}
+        scrollEnabled={false}
+        originWhitelist={["*"]}
+        javaScriptEnabled
+      />
     </View>
+  );
+}
+
+// ─── Helper: proxy Moodle images in HTML through our server ───
+function proxyImagesInHtml(html: string): string {
+  if (!html) return "";
+  const apiBase = require("@/constants/oauth").getApiBaseUrl();
+  return html.replace(
+    /(src=["'])(https?:\/\/nilecenter\.online\/[^"']+)(["'])/gi,
+    (_, prefix, url, suffix) => `${prefix}${apiBase}/api/moodle/proxy-media?url=${encodeURIComponent(url)}${suffix}`
   );
 }
 
@@ -473,7 +596,7 @@ export default function LessonScreen() {
     prefetchService.prefetchNextLesson(courseId.toString(), activityId).catch(console.error);
   };
 
-  const proxyMedia = (url: string) => moodleAPI.getProxyMediaUrl(url);
+  const proxyMedia = useCallback((url: string) => moodleAPI.getProxyMediaUrl(url), []);
   const modInfo = MOD_ICONS[modType] || { icon: "insert-drive-file", color: "#6B7280", label: modType };
 
   // ─── Content Renderers ───
@@ -519,7 +642,7 @@ export default function LessonScreen() {
         )}
 
         {/* Text Content */}
-        {content.html ? <HtmlContentRenderer html={content.html} colors={colors} /> : null}
+        {content.html ? <HtmlContentRenderer html={proxyImagesInHtml(content.html)} colors={colors} /> : null}
       </View>
     );
   };
@@ -567,14 +690,14 @@ export default function LessonScreen() {
                 {content.chapters[selectedChapter]?.name}
               </Text>
               {content.chapters[selectedChapter]?.content ? (
-                <HtmlContentRenderer html={content.chapters[selectedChapter].content} colors={colors} />
+                <HtmlContentRenderer html={proxyImagesInHtml(content.chapters[selectedChapter].content)} colors={colors} />
               ) : null}
             </View>
           </View>
         )}
 
         {/* Main HTML content */}
-        {content.html ? <HtmlContentRenderer html={content.html} colors={colors} /> : null}
+        {content.html ? <HtmlContentRenderer html={proxyImagesInHtml(content.html)} colors={colors} /> : null}
       </View>
     );
   };
@@ -616,7 +739,7 @@ export default function LessonScreen() {
         ) : null}
 
         {/* Description */}
-        {content.html ? <HtmlContentRenderer html={content.html} colors={colors} /> : null}
+        {content.html ? <HtmlContentRenderer html={proxyImagesInHtml(content.html)} colors={colors} /> : null}
       </View>
     );
   };
@@ -662,7 +785,7 @@ export default function LessonScreen() {
           </View>
         )}
 
-        {content.html ? <HtmlContentRenderer html={content.html} colors={colors} /> : null}
+        {content.html ? <HtmlContentRenderer html={proxyImagesInHtml(content.html)} colors={colors} /> : null}
       </View>
     );
   };
@@ -738,7 +861,7 @@ export default function LessonScreen() {
     return (
       <View>
         {/* Assignment Instructions */}
-        {content.html ? <HtmlContentRenderer html={content.html} colors={colors} /> : null}
+        {content.html ? <HtmlContentRenderer html={proxyImagesInHtml(content.html)} colors={colors} /> : null}
 
         {/* Status */}
         {content.status ? (
@@ -914,7 +1037,7 @@ export default function LessonScreen() {
 
     return (
       <View>
-        {content.html ? <HtmlContentRenderer html={content.html} colors={colors} /> : null}
+        {content.html ? <HtmlContentRenderer html={proxyImagesInHtml(content.html)} colors={colors} /> : null}
 
         {/* Embed in-app */}
         {Platform.OS === "web" ? (
@@ -1328,14 +1451,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 2,
+    overflow: "hidden",
   },
-  htmlHeading: { fontSize: 20, fontWeight: "800", marginTop: 16, marginBottom: 12, writingDirection: "rtl", textAlign: "right", lineHeight: 28 },
-  htmlParagraph: { fontSize: 16, lineHeight: 28, marginBottom: 12, writingDirection: "rtl", textAlign: "right" },
-  htmlListItem: { flexDirection: "row", gap: 8, marginBottom: 4, paddingRight: 4 },
-  htmlBullet: { fontSize: 16, fontWeight: "700", lineHeight: 26 },
-  htmlListText: { flex: 1, fontSize: 15, lineHeight: 26, writingDirection: "rtl", textAlign: "right" },
-  htmlTableRow: { paddingVertical: 6, borderBottomWidth: 0.5 },
-  htmlTableText: { fontSize: 14, lineHeight: 22 },
 
   // Completion
   completeSection: { marginTop: 16 },

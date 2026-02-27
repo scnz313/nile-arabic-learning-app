@@ -83,10 +83,15 @@ async function fetchWithSession(url: string, cookie: string): Promise<string> {
 
 function makeAbsoluteUrl(url: string): string {
   if (!url) return "";
-  if (url.startsWith("http")) return url;
+  if (url.startsWith("http://")) return url.replace("http://", "https://");
+  if (url.startsWith("https://")) return url;
   if (url.startsWith("//")) return `https:${url}`;
   if (url.startsWith("/")) return `${MOODLE_BASE_URL}${url}`;
   return `${MOODLE_BASE_URL}/${url}`;
+}
+
+function isLoginPage(html: string): boolean {
+  return html.includes('id="login"') && html.includes('name="logintoken"');
 }
 
 function extractContentHtml($: cheerio.CheerioAPI, selector: string): string {
@@ -158,8 +163,15 @@ export function registerMoodleProxy(app: Express) {
         return;
       }
 
-      const cookie = await getMoodleSession(username, password);
-      const html = await fetchWithSession(`${MOODLE_BASE_URL}/my/`, cookie);
+      let cookie = await getMoodleSession(username, password);
+      let html = await fetchWithSession(`${MOODLE_BASE_URL}/my/`, cookie);
+
+      if (isLoginPage(html)) {
+        sessionCache.delete(username);
+        cookie = await getMoodleSession(username, password);
+        html = await fetchWithSession(`${MOODLE_BASE_URL}/my/`, cookie);
+      }
+
       const $ = cheerio.load(html);
 
       const courses: any[] = [];
@@ -199,13 +211,23 @@ export function registerMoodleProxy(app: Express) {
         return;
       }
 
-      const cookie = await getMoodleSession(username, password);
+      let cookie = await getMoodleSession(username, password);
 
       // First get the course page to find section tabs
-      const courseHtml = await fetchWithSession(
+      courseHtml = await fetchWithSession(
         `${MOODLE_BASE_URL}/course/view.php?id=${courseId}`,
         cookie
       );
+
+      if (isLoginPage(courseHtml)) {
+        sessionCache.delete(username);
+        cookie = await getMoodleSession(username, password);
+        courseHtml = await fetchWithSession(
+          `${MOODLE_BASE_URL}/course/view.php?id=${courseId}`,
+          cookie
+        );
+      }
+
       const $course = cheerio.load(courseHtml);
 
       // Find the Lessons tab section ID
@@ -392,8 +414,16 @@ export function registerMoodleProxy(app: Express) {
         return;
       }
 
-      const cookie = await getMoodleSession(username, password);
-      const html = await fetchWithSession(makeAbsoluteUrl(activityUrl), cookie);
+      let cookie = await getMoodleSession(username, password);
+      let html = await fetchWithSession(makeAbsoluteUrl(activityUrl), cookie);
+
+      // If we got the login page back, session expired - re-authenticate and retry
+      if (isLoginPage(html)) {
+        sessionCache.delete(username);
+        cookie = await getMoodleSession(username, password);
+        html = await fetchWithSession(makeAbsoluteUrl(activityUrl), cookie);
+      }
+
       const $ = cheerio.load(html);
 
       let content: any = {};
@@ -441,6 +471,17 @@ export function registerMoodleProxy(app: Express) {
               chapters.push({ name: text, url: makeAbsoluteUrl(href) });
             }
           });
+
+          // Fetch content for each chapter
+          for (const chapter of chapters) {
+            try {
+              const chapterHtml = await fetchWithSession(chapter.url, cookie);
+              const $ch = cheerio.load(chapterHtml);
+              chapter.content = extractContentHtml($ch, "#region-main .box.generalbox, #region-main .book_content, #region-main [role='main']");
+            } catch {
+              chapter.content = "";
+            }
+          }
 
           content = { type: "book", title, html: mainContent, chapters };
           break;
