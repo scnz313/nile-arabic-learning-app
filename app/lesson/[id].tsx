@@ -19,17 +19,13 @@ import { Image } from "expo-image";
 import WebView from "react-native-webview";
 import { VideoView, useVideoPlayer } from "expo-video";
 import * as Haptics from "expo-haptics";
-import { LoadingSkeleton } from "@/components/loading-skeleton";
 import { TextInput } from "react-native";
 import { bookmarksService } from "@/lib/bookmarks-service";
 import { notesService, type Note } from "@/lib/notes-service";
 import { progressService } from "@/lib/progress-service";
-import { settingsService } from "@/lib/settings-service";
 import { downloadManager } from "@/lib/download-manager";
 import { vocabularyService, type VocabularyWord } from "@/lib/vocabulary-service";
 import { prefetchService } from "@/lib/prefetch-service";
-import { webViewCacheService } from "@/lib/webview-cache-service";
-import { DownloadProgress } from "@/components/download-progress";
 
 const MOD_ICONS: Record<string, { icon: string; color: string; label: string }> = {
   page: { icon: "description", color: "#0C6478", label: "Page" },
@@ -235,6 +231,29 @@ function HtmlContentRenderer({ html, colors }: { html: string; colors: any }) {
   );
 }
 
+// ─── Native Video Player Component (proper hook usage) ───
+function NativeVideoPlayer({ videoUrl, title, colors, width }: { videoUrl: string; title: string; colors: any; width: number }) {
+  const player = useVideoPlayer(videoUrl, (p) => {
+    p.loop = false;
+  });
+
+  return (
+    <View style={[styles.videoPlayerContainer, { borderColor: colors.border }]}>
+      <VideoView
+        style={styles.videoPlayer}
+        player={player}
+        allowsFullscreen
+        allowsPictureInPicture
+        contentFit="contain"
+      />
+      <View style={styles.videoInfo}>
+        <MaterialIcons name="play-circle-filled" size={18} color="#DC2626" />
+        <Text style={[styles.videoInfoText, { color: colors.foreground }]}>{title}</Text>
+      </View>
+    </View>
+  );
+}
+
 // ─── Main Lesson Screen ───
 export default function LessonScreen() {
   const params = useLocalSearchParams<{
@@ -276,6 +295,7 @@ export default function LessonScreen() {
     loadNotes();
     checkDownload();
     loadVocabulary();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activityId]);
 
   const loadVocabulary = async () => {
@@ -390,7 +410,7 @@ export default function LessonScreen() {
     setIsExtractingVocab(true);
     try {
       const htmlContent = content.html || "";
-      const extracted = await vocabularyService.extractAndSaveFromLesson(
+      await vocabularyService.extractAndSaveFromLesson(
         htmlContent,
         courseId,
         parseInt(activityId),
@@ -585,23 +605,12 @@ export default function LessonScreen() {
                 </View>
               </View>
             ) : (
-              <View style={[styles.videoPlayerContainer, { borderColor: colors.border }]}>
-                <VideoView
-                  style={styles.videoPlayer}
-                  player={useVideoPlayer(videoUrl, (player) => {
-                    player.loop = false;
-                  })}
-                  allowsFullscreen
-                  allowsPictureInPicture
-                  contentFit="contain"
-                />
-                <View style={styles.videoInfo}>
-                  <MaterialIcons name="play-circle-filled" size={18} color="#DC2626" />
-                  <Text style={[styles.videoInfoText, { color: colors.foreground }]}>
-                    {content.title || activityName}
-                  </Text>
-                </View>
-              </View>
+              <NativeVideoPlayer
+                videoUrl={videoUrl}
+                title={content.title || activityName}
+                colors={colors}
+                width={width}
+              />
             )}
           </View>
         ) : null}

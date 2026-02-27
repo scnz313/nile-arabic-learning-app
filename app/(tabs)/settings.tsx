@@ -279,7 +279,7 @@ export default function SettingsScreen() {
 
 const styles = StyleSheet.create({
   headerContainer: { paddingHorizontal: 24, paddingTop: 16, paddingBottom: 8 },
-  headerTitle: { fontSize: 24, fontWeight: "700" },
+  headerTitle: { fontSize: 30, fontWeight: "700" },
   scrollContent: { paddingBottom: 40 },
   sectionContainer: { paddingHorizontal: 16, marginBottom: 20 },
   sectionLabel: { fontSize: 12, fontWeight: "700", marginBottom: 8, paddingHorizontal: 4, letterSpacing: 0.5 },

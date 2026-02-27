@@ -93,6 +93,26 @@ export default function RootLayout() {
                 name="lesson/[id]"
                 options={{ headerShown: false }}
               />
+              <Stack.Screen
+                name="flashcards"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="vocabulary"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="reminders"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="downloads"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="quiz/[courseId]"
+                options={{ headerShown: false }}
+              />
               <Stack.Screen name="oauth/callback" />
             </Stack>
           </AuthProvider>

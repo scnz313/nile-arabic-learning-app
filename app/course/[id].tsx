@@ -52,6 +52,7 @@ export default function CourseDetailScreen() {
   const [completedCount, setCompletedCount] = useState(0);
 
   useFocusEffect(
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useCallback(() => {
       loadCourseData();
     }, [courseId])

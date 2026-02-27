@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ScrollView, Text, View, Dimensions } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { ScreenContainer } from "@/components/screen-container";
 import { progressService, type ProgressStats, type StudySession } from "@/lib/progress-service";
 import { useColors } from "@/hooks/use-colors";

@@ -39,7 +39,7 @@ export default function QuizScreen() {
   };
 
   const currentQuestion = questions[currentIndex];
-  const progress = ((currentIndex + 1) / questions.length) * 100;
+  const progress = questions.length > 0 ? ((currentIndex + 1) / questions.length) * 100 : 0;
 
   const handleAnswer = (answer: string) => {
     if (Platform.OS !== "web") {
@@ -251,6 +251,38 @@ export default function QuizScreen() {
       <ScreenContainer className="items-center justify-center">
         <ActivityIndicator size="large" color={colors.primary} />
         <Text className="text-muted mt-4">Loading quiz...</Text>
+      </ScreenContainer>
+    );
+  }
+
+  if (questions.length === 0 && !loading) {
+    return (
+      <ScreenContainer>
+        <View className="flex-1 p-6">
+          <TouchableOpacity
+            onPress={() => router.back()}
+            activeOpacity={0.7}
+            className="w-11 h-11 rounded-full bg-surface items-center justify-center mb-6"
+          >
+            <MaterialIcons name="arrow-back" size={24} color={colors.foreground} />
+          </TouchableOpacity>
+          <View className="flex-1 items-center justify-center">
+            <MaterialIcons name="quiz" size={64} color={colors.muted} />
+            <Text className="text-xl font-semibold text-foreground mt-4 text-center">
+              No Quiz Available
+            </Text>
+            <Text className="text-base text-muted mt-2 text-center">
+              Complete some lessons first to unlock quiz questions for this course.
+            </Text>
+            <TouchableOpacity
+              onPress={() => router.back()}
+              activeOpacity={0.7}
+              className="bg-primary px-8 py-4 rounded-xl mt-8"
+            >
+              <Text className="text-white font-semibold text-base">Back to Course</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </ScreenContainer>
     );
   }

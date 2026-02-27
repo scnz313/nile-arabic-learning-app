@@ -1,6 +1,6 @@
 import { ScrollView, Text, View, RefreshControl, Pressable, ActivityIndicator, TextInput, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
 
@@ -70,9 +70,11 @@ export default function HomeScreen() {
     loadCourses();
   }, []);
 
-  useFocusEffect(() => {
-    loadCourses();
-  });
+  useFocusEffect(
+    useCallback(() => {
+      loadCourses();
+    }, [])
+  );
 
   const handleCoursePress = (course: MoodleCourse) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -200,11 +202,28 @@ export default function HomeScreen() {
             }}>
               <IconSymbol name="book.fill" size={48} color={colors.muted} />
               <Text style={{ fontSize: 18, fontWeight: "600", color: colors.foreground, marginTop: 16 }}>
-                No courses yet
+                {user ? "No courses yet" : "Sign in to get started"}
               </Text>
-              <Text style={{ fontSize: 14, color: colors.muted, marginTop: 8, textAlign: "center" }}>
-                Pull down to sync your courses from Nile Center
+              <Text style={{ fontSize: 14, color: colors.muted, marginTop: 8, textAlign: "center", lineHeight: 22 }}>
+                {user 
+                  ? "Pull down to sync your courses from Nile Center" 
+                  : "Sign in with your Nile Center credentials to access your Arabic courses"}
               </Text>
+              {!user && (
+                <TouchableOpacity
+                  onPress={() => router.push("/login")}
+                  activeOpacity={0.7}
+                  style={{
+                    backgroundColor: colors.primary,
+                    borderRadius: 12,
+                    paddingHorizontal: 32,
+                    paddingVertical: 14,
+                    marginTop: 20,
+                  }}
+                >
+                  <Text style={{ color: "#FFF", fontSize: 16, fontWeight: "700" }}>Sign In</Text>
+                </TouchableOpacity>
+              )}
             </View>
           ) : (
             <View style={{ gap: 16 }}>
@@ -316,7 +335,7 @@ function CourseCard({ course, onPress, colors }: CourseCardProps) {
             <View
               style={{
                 height: 8,
-                backgroundColor: colors.surface,
+                backgroundColor: colors.border,
                 borderRadius: 4,
                 overflow: "hidden",
               }}
