@@ -89,15 +89,26 @@ class MoodleAPI {
 
   async login(username: string, password: string): Promise<{ fullName: string }> {
     const proxyUrl = `${this.getProxyBaseUrl()}/api/moodle/login`;
-    const response = await fetch(proxyUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-    });
+    let response: Response;
+    try {
+      response = await fetch(proxyUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+    } catch (networkError) {
+      throw new Error("Unable to connect to the server. Please check your internet connection and try again.");
+    }
 
-    const data = await response.json();
+    let data: any;
+    try {
+      data = await response.json();
+    } catch {
+      throw new Error("Server returned an unexpected response. Please try again later.");
+    }
+
     if (!response.ok || data.error) {
-      throw new Error(data.error || "Login failed");
+      throw new Error(data.error || "Invalid username or password. Please try again.");
     }
 
     this.username = username;
@@ -134,13 +145,23 @@ class MoodleAPI {
   async getUserCourses(): Promise<MoodleCourse[]> {
     if (!this.username || !this.password) throw new Error("Not authenticated");
 
-    const response = await fetch(`${this.getProxyBaseUrl()}/api/moodle/courses`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: this.username, password: this.password }),
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${this.getProxyBaseUrl()}/api/moodle/courses`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: this.username, password: this.password }),
+      });
+    } catch {
+      throw new Error("Unable to connect to the server.");
+    }
 
-    const data = await response.json();
+    let data: any;
+    try {
+      data = await response.json();
+    } catch {
+      throw new Error("Failed to load courses. Please try again.");
+    }
     if (data.error) throw new Error(data.error);
 
     return (data.courses || []).map((c: any) => ({
@@ -154,13 +175,23 @@ class MoodleAPI {
   async getCourseFull(courseId: number): Promise<CourseFullData> {
     if (!this.username || !this.password) throw new Error("Not authenticated");
 
-    const response = await fetch(`${this.getProxyBaseUrl()}/api/moodle/course-full`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: this.username, password: this.password, courseId }),
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${this.getProxyBaseUrl()}/api/moodle/course-full`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: this.username, password: this.password, courseId }),
+      });
+    } catch {
+      throw new Error("Unable to connect to the server.");
+    }
 
-    const data = await response.json();
+    let data: any;
+    try {
+      data = await response.json();
+    } catch {
+      throw new Error("Failed to load course data. Please try again.");
+    }
     if (data.error) throw new Error(data.error);
     return data;
   }
@@ -168,18 +199,28 @@ class MoodleAPI {
   async getActivityContent(activityUrl: string, modType: string): Promise<ActivityContent> {
     if (!this.username || !this.password) throw new Error("Not authenticated");
 
-    const response = await fetch(`${this.getProxyBaseUrl()}/api/moodle/activity-content`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: this.username,
-        password: this.password,
-        activityUrl,
-        modType,
-      }),
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${this.getProxyBaseUrl()}/api/moodle/activity-content`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: this.username,
+          password: this.password,
+          activityUrl,
+          modType,
+        }),
+      });
+    } catch {
+      throw new Error("Unable to connect to the server.");
+    }
 
-    const data = await response.json();
+    let data: any;
+    try {
+      data = await response.json();
+    } catch {
+      throw new Error("Failed to load activity content. Please try again.");
+    }
     if (data.error) throw new Error(data.error);
     return data;
   }

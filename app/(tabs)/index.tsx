@@ -54,6 +54,10 @@ export default function HomeScreen() {
   };
 
   const handleSync = async () => {
+    if (!user) {
+      router.push("/login");
+      return;
+    }
     setRefreshing(true);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     try {
