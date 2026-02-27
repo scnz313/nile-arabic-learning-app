@@ -31,3 +31,6 @@ Nile Arabic Learning — an Expo (React Native) mobile/web app with a co-located
 - `.npmrc` specifies `node-linker=hoisted` which is required for Expo compatibility.
 - The `packageManager` field in `package.json` pins pnpm to 9.12.0.
 - External services (Moodle at nilecenter.online, Manus OAuth, Manus Forge API) are remote-hosted. The app degrades gracefully without them — course lists will be empty but the UI shell works.
+- Activity URLs from Moodle come as `http://` but must be converted to `https://` before fetching content (the `makeAbsoluteUrl` function handles this). Session cookies are tied to HTTPS.
+- The moodle-proxy has login-page detection: if Moodle returns its login page instead of content, it re-authenticates automatically and retries.
+- Lesson content is rendered as rich HTML on web (using `dangerouslySetInnerHTML`) with comprehensive CSS for tables, images, RTL Arabic text, and embedded media. Images from Moodle are proxied through `/api/moodle/proxy-media` to bypass CORS.

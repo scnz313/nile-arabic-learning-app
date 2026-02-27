@@ -214,7 +214,7 @@ export function registerMoodleProxy(app: Express) {
       let cookie = await getMoodleSession(username, password);
 
       // First get the course page to find section tabs
-      courseHtml = await fetchWithSession(
+      let courseHtml = await fetchWithSession(
         `${MOODLE_BASE_URL}/course/view.php?id=${courseId}`,
         cookie
       );
