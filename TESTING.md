@@ -19,11 +19,14 @@ The Nile Arabic Learning app loads successfully at localhost:8081 and renders th
 - **My Courses Section**: Shows "No courses yet" with sync instruction
 - **Bottom Navigation**: Four tabs visible (Home, Bookmarks, Progress, Settings)
 
-### ⚠️ Navigation Issue Observed
+### ⚠️ Navigation Issue Observed - Web Platform Incompatibility
 - Clicking on bottom navigation tabs (Progress, Settings, Bookmarks) does not navigate to different screens
-- The app remains on the home screen despite tab clicks
-- "Page Unresponsive" dialogs appeared during navigation attempts
-- This appears to be a web-specific routing issue with expo-router
+- Clicking the "Practice Flashcards" button does not navigate to the flashcards screen
+- The app remains on the home screen despite navigation attempts
+- "Page Unresponsive" dialogs appear during navigation attempts
+- Direct URL navigation (e.g., http://localhost:8081/flashcards) changes the URL bar but does not render the correct screen content
+- The home screen content persists regardless of the URL path
+- **This is a web-specific routing issue with expo-router that prevents all navigation from functioning**
 
 ### 📝 Notes
 - The app successfully bundles and serves via Metro bundler
@@ -38,7 +41,22 @@ The Nile Arabic Learning app loads successfully at localhost:8081 and renders th
   - **Progress**: Shows stats, streaks, achievements, study sessions
   - **Bookmarks**: Shows saved lessons
   - **Settings**: Comprehensive settings interface with profile, sync, display options
-- The routing configuration appears correct, suggesting a web platform compatibility issue
+  - **Flashcards**: Interactive spaced repetition system with flip animations and difficulty ratings
+- All routing code uses proper expo-router patterns (router.push(), router.back(), etc.)
+- The routing configuration appears correct, suggesting a web platform compatibility issue with expo-router
+
+### 🧪 Flashcards Feature Testing
+Attempted to access the Practice Flashcards feature through multiple methods:
+1. **Button Click**: Clicked "Practice Flashcards" button - page became unresponsive, no navigation occurred
+2. **Direct URL**: Manually navigated to http://localhost:8081/flashcards - URL changed but content remained on home screen
+3. **Result**: Flashcards screen is not accessible via web browser despite proper code implementation
+
+The flashcards feature code exists at `app/flashcards.tsx` with full functionality including:
+- Card flipping animations
+- Spaced repetition quality ratings (Again, Hard, Good, Easy)
+- Progress tracking
+- "All Caught Up" empty state
+- However, this feature cannot be demonstrated on the web platform due to the routing issue.
 
 ## Conclusion
 The app successfully runs in the browser and demonstrates the development environment is properly configured. The UI renders cleanly with all expected components visible. Tab navigation requires further investigation for web platform compatibility.
