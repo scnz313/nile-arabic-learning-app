@@ -76,6 +76,15 @@ class StorageService {
     return data ? JSON.parse(data) : [];
   }
 
+  async updateCourseMeta(courseId: number, meta: Partial<MoodleCourse>): Promise<void> {
+    const courses = await this.getCourses();
+    const idx = courses.findIndex((c) => c.id === courseId);
+    if (idx >= 0) {
+      Object.assign(courses[idx], meta);
+      await AsyncStorage.setItem(KEYS.COURSES, JSON.stringify(courses));
+    }
+  }
+
   // ─── COURSE DATA (merge: new sections/activities appended, old ones preserved) ───
 
   async saveCourseData(courseId: number, newData: CourseFullData): Promise<{ newSections: number; newActivities: number }> {

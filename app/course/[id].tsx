@@ -128,14 +128,14 @@ export default function CourseDetailScreen() {
   const renderItem = ({ item }: { item: ListItem }) => {
     if (item.type === "header") {
       return (
-        <View style={[styles.sectionHeader, { backgroundColor: colors.surface }]}>
+        <View style={[styles.sectionHeader, { backgroundColor: colors.primary + "08", borderLeftColor: colors.primary }]}>
           <View style={styles.sectionHeaderLeft}>
-            <View style={[styles.sectionDot, { backgroundColor: colors.primary }]} />
+            <MaterialIcons name="folder-open" size={18} color={colors.primary} />
             <Text style={[styles.sectionName, { color: colors.foreground }]} numberOfLines={2}>
               {item.name}
             </Text>
           </View>
-          <View style={[styles.countBadge, { backgroundColor: colors.primary + "15" }]}>
+          <View style={[styles.countBadge, { backgroundColor: colors.primary + "18" }]}>
             <Text style={[styles.countText, { color: colors.primary }]}>{item.activityCount}</Text>
           </View>
         </View>
@@ -148,7 +148,7 @@ export default function CourseDetailScreen() {
       <TouchableOpacity
         onPress={() => handleActivityPress(item.activity)}
         activeOpacity={0.7}
-        style={[styles.activityCard, { backgroundColor: colors.surface }]}
+        style={[styles.activityCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
       >
         <View style={[styles.activityIcon, { backgroundColor: modInfo.color + "15" }]}>
           <MaterialIcons name={modInfo.icon as any} size={24} color={modInfo.color} />
@@ -311,28 +311,25 @@ const styles = StyleSheet.create({
     alignItems: "center", 
     justifyContent: "space-between", 
     paddingHorizontal: 16, 
-    paddingVertical: 16, 
-    marginTop: 12,
+    paddingVertical: 14, 
+    marginTop: 16,
     marginBottom: 8,
-    borderRadius: 12,
+    borderRadius: 14,
+    borderLeftWidth: 4,
   },
-  sectionHeaderLeft: { flex: 1, flexDirection: "row", alignItems: "center", gap: 12 },
-  sectionDot: { width: 8, height: 8, borderRadius: 4 },
+  sectionHeaderLeft: { flex: 1, flexDirection: "row", alignItems: "center", gap: 10 },
+  sectionDot: { width: 0, height: 0 },
   sectionName: { fontSize: 15, fontWeight: "700", flex: 1 },
-  countBadge: { paddingHorizontal: 12, paddingVertical: 4, borderRadius: 12 },
-  countText: { fontSize: 13, fontWeight: "700" },
+  countBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 10, minWidth: 28, alignItems: "center" as const },
+  countText: { fontSize: 12, fontWeight: "700" },
   activityCard: { 
     flexDirection: "row", 
     alignItems: "center", 
-    padding: 16, 
-    marginBottom: 12,
-    borderRadius: 16,
-    gap: 14,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
+    padding: 14, 
+    marginBottom: 10,
+    borderRadius: 14,
+    gap: 12,
+    borderWidth: 1,
   },
   activityIcon: { 
     width: 48, 

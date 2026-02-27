@@ -36,6 +36,12 @@ class SyncService {
           result.coursesUpdated++;
           result.newSections += newSections;
           result.newActivities += newActivities;
+
+          // Update the course list entry with real counts from synced data
+          await storageService.updateCourseMeta(course.id, {
+            totalSections: fullData.totalSections,
+            totalActivities: fullData.totalActivities,
+          });
         } catch (err: any) {
           result.errors.push(`Failed to sync ${course.shortname}: ${err.message}`);
         }

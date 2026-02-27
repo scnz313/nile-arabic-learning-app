@@ -619,13 +619,12 @@ export default function LessonScreen() {
         {content.images && content.images.length > 0 && (
           <View style={styles.sectionBlock}>
             {content.images.map((img, i) => (
-              <View key={i} style={styles.imageWrap}>
+              <View key={i} style={[styles.imageWrap, { borderColor: colors.border }]}>
                 <Image
                   source={{ uri: proxyMedia(img) }}
-                  style={[styles.contentImage, { width: width - 32 }]}
+                  style={[styles.contentImage, { width: width - 40 }]}
                   contentFit="contain"
-                  placeholder={{ blurhash: "L6PZfSi_.AyE_3t7t7R**0o#DgR4" }}
-                  transition={200}
+                  transition={300}
                 />
               </View>
             ))}
@@ -1160,14 +1159,19 @@ export default function LessonScreen() {
         ) : (
           <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
             {/* Title card */}
-            <View style={[styles.titleCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <View style={[styles.titleCard, { backgroundColor: modInfo.color + "08", borderColor: modInfo.color + "20" }]}>
               <View style={[styles.titleIconCircle, { backgroundColor: modInfo.color + "15" }]}>
-                <MaterialIcons name={modInfo.icon as any} size={24} color={modInfo.color} />
+                <MaterialIcons name={modInfo.icon as any} size={28} color={modInfo.color} />
               </View>
               <View style={styles.titleInfo}>
                 <Text style={[styles.titleText, { color: colors.foreground }]}>
                   {content?.title || activityName}
                 </Text>
+                <View style={{ flexDirection: "row", alignItems: "center", gap: 6, marginTop: 6 }}>
+                  <View style={{ backgroundColor: modInfo.color + "15", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 8 }}>
+                    <Text style={{ fontSize: 11, fontWeight: "700", color: modInfo.color, textTransform: "uppercase", letterSpacing: 0.5 }}>{modInfo.label}</Text>
+                  </View>
+                </View>
               </View>
             </View>
 
@@ -1379,8 +1383,8 @@ const styles = StyleSheet.create({
   audioPlayBtn: { width: 44, height: 44, borderRadius: 22, alignItems: "center", justifyContent: "center" },
 
   // Images
-  imageWrap: { marginBottom: 16, borderRadius: 12, overflow: "hidden", alignItems: "center", backgroundColor: "#F3F4F6" },
-  contentImage: { minHeight: 200, maxHeight: 800, borderRadius: 12 },
+  imageWrap: { marginBottom: 16, borderRadius: 16, overflow: "hidden", alignItems: "center", backgroundColor: "#F8F9FA", borderWidth: 1, padding: 8 },
+  contentImage: { minHeight: 300, maxHeight: 1200, borderRadius: 12 },
 
   // Iframe container
   iframeContainer: { borderRadius: 12, borderWidth: 1, overflow: "hidden", marginBottom: 16 },

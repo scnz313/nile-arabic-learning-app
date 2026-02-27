@@ -104,16 +104,16 @@ export default function HomeScreen() {
         }
       >
         {/* Header Section */}
-        <View style={{ paddingHorizontal: 20, paddingTop: 16, paddingBottom: 24 }}>
-          <Text style={{ fontSize: 14, color: colors.muted, marginBottom: 4 }}>Welcome back</Text>
-          <Text style={{ fontSize: 28, fontWeight: "700", color: colors.foreground }}>
+        <View style={{ paddingHorizontal: 20, paddingTop: 20, paddingBottom: 24 }}>
+          <Text style={{ fontSize: 14, color: colors.muted, marginBottom: 2, letterSpacing: 0.3 }}>Welcome back</Text>
+          <Text style={{ fontSize: 30, fontWeight: "800", color: colors.foreground, letterSpacing: -0.5 }}>
             {user?.fullName || "Student"}
           </Text>
           {lastSynced && (
-            <View style={{ flexDirection: "row", alignItems: "center", marginTop: 12 }}>
-              <IconSymbol name="checkmark.circle.fill" size={16} color={colors.success} />
-              <Text style={{ fontSize: 13, color: colors.muted, marginLeft: 6 }}>
-                Last synced: {lastSynced}
+            <View style={{ flexDirection: "row", alignItems: "center", marginTop: 10, backgroundColor: colors.success + "10", paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20, alignSelf: "flex-start" }}>
+              <IconSymbol name="checkmark.circle.fill" size={14} color={colors.success} />
+              <Text style={{ fontSize: 12, color: colors.success, marginLeft: 6, fontWeight: "600" }}>
+                Synced {lastSynced}
               </Text>
             </View>
           )}
@@ -138,39 +138,68 @@ export default function HomeScreen() {
             )}
           </View>
 
-          {/* Flashcards Button */}
-          <TouchableOpacity
-            onPress={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-              router.push("/flashcards");
-            }}
-            activeOpacity={0.7}
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              backgroundColor: colors.primary,
-              borderRadius: 16,
-              paddingHorizontal: 20,
-              paddingVertical: 16,
-              shadowColor: "#000",
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.1,
-              shadowRadius: 8,
-              elevation: 3,
-            }}
-          >
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
-              <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: "rgba(255,255,255,0.2)", alignItems: "center", justifyContent: "center" }}>
+          {/* Quick Actions Row */}
+          <View style={{ flexDirection: "row", gap: 12 }}>
+            <TouchableOpacity
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                router.push("/flashcards");
+              }}
+              activeOpacity={0.7}
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                alignItems: "center",
+                backgroundColor: colors.primary,
+                borderRadius: 16,
+                paddingHorizontal: 16,
+                paddingVertical: 16,
+                gap: 12,
+                shadowColor: colors.primary,
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.25,
+                shadowRadius: 12,
+                elevation: 4,
+              }}
+            >
+              <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: "rgba(255,255,255,0.2)", alignItems: "center", justifyContent: "center" }}>
                 <MaterialIcons name="style" size={22} color="#FFF" />
               </View>
-              <View>
-                <Text style={{ fontSize: 16, fontWeight: "700", color: "#FFF" }}>Practice Flashcards</Text>
-                <Text style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", marginTop: 2 }}>Review vocabulary</Text>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 15, fontWeight: "700", color: "#FFF" }}>Flashcards</Text>
+                <Text style={{ fontSize: 12, color: "rgba(255,255,255,0.75)", marginTop: 1 }}>Practice vocab</Text>
               </View>
-            </View>
-            <MaterialIcons name="chevron-right" size={24} color="#FFF" />
-          </TouchableOpacity>
+              <MaterialIcons name="chevron-right" size={20} color="rgba(255,255,255,0.6)" />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                router.push("/vocabulary" as any);
+              }}
+              activeOpacity={0.7}
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                alignItems: "center",
+                backgroundColor: colors.surface,
+                borderRadius: 16,
+                paddingHorizontal: 16,
+                paddingVertical: 16,
+                gap: 12,
+                borderWidth: 1.5,
+                borderColor: colors.border,
+              }}
+            >
+              <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: "#8B5CF6" + "15", alignItems: "center", justifyContent: "center" }}>
+                <MaterialIcons name="translate" size={22} color="#8B5CF6" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 15, fontWeight: "700", color: colors.foreground }}>Vocabulary</Text>
+                <Text style={{ fontSize: 12, color: colors.muted, marginTop: 1 }}>Word bank</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* My Courses Section */}
@@ -254,29 +283,23 @@ interface CourseCardProps {
 }
 
 function CourseCard({ course, onPress, colors }: CourseCardProps) {
-  // Extract level number from course name
   const levelMatch = course.fullname?.match(/Level\s+(\d+)/i);
   const levelNumber = levelMatch ? levelMatch[1] : "?";
   
-  // Clean course name
-  const cleanName = course.fullname?.replace(/^.*?Level\s+\d+\s*[-–—]?\s*/i, "") || course.fullname || "Course";
+  const cleanName = course.fullname
+    ?.replace(/^[A-Za-z]+-[A-Za-z0-9]+-\d+\s*-\s*/, "")
+    .replace(/\s*Onsite.*$/, "")
+    .replace(/\s*\([^)]*\)$/, "")
+    .trim() || course.fullname || "Course";
   
-  // Calculate progress
   const totalActivities = course.totalActivities || 0;
   const completedCount = course.completedActivities || 0;
   const progressPercent = totalActivities > 0 ? Math.round((completedCount / totalActivities) * 100) : 0;
 
-  // Color based on level
   const levelColors = [
-    { bg: "#EF4444", text: "#FFFFFF" }, // Red
-    { bg: "#F59E0B", text: "#FFFFFF" }, // Orange
-    { bg: "#10B981", text: "#FFFFFF" }, // Green
-    { bg: "#3B82F6", text: "#FFFFFF" }, // Blue
-    { bg: "#8B5CF6", text: "#FFFFFF" }, // Purple
-    { bg: "#EC4899", text: "#FFFFFF" }, // Pink
+    "#EF4444", "#F59E0B", "#10B981", "#3B82F6", "#8B5CF6", "#EC4899",
   ];
-  const colorIndex = (parseInt(levelNumber) - 1) % levelColors.length;
-  const levelColor = levelColors[colorIndex] || levelColors[0];
+  const levelColor = levelColors[(parseInt(levelNumber) - 1) % levelColors.length] || levelColors[0];
 
   return (
     <Pressable
@@ -284,80 +307,75 @@ function CourseCard({ course, onPress, colors }: CourseCardProps) {
       style={({ pressed }) => ({
         backgroundColor: colors.surface,
         borderRadius: 20,
-        padding: 20,
+        overflow: "hidden",
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: pressed ? 0.08 : 0.06,
-        shadowRadius: 12,
+        shadowOpacity: pressed ? 0.1 : 0.06,
+        shadowRadius: 16,
         elevation: 4,
         transform: [{ scale: pressed ? 0.98 : 1 }],
       })}
     >
-      <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
-        {/* Level Badge */}
-        <View
-          style={{
-            width: 64,
-            height: 64,
-            borderRadius: 16,
-            backgroundColor: levelColor.bg,
-            justifyContent: "center",
-            alignItems: "center",
-            marginRight: 16,
-          }}
-        >
-          <Text style={{ fontSize: 12, color: levelColor.text, opacity: 0.8, fontWeight: "600" }}>Level</Text>
-          <Text style={{ fontSize: 24, fontWeight: "700", color: levelColor.text }}>{levelNumber}</Text>
-        </View>
-
-        {/* Course Info */}
-        <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 18, fontWeight: "700", color: colors.foreground, marginBottom: 6 }}>
-            {cleanName}
-          </Text>
-          
-          <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 12 }}>
-            <IconSymbol name="book.fill" size={14} color={colors.muted} />
-            <Text style={{ fontSize: 13, color: colors.muted, marginLeft: 6 }}>
-              {course.totalSections || 0} sections
-            </Text>
-            <Text style={{ fontSize: 13, color: colors.muted, marginHorizontal: 8 }}>•</Text>
-            <IconSymbol name="doc.fill" size={14} color={colors.muted} />
-            <Text style={{ fontSize: 13, color: colors.muted, marginLeft: 6 }}>
-              {totalActivities} activities
-            </Text>
+      {/* Color accent bar at top */}
+      <View style={{ height: 4, backgroundColor: levelColor }} />
+      
+      <View style={{ padding: 20 }}>
+        <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
+          {/* Level Badge */}
+          <View
+            style={{
+              width: 56,
+              height: 56,
+              borderRadius: 14,
+              backgroundColor: levelColor + "15",
+              justifyContent: "center",
+              alignItems: "center",
+              marginRight: 16,
+            }}
+          >
+            <Text style={{ fontSize: 10, color: levelColor, fontWeight: "700", letterSpacing: 0.5, textTransform: "uppercase" }}>Level</Text>
+            <Text style={{ fontSize: 22, fontWeight: "800", color: levelColor }}>{levelNumber}</Text>
           </View>
 
-          {/* Progress Bar */}
-          <View style={{ marginBottom: 8 }}>
+          {/* Course Info */}
+          <View style={{ flex: 1 }}>
+            <Text style={{ fontSize: 17, fontWeight: "700", color: colors.foreground, marginBottom: 6, lineHeight: 22 }}>
+              {cleanName}
+            </Text>
+            
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <MaterialIcons name="folder-open" size={14} color={colors.muted} />
+                <Text style={{ fontSize: 13, color: colors.muted, marginLeft: 4, fontWeight: "500" }}>
+                  {course.totalSections || 0} sections
+                </Text>
+              </View>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <MaterialIcons name="library-books" size={14} color={colors.muted} />
+                <Text style={{ fontSize: 13, color: colors.muted, marginLeft: 4, fontWeight: "500" }}>
+                  {totalActivities} lessons
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          <MaterialIcons name="chevron-right" size={22} color={colors.muted} style={{ marginLeft: 4, marginTop: 4 }} />
+        </View>
+
+        {/* Progress Bar */}
+        {totalActivities > 0 && (
+          <View style={{ marginTop: 16 }}>
             <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 6 }}>
-              <Text style={{ fontSize: 12, color: colors.muted }}>Progress</Text>
-              <Text style={{ fontSize: 12, fontWeight: "600", color: colors.success }}>
-                {completedCount}/{totalActivities} ({progressPercent}%)
+              <Text style={{ fontSize: 12, color: colors.muted, fontWeight: "500" }}>Progress</Text>
+              <Text style={{ fontSize: 12, fontWeight: "700", color: progressPercent > 0 ? colors.success : colors.muted }}>
+                {progressPercent}%
               </Text>
             </View>
-            <View
-              style={{
-                height: 8,
-                backgroundColor: colors.border,
-                borderRadius: 4,
-                overflow: "hidden",
-              }}
-            >
-              <View
-                style={{
-                  height: "100%",
-                  width: `${progressPercent}%`,
-                  backgroundColor: colors.success,
-                  borderRadius: 4,
-                }}
-              />
+            <View style={{ height: 6, backgroundColor: colors.border, borderRadius: 3, overflow: "hidden" }}>
+              <View style={{ height: "100%", width: `${Math.max(progressPercent, 2)}%`, backgroundColor: colors.success, borderRadius: 3 }} />
             </View>
           </View>
-        </View>
-
-        {/* Chevron */}
-        <IconSymbol name="chevron.right" size={20} color={colors.muted} style={{ marginLeft: 8 }} />
+        )}
       </View>
     </Pressable>
   );
