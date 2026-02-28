@@ -308,8 +308,8 @@ export default function SettingsScreen() {
                   <Text style={[styles.profileMeta, { color: colors.muted }]}>{user.username}</Text>
                 ) : null}
               </View>
-              <View style={[styles.badge, { backgroundColor: colors.primary + "18" }]}>
-                <Text style={[styles.badgeText, { color: colors.primary }]}>Learner</Text>
+              <View style={[styles.badge, { backgroundColor: colors.accent + "14" }]}>
+                <Text style={[styles.badgeText, { color: colors.accent }]}>Learner</Text>
               </View>
             </View>
           </View>
@@ -361,7 +361,7 @@ export default function SettingsScreen() {
           <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <SettingRow
               icon="text-fields"
-              iconColor={colors.primary}
+              iconColor={colors.accent}
               label="Show Diacritics"
               subtitle="Display tashkeel vowel marks on Arabic text"
               colors={colors}
@@ -369,14 +369,14 @@ export default function SettingsScreen() {
                 <Switch
                   value={appSettings?.showDiacritics ?? true}
                   onValueChange={(v) => updateAppSetting("showDiacritics", v)}
-                  trackColor={{ false: colors.border, true: colors.primary }}
+                  trackColor={{ false: colors.border, true: colors.accent }}
                   thumbColor="#FFFFFF"
                 />
               }
             />
             <View style={styles.row}>
-              <View style={[styles.rowIconContainer, { backgroundColor: colors.primary + "14" }]}>
-                <MaterialIcons name="speed" size={18} color={colors.primary} />
+              <View style={[styles.rowIconContainer, { backgroundColor: colors.accent + "14" }]}>
+                <MaterialIcons name="speed" size={18} color={colors.accent} />
               </View>
               <View style={styles.rowContent}>
                 <Text style={[styles.rowLabel, { color: colors.foreground }]}>Audio Speed</Text>
@@ -400,7 +400,7 @@ export default function SettingsScreen() {
           <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <SettingRow
               icon="sync"
-              iconColor={colors.primary}
+              iconColor={colors.accent}
               label="Auto-sync courses"
               subtitle="Sync when app opens"
               colors={colors}
@@ -408,7 +408,7 @@ export default function SettingsScreen() {
                 <Switch
                   value={settings.autoSync}
                   onValueChange={(v) => updateSetting("autoSync", v)}
-                  trackColor={{ false: colors.border, true: colors.primary }}
+                  trackColor={{ false: colors.border, true: colors.accent }}
                   thumbColor="#FFFFFF"
                 />
               }
@@ -429,7 +429,7 @@ export default function SettingsScreen() {
           <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <SettingRow
               icon="notifications-none"
-              iconColor={colors.warning}
+              iconColor={colors.accent}
               label="Push Notifications"
               subtitle="Get notified about new content"
               colors={colors}
@@ -437,14 +437,14 @@ export default function SettingsScreen() {
                 <Switch
                   value={settings.notificationsEnabled}
                   onValueChange={(v) => updateSetting("notificationsEnabled", v)}
-                  trackColor={{ false: colors.border, true: colors.primary }}
+                  trackColor={{ false: colors.border, true: colors.accent }}
                   thumbColor="#FFFFFF"
                 />
               }
             />
             <SettingRow
               icon="alarm"
-              iconColor={colors.warning}
+              iconColor={colors.accent}
               label="Study Reminders"
               subtitle="Set daily study notifications"
               onPress={() => router.push("/reminders" as any)}
@@ -507,7 +507,7 @@ export default function SettingsScreen() {
             onPress={() => Linking.openURL("https://nilecenter.online")}
             activeOpacity={0.6}
           >
-            <Text style={[styles.footerLink, { color: colors.primary }]}>nilecenter.online</Text>
+            <Text style={[styles.footerLink, { color: colors.accent }]}>nilecenter.online</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

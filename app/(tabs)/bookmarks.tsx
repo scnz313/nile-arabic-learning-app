@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import { FlatList, Text, View, TouchableOpacity, Platform } from "react-native";
+import {
+  FlatList,
+  Text,
+  View,
+  TouchableOpacity,
+  Platform,
+  StyleSheet,
+} from "react-native";
 import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
 import { ScreenContainer } from "@/components/screen-container";
@@ -28,7 +35,9 @@ export default function BookmarksScreen() {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
     await bookmarksService.removeBookmark(courseId, activityId);
-    setBookmarks((prev) => prev.filter((b) => !(b.courseId === courseId && b.activityId === activityId)));
+    setBookmarks((prev) =>
+      prev.filter((b) => !(b.courseId === courseId && b.activityId === activityId))
+    );
   };
 
   const handleOpenLesson = (courseId: number, activityId: number) => {
@@ -42,55 +51,56 @@ export default function BookmarksScreen() {
     <TouchableOpacity
       onPress={() => handleOpenLesson(item.courseId, item.activityId)}
       activeOpacity={0.7}
-      className="bg-surface rounded-2xl p-5 mb-4 shadow-sm border border-border"
+      style={[s.card, { backgroundColor: colors.surface, borderColor: colors.border }]}
     >
-      <View className="flex-row items-start justify-between mb-2">
-        <View className="flex-1 mr-3">
-          <Text className="text-lg font-semibold text-foreground mb-1" numberOfLines={2}>
+      <View style={s.cardContent}>
+        <View style={s.cardLeft}>
+          <Text style={[s.cardTitle, { color: colors.foreground }]} numberOfLines={2}>
             {item.activityName}
           </Text>
-          <Text className="text-sm text-muted" numberOfLines={1}>
+          <Text style={[s.cardSub, { color: colors.muted }]} numberOfLines={1}>
             {item.courseName}
           </Text>
         </View>
         <TouchableOpacity
           onPress={() => handleRemoveBookmark(item.courseId, item.activityId)}
-          className="p-2"
+          style={s.bookmarkBtn}
+          activeOpacity={0.6}
         >
-          <MaterialIcons name="bookmark" size={24} color={colors.primary} />
+          <MaterialIcons name="bookmark" size={20} color={colors.accent} />
         </TouchableOpacity>
       </View>
-      <Text className="text-xs text-muted mt-2">
-        Saved {new Date(item.timestamp).toLocaleDateString()}
+      <Text style={[s.cardDate, { color: colors.muted }]}>
+        {new Date(item.timestamp).toLocaleDateString()}
       </Text>
     </TouchableOpacity>
   );
 
   if (loading) {
     return (
-      <ScreenContainer className="items-center justify-center">
-        <Text className="text-muted">Loading bookmarks...</Text>
+      <ScreenContainer>
+        <View style={s.centered}>
+          <Text style={[s.loadingText, { color: colors.muted }]}>Loading...</Text>
+        </View>
       </ScreenContainer>
     );
   }
 
   return (
     <ScreenContainer>
-      <View className="p-6 pb-0">
-        <Text className="text-3xl font-bold text-foreground">Bookmarks</Text>
-        <Text className="text-base text-muted mt-2">
-          {bookmarks.length} saved {bookmarks.length === 1 ? "lesson" : "lessons"}
+      <View style={s.header}>
+        <Text style={[s.headerTitle, { color: colors.foreground }]}>Bookmarks</Text>
+        <Text style={[s.headerCount, { color: colors.muted }]}>
+          {bookmarks.length} {bookmarks.length === 1 ? "item" : "items"}
         </Text>
       </View>
 
       {bookmarks.length === 0 ? (
-        <View className="flex-1 items-center justify-center px-6">
-          <MaterialIcons name="bookmark-border" size={64} color={colors.muted} />
-          <Text className="text-xl font-semibold text-foreground mt-4 text-center">
-            No Bookmarks Yet
-          </Text>
-          <Text className="text-base text-muted mt-2 text-center">
-            Bookmark lessons to easily access them later
+        <View style={s.emptyContainer}>
+          <MaterialIcons name="bookmark-outline" size={40} color={colors.muted + "50"} />
+          <Text style={[s.emptyTitle, { color: colors.foreground }]}>No bookmarks</Text>
+          <Text style={[s.emptySub, { color: colors.muted }]}>
+            Save lessons to access them quickly
           </Text>
         </View>
       ) : (
@@ -98,10 +108,48 @@ export default function BookmarksScreen() {
           data={bookmarks}
           renderItem={renderBookmark}
           keyExtractor={(item) => `${item.courseId}-${item.activityId}`}
-          contentContainerStyle={{ padding: 24, paddingTop: 16 }}
+          contentContainerStyle={s.listContent}
           showsVerticalScrollIndicator={false}
         />
       )}
     </ScreenContainer>
   );
 }
+
+const s = StyleSheet.create({
+  centered: { flex: 1, justifyContent: "center", alignItems: "center" },
+  loadingText: { fontSize: 13 },
+
+  header: {
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 20,
+  },
+  headerTitle: { fontSize: 26, fontWeight: "700", letterSpacing: -0.6 },
+  headerCount: { fontSize: 13, marginTop: 4 },
+
+  emptyContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 40,
+    gap: 8,
+  },
+  emptyTitle: { fontSize: 16, fontWeight: "600", marginTop: 4 },
+  emptySub: { fontSize: 13, textAlign: "center", lineHeight: 18 },
+
+  listContent: { paddingHorizontal: 16, paddingBottom: 32 },
+
+  card: {
+    borderRadius: 12,
+    borderWidth: StyleSheet.hairlineWidth,
+    padding: 14,
+    marginBottom: 8,
+  },
+  cardContent: { flexDirection: "row", alignItems: "flex-start" },
+  cardLeft: { flex: 1, marginRight: 12 },
+  cardTitle: { fontSize: 14, fontWeight: "600", letterSpacing: -0.1, lineHeight: 20 },
+  cardSub: { fontSize: 12, marginTop: 3 },
+  bookmarkBtn: { padding: 4 },
+  cardDate: { fontSize: 11, marginTop: 8 },
+});

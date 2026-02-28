@@ -32,6 +32,7 @@ type RuntimePalette = SchemePaletteItem & {
   text: string;
   background: string;
   tint: string;
+  accent: string;
   icon: string;
   tabIconDefault: string;
   tabIconSelected: string;
@@ -40,11 +41,13 @@ type RuntimePalette = SchemePaletteItem & {
 
 function buildRuntimePalette(scheme: ColorScheme): RuntimePalette {
   const base = SchemeColors[scheme];
+  const accentSwatch = (ThemeColors as Record<string, { light: string; dark: string }>)["accent"];
   return {
     ...base,
     text: base.foreground,
     background: base.background,
     tint: base.primary,
+    accent: accentSwatch?.[scheme] ?? base.primary,
     icon: base.muted,
     tabIconDefault: base.muted,
     tabIconSelected: base.primary,
