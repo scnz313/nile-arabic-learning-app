@@ -8,6 +8,7 @@ import {
   Alert,
   StyleSheet,
   Platform,
+  Linking,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { ScreenContainer } from "@/components/screen-container";
@@ -26,6 +27,169 @@ function confirmAction(title: string, message: string, onConfirm: () => void) {
       { text: "Confirm", style: "destructive", onPress: onConfirm },
     ]);
   }
+}
+
+type ThemeOption = "auto" | "light" | "dark";
+type FontSizeOption = "small" | "medium" | "large";
+
+interface SettingRowProps {
+  icon: string;
+  iconColor?: string;
+  label: string;
+  subtitle?: string;
+  right?: React.ReactNode;
+  onPress?: () => void;
+  isLast?: boolean;
+  destructive?: boolean;
+  colors: ReturnType<typeof useColors>;
+}
+
+function SettingRow({
+  icon,
+  iconColor,
+  label,
+  subtitle,
+  right,
+  onPress,
+  isLast = false,
+  destructive = false,
+  colors,
+}: SettingRowProps) {
+  const content = (
+    <View
+      style={[
+        styles.row,
+        !isLast && { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border },
+      ]}
+    >
+      <View style={[styles.rowIconContainer, { backgroundColor: (iconColor || colors.muted) + "14" }]}>
+        <MaterialIcons
+          name={icon as any}
+          size={18}
+          color={iconColor || colors.muted}
+        />
+      </View>
+      <View style={styles.rowContent}>
+        <Text
+          style={[
+            styles.rowLabel,
+            { color: destructive ? colors.error : colors.foreground },
+          ]}
+        >
+          {label}
+        </Text>
+        {subtitle ? (
+          <Text style={[styles.rowSubtitle, { color: colors.muted }]}>
+            {subtitle}
+          </Text>
+        ) : null}
+      </View>
+      {right || (onPress ? (
+        <MaterialIcons name="chevron-right" size={18} color={colors.muted} />
+      ) : null)}
+    </View>
+  );
+
+  if (onPress) {
+    return (
+      <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
+        {content}
+      </TouchableOpacity>
+    );
+  }
+  return content;
+}
+
+interface SegmentedControlProps {
+  options: { label: string; value: string }[];
+  selected: string;
+  onSelect: (value: string) => void;
+  colors: ReturnType<typeof useColors>;
+}
+
+function SegmentedControl({ options, selected, onSelect, colors }: SegmentedControlProps) {
+  return (
+    <View style={[styles.segmented, { backgroundColor: colors.background, borderColor: colors.border }]}>
+      {options.map((opt) => {
+        const isActive = opt.value === selected;
+        return (
+          <TouchableOpacity
+            key={opt.value}
+            onPress={() => onSelect(opt.value)}
+            activeOpacity={0.7}
+            style={[
+              styles.segmentedItem,
+              isActive && {
+                backgroundColor: colors.surface,
+                borderColor: colors.border,
+                borderWidth: 1,
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 1 },
+                shadowOpacity: 0.06,
+                shadowRadius: 3,
+                elevation: 1,
+              },
+            ]}
+          >
+            <Text
+              style={[
+                styles.segmentedText,
+                {
+                  color: isActive ? colors.foreground : colors.muted,
+                  fontWeight: isActive ? "600" : "400",
+                },
+              ]}
+            >
+              {opt.label}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
+    </View>
+  );
+}
+
+interface ChipGroupProps {
+  options: { label: string; value: number }[];
+  selected: number;
+  onSelect: (value: number) => void;
+  colors: ReturnType<typeof useColors>;
+}
+
+function ChipGroup({ options, selected, onSelect, colors }: ChipGroupProps) {
+  return (
+    <View style={styles.chipGroup}>
+      {options.map((opt) => {
+        const isActive = opt.value === selected;
+        return (
+          <TouchableOpacity
+            key={opt.value}
+            onPress={() => onSelect(opt.value)}
+            activeOpacity={0.7}
+            style={[
+              styles.chip,
+              {
+                backgroundColor: isActive ? colors.foreground : "transparent",
+                borderColor: isActive ? colors.foreground : colors.border,
+              },
+            ]}
+          >
+            <Text
+              style={[
+                styles.chipText,
+                {
+                  color: isActive ? colors.background : colors.muted,
+                  fontWeight: isActive ? "600" : "400",
+                },
+              ]}
+            >
+              {opt.label}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
+    </View>
+  );
 }
 
 export default function SettingsScreen() {
@@ -87,201 +251,264 @@ export default function SettingsScreen() {
     );
   };
 
+  const handleResetSettings = () => {
+    confirmAction(
+      "Reset Settings",
+      "This will restore all settings to their defaults.",
+      async () => {
+        await settingsService.resetSettings();
+        await loadSettings();
+      }
+    );
+  };
+
+  const themeOptions: { label: string; value: string }[] = [
+    { label: "System", value: "auto" },
+    { label: "Light", value: "light" },
+    { label: "Dark", value: "dark" },
+  ];
+
+  const fontSizeOptions: { label: string; value: string }[] = [
+    { label: "Small", value: "small" },
+    { label: "Medium", value: "medium" },
+    { label: "Large", value: "large" },
+  ];
+
+  const speedOptions: { label: string; value: number }[] = [
+    { label: "0.5x", value: 0.5 },
+    { label: "0.75x", value: 0.75 },
+    { label: "1x", value: 1.0 },
+    { label: "1.25x", value: 1.25 },
+    { label: "1.5x", value: 1.5 },
+    { label: "2x", value: 2.0 },
+  ];
+
+  const initials = user?.fullName?.charAt(0)?.toUpperCase() || "?";
+
   return (
     <ScreenContainer>
-      <View style={styles.headerContainer}>
-        <Text style={[styles.headerTitle, { color: colors.foreground }]}>Settings</Text>
-      </View>
-
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        {/* Profile Section */}
-        <View style={styles.sectionContainer}>
-          <Text style={[styles.sectionLabel, { color: colors.muted }]}>PROFILE</Text>
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={[styles.headerTitle, { color: colors.foreground }]}>Settings</Text>
+        </View>
+
+        {/* Profile */}
+        <View style={styles.section}>
           <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <View style={styles.profileRow}>
-              <View style={[styles.avatar, { backgroundColor: colors.primary }]}>
-                <Text style={styles.avatarText}>
-                  {user?.fullName?.charAt(0)?.toUpperCase() || "?"}
-                </Text>
+              <View style={[styles.avatar, { backgroundColor: colors.foreground }]}>
+                <Text style={[styles.avatarText, { color: colors.background }]}>{initials}</Text>
               </View>
               <View style={styles.profileInfo}>
                 <Text style={[styles.profileName, { color: colors.foreground }]}>
                   {user?.fullName || "Student"}
                 </Text>
-                <Text style={[styles.profileEmail, { color: colors.muted }]}>{user?.username || ""}</Text>
+                {user?.username ? (
+                  <Text style={[styles.profileMeta, { color: colors.muted }]}>{user.username}</Text>
+                ) : null}
+              </View>
+              <View style={[styles.badge, { backgroundColor: colors.primary + "18" }]}>
+                <Text style={[styles.badgeText, { color: colors.primary }]}>Learner</Text>
               </View>
             </View>
           </View>
         </View>
 
-        {/* Sync Section */}
-        <View style={styles.sectionContainer}>
-          <Text style={[styles.sectionLabel, { color: colors.muted }]}>SYNC</Text>
+        {/* Appearance */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: colors.muted }]}>Appearance</Text>
           <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-            <View style={[styles.settingRow, { borderBottomColor: colors.border }]}>
-              <View style={styles.settingInfo}>
-                <Text style={[styles.settingLabelText, { color: colors.foreground }]}>Auto-sync courses</Text>
-                <Text style={[styles.settingSubtitle, { color: colors.muted }]}>Sync courses when app opens</Text>
+            <View style={[styles.row, { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border }]}>
+              <View style={[styles.rowIconContainer, { backgroundColor: colors.muted + "14" }]}>
+                <MaterialIcons name="palette" size={18} color={colors.muted} />
               </View>
-              <Switch
-                value={settings.autoSync}
-                onValueChange={(v) => updateSetting("autoSync", v)}
-                trackColor={{ false: colors.border, true: colors.primary }}
-                thumbColor="#FFFFFF"
+              <View style={styles.rowContent}>
+                <Text style={[styles.rowLabel, { color: colors.foreground }]}>Theme</Text>
+              </View>
+            </View>
+            <View style={styles.controlRow}>
+              <SegmentedControl
+                options={themeOptions}
+                selected={settings.theme}
+                onSelect={(v) => updateSetting("theme", v as ThemeOption)}
+                colors={colors}
               />
             </View>
-            <View style={[styles.settingRow, { borderBottomWidth: 0 }]}>
-              <View style={styles.settingInfo}>
-                <Text style={[styles.settingLabelText, { color: colors.foreground }]}>Last synced</Text>
-                <Text style={[styles.settingSubtitle, { color: colors.muted }]}>{lastSync || "Never"}</Text>
+            <View style={[styles.divider, { backgroundColor: colors.border }]} />
+            <View style={styles.row}>
+              <View style={[styles.rowIconContainer, { backgroundColor: colors.muted + "14" }]}>
+                <MaterialIcons name="format-size" size={18} color={colors.muted} />
               </View>
-              <MaterialIcons name="sync" size={20} color={colors.muted} />
+              <View style={styles.rowContent}>
+                <Text style={[styles.rowLabel, { color: colors.foreground }]}>Font Size</Text>
+              </View>
+            </View>
+            <View style={styles.controlRow}>
+              <SegmentedControl
+                options={fontSizeOptions}
+                selected={appSettings?.fontSize || "medium"}
+                onSelect={(v) => updateAppSetting("fontSize", v as FontSizeOption)}
+                colors={colors}
+              />
             </View>
           </View>
         </View>
 
-        {/* Display Settings */}
-        <View style={styles.sectionContainer}>
-          <Text style={[styles.sectionLabel, { color: colors.muted }]}>DISPLAY</Text>
+        {/* Arabic */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: colors.muted }]}>Arabic</Text>
           <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-            <View style={[styles.settingRow, { borderBottomColor: colors.border }]}>
-              <View style={styles.settingInfo}>
-                <Text style={[styles.settingLabelText, { color: colors.foreground }]}>Font Size</Text>
-                <View style={{ flexDirection: "row", gap: 8, marginTop: 8 }}>
-                  {["small", "medium", "large"].map((size) => (
-                    <TouchableOpacity
-                      key={size}
-                      onPress={() => updateAppSetting("fontSize", size)}
-                      style={{
-                        paddingHorizontal: 16,
-                        paddingVertical: 8,
-                        borderRadius: 8,
-                        borderWidth: 2,
-                        borderColor: appSettings?.fontSize === size ? colors.primary : colors.border,
-                        backgroundColor: appSettings?.fontSize === size ? colors.primary : "transparent",
-                      }}
-                    >
-                      <Text style={{ color: appSettings?.fontSize === size ? "#FFFFFF" : colors.foreground, fontWeight: "600", textTransform: "capitalize" }}>{size}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
+            <SettingRow
+              icon="text-fields"
+              iconColor={colors.primary}
+              label="Show Diacritics"
+              subtitle="Display tashkeel vowel marks on Arabic text"
+              colors={colors}
+              right={
+                <Switch
+                  value={appSettings?.showDiacritics ?? true}
+                  onValueChange={(v) => updateAppSetting("showDiacritics", v)}
+                  trackColor={{ false: colors.border, true: colors.primary }}
+                  thumbColor="#FFFFFF"
+                />
+              }
+            />
+            <View style={styles.row}>
+              <View style={[styles.rowIconContainer, { backgroundColor: colors.primary + "14" }]}>
+                <MaterialIcons name="speed" size={18} color={colors.primary} />
+              </View>
+              <View style={styles.rowContent}>
+                <Text style={[styles.rowLabel, { color: colors.foreground }]}>Audio Speed</Text>
+                <Text style={[styles.rowSubtitle, { color: colors.muted }]}>Playback speed for lesson audio</Text>
               </View>
             </View>
-            <View style={[styles.settingRow, { borderBottomColor: colors.border }]}>
-              <View style={styles.settingInfo}>
-                <Text style={[styles.settingLabelText, { color: colors.foreground }]}>Show Diacritics</Text>
-                <Text style={[styles.settingSubtitle, { color: colors.muted }]}>Display Arabic vowel marks</Text>
-              </View>
-              <Switch
-                value={appSettings?.showDiacritics ?? true}
-                onValueChange={(v) => updateAppSetting("showDiacritics", v)}
-                trackColor={{ false: colors.border, true: colors.primary }}
-                thumbColor="#FFFFFF"
+            <View style={[styles.controlRow, { paddingBottom: 14 }]}>
+              <ChipGroup
+                options={speedOptions}
+                selected={appSettings?.audioPlaybackSpeed ?? 1.0}
+                onSelect={(v) => updateAppSetting("audioPlaybackSpeed", v)}
+                colors={colors}
               />
             </View>
-            <View style={[styles.settingRow, { borderBottomWidth: 0 }]}>
-              <View style={styles.settingInfo}>
-                <Text style={[styles.settingLabelText, { color: colors.foreground }]}>Audio Playback Speed</Text>
-                <View style={{ flexDirection: "row", gap: 8, marginTop: 8, flexWrap: "wrap" }}>
-                  {[0.5, 0.75, 1.0, 1.25, 1.5, 2.0].map((speed) => (
-                    <TouchableOpacity
-                      key={speed}
-                      onPress={() => updateAppSetting("audioPlaybackSpeed", speed)}
-                      style={{
-                        paddingHorizontal: 12,
-                        paddingVertical: 6,
-                        borderRadius: 8,
-                        borderWidth: 2,
-                        borderColor: appSettings?.audioPlaybackSpeed === speed ? colors.primary : colors.border,
-                        backgroundColor: appSettings?.audioPlaybackSpeed === speed ? colors.primary : "transparent",
-                      }}
-                    >
-                      <Text style={{ color: appSettings?.audioPlaybackSpeed === speed ? "#FFFFFF" : colors.foreground, fontWeight: "600" }}>{speed}x</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </View>
-            </View>
+          </View>
+        </View>
+
+        {/* Sync */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: colors.muted }]}>Sync</Text>
+          <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <SettingRow
+              icon="sync"
+              iconColor={colors.primary}
+              label="Auto-sync courses"
+              subtitle="Sync when app opens"
+              colors={colors}
+              right={
+                <Switch
+                  value={settings.autoSync}
+                  onValueChange={(v) => updateSetting("autoSync", v)}
+                  trackColor={{ false: colors.border, true: colors.primary }}
+                  thumbColor="#FFFFFF"
+                />
+              }
+            />
+            <SettingRow
+              icon="schedule"
+              label="Last synced"
+              subtitle={lastSync || "Never"}
+              isLast
+              colors={colors}
+            />
           </View>
         </View>
 
         {/* Notifications */}
-        <View style={styles.sectionContainer}>
-          <Text style={[styles.sectionLabel, { color: colors.muted }]}>NOTIFICATIONS</Text>
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: colors.muted }]}>Notifications</Text>
           <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-            <TouchableOpacity
+            <SettingRow
+              icon="notifications-none"
+              iconColor={colors.warning}
+              label="Push Notifications"
+              subtitle="Get notified about new content"
+              colors={colors}
+              right={
+                <Switch
+                  value={settings.notificationsEnabled}
+                  onValueChange={(v) => updateSetting("notificationsEnabled", v)}
+                  trackColor={{ false: colors.border, true: colors.primary }}
+                  thumbColor="#FFFFFF"
+                />
+              }
+            />
+            <SettingRow
+              icon="alarm"
+              iconColor={colors.warning}
+              label="Study Reminders"
+              subtitle="Set daily study notifications"
               onPress={() => router.push("/reminders" as any)}
-              style={[styles.settingRow, { borderBottomColor: colors.border }]}
-            >
-              <View style={styles.settingInfo}>
-                <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                  <MaterialIcons name="notifications-active" size={20} color={colors.primary} />
-                  <Text style={[styles.settingLabelText, { color: colors.foreground }]}>Study Reminders</Text>
-                </View>
-                <Text style={[styles.settingSubtitle, { color: colors.muted }]}>Set daily study notifications</Text>
-              </View>
-              <MaterialIcons name="chevron-right" size={24} color={colors.muted} />
-            </TouchableOpacity>
-            <View style={[styles.settingRow, { borderBottomWidth: 0 }]}>
-              <View style={styles.settingInfo}>
-                <Text style={[styles.settingLabelText, { color: colors.foreground }]}>Push notifications</Text>
-                <Text style={[styles.settingSubtitle, { color: colors.muted }]}>Get notified about new content</Text>
-              </View>
-              <Switch
-                value={settings.notificationsEnabled}
-                onValueChange={(v) => updateSetting("notificationsEnabled", v)}
-                trackColor={{ false: colors.border, true: colors.primary }}
-                thumbColor="#FFFFFF"
-              />
-            </View>
+              isLast
+              colors={colors}
+            />
           </View>
         </View>
 
-        {/* Data */}
-        <View style={styles.sectionContainer}>
-          <Text style={[styles.sectionLabel, { color: colors.muted }]}>DATA</Text>
+        {/* Data & Storage */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: colors.muted }]}>Data & Storage</Text>
           <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-            <TouchableOpacity
+            <SettingRow
+              icon="folder-open"
+              label="Cache Management"
+              subtitle="View and manage cached content"
               onPress={() => router.push("/cache-management" as any)}
-              activeOpacity={0.7}
-              style={[styles.settingRow, { borderBottomWidth: 1, borderBottomColor: colors.border }]}
-            >
-              <View style={styles.settingInfo}>
-                <Text style={[styles.settingLabelText, { color: colors.foreground }]}>Cache Management</Text>
-                <Text style={[styles.settingSubtitle, { color: colors.muted }]}>View and manage cached content</Text>
-              </View>
-              <MaterialIcons name="chevron-right" size={20} color={colors.muted} />
-            </TouchableOpacity>
-            <TouchableOpacity
+              colors={colors}
+            />
+            <SettingRow
+              icon="delete-outline"
+              label="Clear All Cache"
+              subtitle="Remove all cached course data"
               onPress={handleClearCache}
-              activeOpacity={0.7}
-              style={[styles.settingRow, { borderBottomWidth: 0 }]}
-            >
-              <View style={styles.settingInfo}>
-                <Text style={[styles.settingLabelText, { color: colors.error }]}>Clear Cache</Text>
-                <Text style={[styles.settingSubtitle, { color: colors.muted }]}>Remove all cached course data</Text>
-              </View>
-              <MaterialIcons name="delete-outline" size={20} color={colors.error} />
-            </TouchableOpacity>
+              destructive
+              colors={colors}
+            />
+            <SettingRow
+              icon="settings-backup-restore"
+              label="Reset Settings"
+              subtitle="Restore defaults"
+              onPress={handleResetSettings}
+              destructive
+              isLast
+              colors={colors}
+            />
           </View>
         </View>
 
         {/* Sign Out */}
-        <View style={styles.sectionContainer}>
-          <TouchableOpacity
-            onPress={handleLogout}
-            activeOpacity={0.8}
-            style={[styles.logoutButton, { backgroundColor: colors.error + "12", borderColor: colors.error }]}
-          >
-            <MaterialIcons name="logout" size={18} color={colors.error} />
-            <Text style={[styles.logoutText, { color: colors.error }]}>Sign Out</Text>
-          </TouchableOpacity>
+        <View style={styles.section}>
+          <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <SettingRow
+              icon="logout"
+              label="Sign Out"
+              onPress={handleLogout}
+              destructive
+              isLast
+              colors={colors}
+            />
+          </View>
         </View>
 
-        {/* App Info */}
+        {/* Footer */}
         <View style={styles.footer}>
-          <Text style={[styles.footerText, { color: colors.muted }]}>Nile Arabic Learning v1.0.0</Text>
-          <Text style={[styles.footerText, { color: colors.muted, marginTop: 4 }]}>nilecenter.online</Text>
+          <Text style={[styles.footerText, { color: colors.muted }]}>Nile Arabic Learning</Text>
+          <Text style={[styles.footerVersion, { color: colors.muted }]}>Version 1.0.0</Text>
+          <TouchableOpacity
+            onPress={() => Linking.openURL("https://nilecenter.online")}
+            activeOpacity={0.6}
+          >
+            <Text style={[styles.footerLink, { color: colors.primary }]}>nilecenter.online</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </ScreenContainer>
@@ -289,24 +516,171 @@ export default function SettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  headerContainer: { paddingHorizontal: 24, paddingTop: 16, paddingBottom: 8 },
-  headerTitle: { fontSize: 24, fontWeight: "700" },
-  scrollContent: { paddingBottom: 40 },
-  sectionContainer: { paddingHorizontal: 16, marginBottom: 20 },
-  sectionLabel: { fontSize: 12, fontWeight: "700", marginBottom: 8, paddingHorizontal: 4, letterSpacing: 0.5 },
-  card: { borderRadius: 14, borderWidth: 1, overflow: "hidden" },
-  profileRow: { flexDirection: "row", alignItems: "center", padding: 16 },
-  avatar: { width: 48, height: 48, borderRadius: 24, alignItems: "center", justifyContent: "center", marginRight: 14 },
-  avatarText: { color: "#FFFFFF", fontSize: 20, fontWeight: "700" },
-  profileInfo: { flex: 1 },
-  profileName: { fontSize: 16, fontWeight: "700" },
-  profileEmail: { fontSize: 14, marginTop: 2 },
-  settingRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: 0.5 },
-  settingInfo: { flex: 1, marginRight: 12 },
-  settingLabelText: { fontSize: 14, fontWeight: "600" },
-  settingSubtitle: { fontSize: 12, marginTop: 4 },
-  logoutButton: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, borderRadius: 14, paddingVertical: 16, borderWidth: 1 },
-  logoutText: { fontSize: 16, fontWeight: "700" },
-  footer: { paddingVertical: 24, alignItems: "center" },
-  footerText: { fontSize: 12, textAlign: "center" },
+  scrollContent: {
+    paddingBottom: 48,
+  },
+  header: {
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 24,
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: "700",
+    letterSpacing: -0.5,
+  },
+
+  section: {
+    paddingHorizontal: 16,
+    marginBottom: 28,
+  },
+  sectionTitle: {
+    fontSize: 12,
+    fontWeight: "600",
+    textTransform: "uppercase",
+    letterSpacing: 0.8,
+    marginBottom: 8,
+    paddingHorizontal: 4,
+  },
+  card: {
+    borderRadius: 12,
+    borderWidth: StyleSheet.hairlineWidth,
+    overflow: "hidden",
+  },
+
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    minHeight: 48,
+  },
+  rowIconContainer: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 12,
+  },
+  rowContent: {
+    flex: 1,
+    marginRight: 8,
+  },
+  rowLabel: {
+    fontSize: 14,
+    fontWeight: "500",
+    letterSpacing: -0.1,
+  },
+  rowSubtitle: {
+    fontSize: 12,
+    marginTop: 2,
+    lineHeight: 16,
+  },
+
+  controlRow: {
+    paddingHorizontal: 14,
+    paddingBottom: 10,
+    paddingTop: 2,
+  },
+  divider: {
+    height: StyleSheet.hairlineWidth,
+    marginHorizontal: 14,
+    marginVertical: 4,
+  },
+
+  segmented: {
+    flexDirection: "row",
+    borderRadius: 8,
+    borderWidth: StyleSheet.hairlineWidth,
+    padding: 3,
+  },
+  segmentedItem: {
+    flex: 1,
+    paddingVertical: 7,
+    alignItems: "center",
+    borderRadius: 6,
+    borderWidth: 0,
+    borderColor: "transparent",
+  },
+  segmentedText: {
+    fontSize: 13,
+    letterSpacing: -0.1,
+  },
+
+  chipGroup: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 6,
+  },
+  chip: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 6,
+    borderWidth: 1,
+  },
+  chipText: {
+    fontSize: 12,
+    letterSpacing: -0.1,
+  },
+
+  profileRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 12,
+  },
+  avatarText: {
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  profileInfo: {
+    flex: 1,
+  },
+  profileName: {
+    fontSize: 15,
+    fontWeight: "600",
+    letterSpacing: -0.2,
+  },
+  profileMeta: {
+    fontSize: 12,
+    marginTop: 1,
+  },
+  badge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 6,
+  },
+  badgeText: {
+    fontSize: 11,
+    fontWeight: "600",
+    letterSpacing: 0.2,
+  },
+
+  footer: {
+    alignItems: "center",
+    paddingTop: 8,
+    paddingBottom: 24,
+    gap: 4,
+  },
+  footerText: {
+    fontSize: 12,
+    fontWeight: "500",
+  },
+  footerVersion: {
+    fontSize: 11,
+  },
+  footerLink: {
+    fontSize: 12,
+    fontWeight: "500",
+    marginTop: 4,
+  },
 });
