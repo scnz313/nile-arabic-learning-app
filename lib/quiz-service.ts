@@ -113,7 +113,7 @@ class QuizService {
       }
     });
 
-    const score = Math.round((correctAnswers / questions.length) * 100);
+    const score = questions.length > 0 ? Math.round((correctAnswers / questions.length) * 100) : 0;
     return { score, correctAnswers };
   }
 

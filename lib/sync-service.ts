@@ -64,8 +64,14 @@ class SyncService {
 
   // Deep sync: fetch and cache ALL activity content for a course
   async deepSyncCourse(courseId: number, onProgress?: (current: number, total: number) => void): Promise<number> {
-    const courseData = await storageService.getCourseData(courseId);
-    if (!courseData) return 0;
+    let courseData;
+    try {
+      courseData = await storageService.getCourseData(courseId);
+    } catch (err) {
+      console.error("Error loading course data for deep sync:", err);
+      return 0;
+    }
+    if (!courseData?.sections) return 0;
 
     let cached = 0;
     const allActivities = courseData.sections.flatMap((s) => s.activities || []);
@@ -73,18 +79,17 @@ class SyncService {
 
     for (let i = 0; i < allActivities.length; i++) {
       const activity = allActivities[i];
-      if (!activity.url || activity.hidden) continue;
+      if (!activity?.url || activity.hidden) continue;
 
       try {
-        // Check if already cached
         const existing = await storageService.getCachedActivityContent(activity.id);
         if (!existing) {
           const content = await moodleAPI.getActivityContent(activity.url, activity.modType);
           await storageService.cacheActivityContent(activity.id, content);
           cached++;
         }
-      } catch (_) {
-        // Skip failed activities
+      } catch {
+        // Individual activity failures are non-critical — skip and continue
       }
 
       onProgress?.(i + 1, total);

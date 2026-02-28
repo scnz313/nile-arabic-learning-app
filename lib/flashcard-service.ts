@@ -41,7 +41,7 @@ class FlashcardService {
       const allCards = await this.getFlashcards();
       const newCard: Flashcard = {
         ...card,
-        id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        id: `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
         createdAt: Date.now(),
       };
       allCards.push(newCard);

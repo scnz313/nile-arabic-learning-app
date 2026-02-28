@@ -19,11 +19,16 @@ const DEFAULT_SETTINGS: AppSettings = {
   studyReminders: false,
 };
 
+function safeParse<T>(data: string | null, fallback: T): T {
+  if (!data) return fallback;
+  try { return JSON.parse(data); } catch { return fallback; }
+}
+
 class SettingsService {
   async getSettings(): Promise<AppSettings> {
     try {
       const data = await AsyncStorage.getItem(SETTINGS_KEY);
-      return data ? { ...DEFAULT_SETTINGS, ...JSON.parse(data) } : DEFAULT_SETTINGS;
+      return { ...DEFAULT_SETTINGS, ...safeParse(data, {}) };
     } catch (error) {
       console.error("Error loading settings:", error);
       return DEFAULT_SETTINGS;

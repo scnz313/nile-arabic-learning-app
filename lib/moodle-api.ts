@@ -88,14 +88,23 @@ class MoodleAPI {
   }
 
   async login(username: string, password: string): Promise<{ fullName: string }> {
+    if (!username?.trim() || !password) {
+      throw new Error("Username and password are required");
+    }
     const proxyUrl = `${this.getProxyBaseUrl()}/api/moodle/login`;
-    const response = await fetch(proxyUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-    });
+    let response: Response;
+    try {
+      response = await fetch(proxyUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: username.trim(), password }),
+      });
+    } catch (err) {
+      throw new Error("Network error. Please check your connection.");
+    }
 
-    const data = await response.json();
+    let data: any;
+    try { data = await response.json(); } catch { throw new Error("Invalid server response"); }
     if (!response.ok || data.error) {
       throw new Error(data.error || "Login failed");
     }
@@ -134,13 +143,17 @@ class MoodleAPI {
   async getUserCourses(): Promise<MoodleCourse[]> {
     if (!this.username || !this.password) throw new Error("Not authenticated");
 
-    const response = await fetch(`${this.getProxyBaseUrl()}/api/moodle/courses`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: this.username, password: this.password }),
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${this.getProxyBaseUrl()}/api/moodle/courses`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: this.username, password: this.password }),
+      });
+    } catch { throw new Error("Network error while fetching courses"); }
 
-    const data = await response.json();
+    let data: any;
+    try { data = await response.json(); } catch { throw new Error("Invalid response from server"); }
     if (data.error) throw new Error(data.error);
 
     return (data.courses || []).map((c: any) => ({
@@ -153,33 +166,43 @@ class MoodleAPI {
 
   async getCourseFull(courseId: number): Promise<CourseFullData> {
     if (!this.username || !this.password) throw new Error("Not authenticated");
+    if (!courseId || isNaN(courseId)) throw new Error("Invalid course ID");
 
-    const response = await fetch(`${this.getProxyBaseUrl()}/api/moodle/course-full`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: this.username, password: this.password, courseId }),
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${this.getProxyBaseUrl()}/api/moodle/course-full`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: this.username, password: this.password, courseId }),
+      });
+    } catch { throw new Error("Network error while fetching course data"); }
 
-    const data = await response.json();
+    let data: any;
+    try { data = await response.json(); } catch { throw new Error("Invalid response from server"); }
     if (data.error) throw new Error(data.error);
     return data;
   }
 
   async getActivityContent(activityUrl: string, modType: string): Promise<ActivityContent> {
     if (!this.username || !this.password) throw new Error("Not authenticated");
+    if (!activityUrl) throw new Error("Activity URL is required");
 
-    const response = await fetch(`${this.getProxyBaseUrl()}/api/moodle/activity-content`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: this.username,
-        password: this.password,
-        activityUrl,
-        modType,
-      }),
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${this.getProxyBaseUrl()}/api/moodle/activity-content`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: this.username,
+          password: this.password,
+          activityUrl,
+          modType: modType || "unknown",
+        }),
+      });
+    } catch { throw new Error("Network error while fetching activity content"); }
 
-    const data = await response.json();
+    let data: any;
+    try { data = await response.json(); } catch { throw new Error("Invalid response from server"); }
     if (data.error) throw new Error(data.error);
     return data;
   }

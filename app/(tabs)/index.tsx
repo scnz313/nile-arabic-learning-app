@@ -63,13 +63,21 @@ export default function HomeScreen() {
     setFilteredCourses(filtered);
   };
 
+  const [syncError, setSyncError] = useState<string | null>(null);
+
   const handleSync = async () => {
     setRefreshing(true);
+    setSyncError(null);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     try {
-      await syncService.syncAllCourses();
+      const result = await syncService.syncAllCourses();
+      if (result.errors.length > 0) {
+        setSyncError(result.errors[0]);
+      }
       await loadCourses();
     } catch (error) {
+      const msg = error instanceof Error ? error.message : "Sync failed";
+      setSyncError(msg);
       console.error("Sync error:", error);
     } finally {
       setRefreshing(false);
@@ -124,6 +132,14 @@ export default function HomeScreen() {
                 Synced {lastSynced}
               </Text>
             </View>
+          )}
+          {syncError && (
+            <TouchableOpacity
+              onPress={() => setSyncError(null)}
+              style={[s.errorBanner, { backgroundColor: colors.error + "10", borderColor: colors.error + "30" }]}
+            >
+              <Text style={[s.errorText, { color: colors.error }]} numberOfLines={2}>{syncError}</Text>
+            </TouchableOpacity>
           )}
         </View>
 
@@ -322,6 +338,8 @@ const s = StyleSheet.create({
   syncRow: { flexDirection: "row", alignItems: "center", marginTop: 10 },
   syncDot: { width: 6, height: 6, borderRadius: 3, marginRight: 8 },
   syncText: { fontSize: 12 },
+  errorBanner: { marginTop: 10, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 8, borderWidth: 1 },
+  errorText: { fontSize: 12 },
 
   searchContainer: { paddingHorizontal: 16, marginBottom: 16 },
   searchBar: {

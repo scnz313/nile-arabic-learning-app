@@ -33,13 +33,15 @@ export default function QuizScreen() {
   }, []);
 
   const loadQuiz = async () => {
-    const quiz = await quizService.generateQuiz(parseInt(courseId), undefined, 10);
+    const id = parseInt(courseId, 10);
+    if (isNaN(id)) { setLoading(false); return; }
+    const quiz = await quizService.generateQuiz(id, undefined, 10);
     setQuestions(quiz);
     setLoading(false);
   };
 
-  const currentQuestion = questions[currentIndex];
-  const progress = ((currentIndex + 1) / questions.length) * 100;
+  const currentQuestion = questions[currentIndex] ?? null;
+  const progress = questions.length > 0 ? ((currentIndex + 1) / questions.length) * 100 : 0;
 
   const handleAnswer = (answer: string) => {
     if (Platform.OS !== "web") {

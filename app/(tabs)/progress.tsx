@@ -40,9 +40,7 @@ export default function ProgressScreen() {
   const totalCourses = Object.keys(stats.coursesProgress).length;
   const avgStudyTime =
     sessions.length > 0
-      ? Math.round(
-          sessions.reduce((sum, ss) => sum + ss.duration, 0) / sessions.length
-        )
+      ? Math.round(sessions.reduce((sum, ss) => sum + ss.duration, 0) / sessions.length)
       : 0;
 
   return (
@@ -159,9 +157,9 @@ export default function ProgressScreen() {
               {Object.values(stats.coursesProgress)
                 .slice(0, 5)
                 .map((course, index, arr) => {
-                  const pct = Math.round(
-                    (course.completedActivities.length / course.totalActivities) * 100
-                  );
+                  const pct = course.totalActivities > 0
+                    ? Math.round((course.completedActivities.length / course.totalActivities) * 100)
+                    : 0;
                   return (
                     <View
                       key={course.courseId}

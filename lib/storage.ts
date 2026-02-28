@@ -72,8 +72,14 @@ class StorageService {
   }
 
   async getCourses(): Promise<(MoodleCourse & { hidden?: boolean })[]> {
-    const data = await AsyncStorage.getItem(KEYS.COURSES);
-    return data ? JSON.parse(data) : [];
+    try {
+      const data = await AsyncStorage.getItem(KEYS.COURSES);
+      if (!data) return [];
+      return JSON.parse(data);
+    } catch {
+      console.error("Error parsing courses data");
+      return [];
+    }
   }
 
   // ─── COURSE DATA (merge: new sections/activities appended, old ones preserved) ───
@@ -181,8 +187,14 @@ class StorageService {
   }
 
   async getCourseData(courseId: number): Promise<(CourseFullData & { lastUpdated?: number }) | null> {
-    const data = await AsyncStorage.getItem(KEYS.COURSE_DATA + courseId);
-    return data ? JSON.parse(data) : null;
+    try {
+      const data = await AsyncStorage.getItem(KEYS.COURSE_DATA + courseId);
+      if (!data) return null;
+      return JSON.parse(data);
+    } catch {
+      console.error(`Error parsing course data for ${courseId}`);
+      return null;
+    }
   }
 
   // ─── ACTIVITY CONTENT CACHE (always update, never delete) ───
@@ -197,8 +209,13 @@ class StorageService {
   }
 
   async getCachedActivityContent(activityId: string): Promise<(ActivityContent & { cachedAt?: number }) | null> {
-    const data = await AsyncStorage.getItem(KEYS.ACTIVITY_CONTENT + activityId);
-    return data ? JSON.parse(data) : null;
+    try {
+      const data = await AsyncStorage.getItem(KEYS.ACTIVITY_CONTENT + activityId);
+      if (!data) return null;
+      return JSON.parse(data);
+    } catch {
+      return null;
+    }
   }
 
   // ─── COMPLETION TRACKING ───
@@ -212,8 +229,13 @@ class StorageService {
   }
 
   async getCompletedActivities(courseId: number): Promise<string[]> {
-    const data = await AsyncStorage.getItem(KEYS.COMPLETED + courseId);
-    return data ? JSON.parse(data) : [];
+    try {
+      const data = await AsyncStorage.getItem(KEYS.COMPLETED + courseId);
+      if (!data) return [];
+      return JSON.parse(data);
+    } catch {
+      return [];
+    }
   }
 
   async getCompletionCount(courseId: number): Promise<{ completed: number; total: number }> {
@@ -234,8 +256,13 @@ class StorageService {
   }
 
   async getArchiveLog(): Promise<ArchiveLogEntry[]> {
-    const data = await AsyncStorage.getItem(KEYS.ARCHIVE_LOG);
-    return data ? JSON.parse(data) : [];
+    try {
+      const data = await AsyncStorage.getItem(KEYS.ARCHIVE_LOG);
+      if (!data) return [];
+      return JSON.parse(data);
+    } catch {
+      return [];
+    }
   }
 
   async getRecentChanges(limit: number = 20): Promise<ArchiveLogEntry[]> {
@@ -246,8 +273,13 @@ class StorageService {
   // ─── SETTINGS ───
 
   async getUserSettings(): Promise<UserSettings> {
-    const data = await AsyncStorage.getItem(KEYS.SETTINGS);
-    return data ? { ...DEFAULT_SETTINGS, ...JSON.parse(data) } : DEFAULT_SETTINGS;
+    try {
+      const data = await AsyncStorage.getItem(KEYS.SETTINGS);
+      if (!data) return DEFAULT_SETTINGS;
+      return { ...DEFAULT_SETTINGS, ...JSON.parse(data) };
+    } catch {
+      return DEFAULT_SETTINGS;
+    }
   }
 
   async setUserSettings(updates: Partial<UserSettings>): Promise<void> {

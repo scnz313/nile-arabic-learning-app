@@ -10,8 +10,23 @@ interface MoodleSession {
 }
 
 const sessionCache = new Map<string, MoodleSession>();
+const MAX_SESSIONS = 100;
+
+function cleanupExpiredSessions() {
+  const now = Date.now();
+  for (const [key, session] of sessionCache) {
+    if (session.expiresAt <= now) sessionCache.delete(key);
+  }
+  if (sessionCache.size > MAX_SESSIONS) {
+    const entries = [...sessionCache.entries()].sort((a, b) => a[1].expiresAt - b[1].expiresAt);
+    for (let i = 0; i < entries.length - MAX_SESSIONS; i++) {
+      sessionCache.delete(entries[i][0]);
+    }
+  }
+}
 
 async function getMoodleSession(username: string, password: string): Promise<string> {
+  cleanupExpiredSessions();
   const cached = sessionCache.get(username);
   if (cached && cached.expiresAt > Date.now()) {
     return cached.cookie;

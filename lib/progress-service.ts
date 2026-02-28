@@ -26,28 +26,28 @@ export interface StudySession {
   activitiesCompleted: number;
 }
 
+const DEFAULT_STATS: ProgressStats = {
+  totalLessonsCompleted: 0,
+  totalStudyTime: 0,
+  currentStreak: 0,
+  longestStreak: 0,
+  lastStudyDate: "",
+  coursesProgress: {},
+};
+
+function safeParse<T>(data: string | null, fallback: T): T {
+  if (!data) return fallback;
+  try { return JSON.parse(data); } catch { return fallback; }
+}
+
 class ProgressService {
   async getProgressStats(): Promise<ProgressStats> {
     try {
       const data = await AsyncStorage.getItem(PROGRESS_KEY);
-      return data ? JSON.parse(data) : {
-        totalLessonsCompleted: 0,
-        totalStudyTime: 0,
-        currentStreak: 0,
-        longestStreak: 0,
-        lastStudyDate: "",
-        coursesProgress: {},
-      };
+      return safeParse(data, { ...DEFAULT_STATS }) ?? { ...DEFAULT_STATS };
     } catch (error) {
       console.error("Error loading progress stats:", error);
-      return {
-        totalLessonsCompleted: 0,
-        totalStudyTime: 0,
-        currentStreak: 0,
-        longestStreak: 0,
-        lastStudyDate: "",
-        coursesProgress: {},
-      };
+      return { ...DEFAULT_STATS };
     }
   }
 
@@ -91,8 +91,7 @@ class ProgressService {
       stats.lastStudyDate = today;
       stats.longestStreak = Math.max(stats.longestStreak, stats.currentStreak);
 
-      // Update reminder service streak
-      await reminderService.updateStreak();
+      try { await reminderService.updateStreak(); } catch { /* non-critical */ }
 
       await AsyncStorage.setItem(PROGRESS_KEY, JSON.stringify(stats));
     } catch (error) {
@@ -108,7 +107,7 @@ class ProgressService {
 
       // Log session
       const sessionsData = await AsyncStorage.getItem(STUDY_SESSIONS_KEY);
-      const sessions: StudySession[] = sessionsData ? JSON.parse(sessionsData) : [];
+      const sessions: StudySession[] = safeParse(sessionsData, []);
       const today = new Date().toISOString().split("T")[0];
       
       const todaySession = sessions.find((s) => s.date === today);
@@ -128,8 +127,9 @@ class ProgressService {
   async getStudySessions(days: number = 30): Promise<StudySession[]> {
     try {
       const data = await AsyncStorage.getItem(STUDY_SESSIONS_KEY);
-      const sessions: StudySession[] = data ? JSON.parse(data) : [];
-      const cutoffDate = new Date(Date.now() - days * 86400000).toISOString().split("T")[0];
+      const sessions: StudySession[] = safeParse(data, []);
+      const safeDays = Math.max(1, days);
+      const cutoffDate = new Date(Date.now() - safeDays * 86400000).toISOString().split("T")[0];
       return sessions.filter((s) => s.date >= cutoffDate).sort((a, b) => b.date.localeCompare(a.date));
     } catch (error) {
       console.error("Error loading study sessions:", error);

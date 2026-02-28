@@ -10,18 +10,24 @@ export interface Bookmark {
   timestamp: number;
 }
 
+function safeParse<T>(data: string | null, fallback: T): T {
+  if (!data) return fallback;
+  try { return JSON.parse(data); } catch { return fallback; }
+}
+
 class BookmarksService {
   async getBookmarks(): Promise<Bookmark[]> {
     try {
       const data = await AsyncStorage.getItem(BOOKMARKS_KEY);
-      return data ? JSON.parse(data) : [];
+      return safeParse<Bookmark[]>(data, []);
     } catch (error) {
       console.error("Error loading bookmarks:", error);
       return [];
     }
   }
 
-  async addBookmark(bookmark: Omit<Bookmark, "timestamp">): Promise<void> {
+  async addBookmark(bookmark: Omit<Bookmark, "timestamp">): Promise<boolean> {
+    if (!bookmark.activityName || !bookmark.courseName) return false;
     try {
       const bookmarks = await this.getBookmarks();
       const exists = bookmarks.some(
@@ -32,20 +38,24 @@ class BookmarksService {
         bookmarks.unshift({ ...bookmark, timestamp: Date.now() });
         await AsyncStorage.setItem(BOOKMARKS_KEY, JSON.stringify(bookmarks));
       }
+      return true;
     } catch (error) {
       console.error("Error adding bookmark:", error);
+      return false;
     }
   }
 
-  async removeBookmark(courseId: number, activityId: number): Promise<void> {
+  async removeBookmark(courseId: number, activityId: number): Promise<boolean> {
     try {
       const bookmarks = await this.getBookmarks();
       const filtered = bookmarks.filter(
         (b) => !(b.courseId === courseId && b.activityId === activityId)
       );
       await AsyncStorage.setItem(BOOKMARKS_KEY, JSON.stringify(filtered));
+      return true;
     } catch (error) {
       console.error("Error removing bookmark:", error);
+      return false;
     }
   }
 
