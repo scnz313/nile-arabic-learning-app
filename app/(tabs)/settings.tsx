@@ -11,12 +11,15 @@ import {
   Linking,
 } from "react-native";
 import { useRouter } from "expo-router";
+import { useColorScheme as useSystemScheme } from "react-native";
 import { ScreenContainer } from "@/components/screen-container";
 import { useColors } from "@/hooks/use-colors";
+import { useThemeContext } from "@/lib/theme-provider";
 import { useAuthContext } from "@/lib/auth-context";
 import { storageService, type UserSettings } from "@/lib/storage";
 import { settingsService, type AppSettings } from "@/lib/settings-service";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import type { ColorScheme } from "@/constants/theme";
 
 function confirmAction(title: string, message: string, onConfirm: () => void) {
   if (Platform.OS === "web") {
@@ -195,6 +198,8 @@ function ChipGroup({ options, selected, onSelect, colors }: ChipGroupProps) {
 export default function SettingsScreen() {
   const router = useRouter();
   const colors = useColors();
+  const { setColorScheme } = useThemeContext();
+  const systemScheme = useSystemScheme() ?? "light";
   const { user, logout } = useAuthContext();
 
   const [settings, setSettings] = useState<UserSettings>({
@@ -212,6 +217,11 @@ export default function SettingsScreen() {
   const loadSettings = async () => {
     const userSettings = await storageService.getUserSettings();
     setSettings(userSettings);
+
+    if (userSettings.theme && userSettings.theme !== "auto") {
+      setColorScheme(userSettings.theme as ColorScheme);
+    }
+
     const appSetts = await settingsService.getSettings();
     setAppSettings(appSetts);
     const syncTime = await storageService.getLastSyncTime();
@@ -222,6 +232,11 @@ export default function SettingsScreen() {
     const updated = { ...settings, [key]: value };
     setSettings(updated);
     await storageService.setUserSettings({ [key]: value });
+
+    if (key === "theme") {
+      const resolved: ColorScheme = value === "auto" ? (systemScheme as ColorScheme) : (value as ColorScheme);
+      setColorScheme(resolved);
+    }
   };
 
   const updateAppSetting = async (key: keyof AppSettings, value: any) => {

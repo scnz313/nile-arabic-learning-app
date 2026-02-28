@@ -36,8 +36,13 @@ export default function LoginScreen() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleLogin = async () => {
-    if (!email.trim() || !password.trim()) {
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail || !password.trim()) {
       setErrorMessage("Please enter both email and password.");
+      return;
+    }
+    if (trimmedEmail.length < 3) {
+      setErrorMessage("Please enter a valid username or email.");
       return;
     }
 

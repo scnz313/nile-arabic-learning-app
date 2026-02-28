@@ -238,11 +238,21 @@ export default function HomeScreen() {
 
           {filteredCourses.length === 0 ? (
             <View style={[s.emptyCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-              <MaterialIcons name="school" size={36} color={colors.muted + "60"} />
+              <View style={[s.emptyIcon, { backgroundColor: colors.accent + "10" }]}>
+                <MaterialIcons name="school" size={28} color={colors.accent} />
+              </View>
               <Text style={[s.emptyTitle, { color: colors.foreground }]}>No courses yet</Text>
               <Text style={[s.emptySub, { color: colors.muted }]}>
                 Pull down to sync your courses from Nile Center
               </Text>
+              <TouchableOpacity
+                onPress={handleSync}
+                style={[s.emptyBtn, { backgroundColor: colors.foreground }]}
+                activeOpacity={0.8}
+              >
+                <MaterialIcons name="sync" size={16} color={colors.background} />
+                <Text style={[s.emptyBtnText, { color: colors.background }]}>Sync Now</Text>
+              </TouchableOpacity>
             </View>
           ) : (
             <View style={s.coursesList}>
@@ -408,8 +418,11 @@ const s = StyleSheet.create({
     alignItems: "center",
     gap: 8,
   },
-  emptyTitle: { fontSize: 15, fontWeight: "600", marginTop: 4 },
+  emptyIcon: { width: 56, height: 56, borderRadius: 14, alignItems: "center", justifyContent: "center" },
+  emptyTitle: { fontSize: 15, fontWeight: "600", marginTop: 12 },
   emptySub: { fontSize: 13, textAlign: "center", lineHeight: 18 },
+  emptyBtn: { flexDirection: "row", alignItems: "center", gap: 6, paddingHorizontal: 20, paddingVertical: 10, borderRadius: 8, marginTop: 16 },
+  emptyBtnText: { fontSize: 13, fontWeight: "600" },
 
   coursesList: { gap: 8 },
   courseCard: {
