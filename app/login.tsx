@@ -10,25 +10,23 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-import { useRouter } from "expo-router";
 import { ScreenContainer } from "@/components/screen-container";
 import { Colors } from "@/constants/theme";
 import { useAuthContext } from "@/lib/auth-context";
 
 export default function LoginScreen() {
-  const router = useRouter();
   const { login } = useAuthContext();
   const colors = Colors.dark;
 
-  const [username, setUsername] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleLogin = async () => {
-    if (!username.trim() || !password.trim()) {
-      setErrorMessage("Please enter both username and password.");
+    if (!identifier.trim() || !password.trim()) {
+      setErrorMessage("Please enter both your email/username and password.");
       return;
     }
 
@@ -36,8 +34,7 @@ export default function LoginScreen() {
 
     try {
       setIsLoading(true);
-      await login(username.trim(), password);
-      router.replace("/(tabs)");
+      await login(identifier.trim(), password);
     } catch (error) {
       const msg = error instanceof Error ? error.message : "Login failed. Please check your credentials.";
       setErrorMessage(msg);
@@ -78,17 +75,17 @@ export default function LoginScreen() {
               </View>
             ) : null}
 
-            {/* Username Field */}
+            {/* Identifier Field */}
             <View style={styles.fieldGroup}>
               <Text className="text-sm font-semibold text-foreground" style={styles.label}>
-                Username
+                Email or username
               </Text>
               <TextInput
                 style={[styles.input, { backgroundColor: colors.background, borderColor: colors.border, color: colors.foreground }]}
-                placeholder="Enter your Nile Center username"
+                placeholder="Enter your Nile Center email or username"
                 placeholderTextColor={colors.muted}
-                value={username}
-                onChangeText={(text) => { setUsername(text); setErrorMessage(""); }}
+                value={identifier}
+                onChangeText={(text) => { setIdentifier(text); setErrorMessage(""); }}
                 autoCapitalize="none"
                 autoCorrect={false}
                 editable={!isLoading}
@@ -145,7 +142,7 @@ export default function LoginScreen() {
             {/* Info */}
             <View style={styles.infoContainer}>
               <Text className="text-xs text-muted" style={styles.infoText}>
-                Use your Nile Center Online credentials.{"\n"}
+                Use the same login you use on nilecenter.online.{"\n"}
                 Automatic sync keeps newly public teacher quizzes available offline.
               </Text>
             </View>

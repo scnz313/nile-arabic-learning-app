@@ -1,5 +1,6 @@
 import type { Express } from "express";
 import * as cheerio from "cheerio";
+import { createHash } from "node:crypto";
 
 const MOODLE_BASE_URL = "https://nilecenter.online";
 
@@ -11,10 +12,61 @@ interface MoodleSession {
 
 const sessionCache = new Map<string, MoodleSession>();
 
-async function getMoodleSession(username: string, password: string): Promise<string> {
-  const cached = sessionCache.get(username);
+export function buildSessionCacheKey(username: string, password: string): string {
+  return createHash("sha256").update(`${username}\0${password}`).digest("hex");
+}
+
+function clearUserSessions(username: string) {
+  for (const [cacheKey, session] of sessionCache.entries()) {
+    if (session.username === username) {
+      sessionCache.delete(cacheKey);
+    }
+  }
+}
+
+export function isLoginPageHtml(html: string): boolean {
+  const normalized = html.toLowerCase();
+  return (
+    normalized.includes('id="login"') ||
+    normalized.includes('name="logintoken"') ||
+    normalized.includes("/login/index.php")
+  );
+}
+
+function extractFullName(html: string, fallback: string): string {
+  const $ = cheerio.load(html);
+  return $(".usertext").first().text().trim() || fallback;
+}
+
+export function isAuthErrorMessage(message: string): boolean {
+  const normalized = message.toLowerCase();
+  return (
+    normalized.includes("invalid username/email or password") ||
+    normalized.includes("session expired")
+  );
+}
+
+async function fetchDashboardHtml(cookie: string): Promise<string> {
+  return fetchWithSession(`${MOODLE_BASE_URL}/my/`, cookie);
+}
+
+async function getMoodleSession(
+  username: string,
+  password: string,
+): Promise<{ cookie: string; dashboardHtml: string; fullName: string }> {
+  const cacheKey = buildSessionCacheKey(username, password);
+  const cached = sessionCache.get(cacheKey);
   if (cached && cached.expiresAt > Date.now()) {
-    return cached.cookie;
+    const dashboardHtml = await fetchDashboardHtml(cached.cookie);
+    if (!isLoginPageHtml(dashboardHtml)) {
+      return {
+        cookie: cached.cookie,
+        dashboardHtml,
+        fullName: extractFullName(dashboardHtml, username),
+      };
+    }
+
+    sessionCache.delete(cacheKey);
   }
 
   const loginPageRes = await fetch(`${MOODLE_BASE_URL}/login/index.php`);
@@ -65,13 +117,21 @@ async function getMoodleSession(username: string, password: string): Promise<str
     }
   }
 
-  sessionCache.set(username, {
+  const dashboardHtml = await fetchDashboardHtml(sessionCookie);
+  if (isLoginPageHtml(dashboardHtml)) {
+    clearUserSessions(username);
+    throw new Error("Invalid username/email or password");
+  }
+
+  const fullName = extractFullName(dashboardHtml, username);
+  clearUserSessions(username);
+  sessionCache.set(cacheKey, {
     cookie: sessionCookie,
     username,
     expiresAt: Date.now() + 30 * 60 * 1000,
   });
 
-  return sessionCookie;
+  return { cookie: sessionCookie, dashboardHtml, fullName };
 }
 
 async function fetchWithSession(url: string, cookie: string): Promise<string> {
@@ -128,15 +188,7 @@ export function registerMoodleProxy(app: Express) {
         return;
       }
 
-      const cookie = await getMoodleSession(username, password);
-      const dashboardHtml = await fetchWithSession(`${MOODLE_BASE_URL}/my/`, cookie);
-      const $ = cheerio.load(dashboardHtml);
-      const fullName = $(".usertext").first().text().trim() || username;
-
-      if (!fullName || dashboardHtml.includes('id="login"')) {
-        res.status(401).json({ error: "Invalid username or password" });
-        return;
-      }
+      const { cookie, fullName } = await getMoodleSession(username, password);
 
       res.json({
         success: true,
@@ -145,7 +197,8 @@ export function registerMoodleProxy(app: Express) {
       });
     } catch (error) {
       console.error("Moodle login error:", error);
-      res.status(500).json({ error: "Failed to connect to Moodle" });
+      const message = error instanceof Error ? error.message : "Failed to connect to Moodle";
+      res.status(isAuthErrorMessage(message) ? 401 : 500).json({ error: message });
     }
   });
 
@@ -158,8 +211,13 @@ export function registerMoodleProxy(app: Express) {
         return;
       }
 
-      const cookie = await getMoodleSession(username, password);
-      const html = await fetchWithSession(`${MOODLE_BASE_URL}/my/`, cookie);
+      const { cookie, dashboardHtml } = await getMoodleSession(username, password);
+      const html = dashboardHtml;
+      if (isLoginPageHtml(html)) {
+        clearUserSessions(username);
+        res.status(401).json({ error: "Session expired. Please sign in again." });
+        return;
+      }
       const $ = cheerio.load(html);
 
       const courses: any[] = [];
@@ -186,7 +244,8 @@ export function registerMoodleProxy(app: Express) {
       res.json({ courses });
     } catch (error) {
       console.error("Moodle courses error:", error);
-      res.status(500).json({ error: "Failed to fetch courses" });
+      const message = error instanceof Error ? error.message : "Failed to fetch courses";
+      res.status(isAuthErrorMessage(message) ? 401 : 500).json({ error: message });
     }
   });
 
@@ -199,13 +258,18 @@ export function registerMoodleProxy(app: Express) {
         return;
       }
 
-      const cookie = await getMoodleSession(username, password);
+      const { cookie } = await getMoodleSession(username, password);
 
       // First get the course page to find section tabs
       const courseHtml = await fetchWithSession(
         `${MOODLE_BASE_URL}/course/view.php?id=${courseId}`,
         cookie
       );
+      if (isLoginPageHtml(courseHtml)) {
+        clearUserSessions(username);
+        res.status(401).json({ error: "Session expired. Please sign in again." });
+        return;
+      }
       const $course = cheerio.load(courseHtml);
 
       // Find the Lessons tab section ID
@@ -399,7 +463,8 @@ export function registerMoodleProxy(app: Express) {
       });
     } catch (error) {
       console.error("Moodle course-full error:", error);
-      res.status(500).json({ error: "Failed to fetch course contents" });
+      const message = error instanceof Error ? error.message : "Failed to fetch course contents";
+      res.status(isAuthErrorMessage(message) ? 401 : 500).json({ error: message });
     }
   });
 
@@ -412,8 +477,13 @@ export function registerMoodleProxy(app: Express) {
         return;
       }
 
-      const cookie = await getMoodleSession(username, password);
+      const { cookie } = await getMoodleSession(username, password);
       const html = await fetchWithSession(makeAbsoluteUrl(activityUrl), cookie);
+      if (isLoginPageHtml(html)) {
+        clearUserSessions(username);
+        res.status(401).json({ error: "Session expired. Please sign in again." });
+        return;
+      }
       const $ = cheerio.load(html);
 
       let content: any = {};
@@ -568,7 +638,8 @@ export function registerMoodleProxy(app: Express) {
       res.json(content);
     } catch (error) {
       console.error("Moodle activity content error:", error);
-      res.status(500).json({ error: "Failed to fetch activity content" });
+      const message = error instanceof Error ? error.message : "Failed to fetch activity content";
+      res.status(isAuthErrorMessage(message) ? 401 : 500).json({ error: message });
     }
   });
 

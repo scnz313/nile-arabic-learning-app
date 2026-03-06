@@ -124,11 +124,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const hasCredentials = await moodleAPI.init();
       if (hasCredentials) {
+        const isValid = await moodleAPI.validateSession();
+        if (!isValid) {
+          await moodleAPI.logout();
+          setUser(null);
+          return;
+        }
+
         setUser({
           username: moodleAPI.getUsername(),
           fullName: moodleAPI.getFullName(),
         });
-        await maybeAutoSync();
+        void maybeAutoSync();
       }
     } catch (error) {
       console.error("Auth check failed:", error);
@@ -139,14 +146,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (username: string, password: string) => {
     try {
-      setIsLoading(true);
       const result = await moodleAPI.login(username, password);
       setUser({ username, fullName: result.fullName });
-      await maybeAutoSync(true);
+      void maybeAutoSync(true);
     } catch (error) {
       throw error;
-    } finally {
-      setIsLoading(false);
     }
   };
 
