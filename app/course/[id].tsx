@@ -52,13 +52,7 @@ export default function CourseDetailScreen() {
   const [totalActivities, setTotalActivities] = useState(0);
   const [completedCount, setCompletedCount] = useState(0);
 
-  useFocusEffect(
-    useCallback(() => {
-      loadCourseData();
-    }, [courseId])
-  );
-
-  const loadCourseData = async () => {
+  const loadCourseData = useCallback(async () => {
     try {
       setIsLoading(true);
       const courses = await storageService.getCourses();
@@ -103,7 +97,13 @@ export default function CourseDetailScreen() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [courseId]);
+
+  useFocusEffect(
+    useCallback(() => {
+      void loadCourseData();
+    }, [loadCourseData])
+  );
 
   const handleRefresh = async () => {
     try {
@@ -196,6 +196,7 @@ export default function CourseDetailScreen() {
             <MaterialIcons name="arrow-back" size={24} color={colors.foreground} />
           </TouchableOpacity>
           <View style={styles.topBarTitle}>
+            <Text style={[styles.topBarEyebrow, { color: colors.muted }]}>Course overview</Text>
             <Text style={[styles.topBarText, { color: colors.foreground }]} numberOfLines={1}>{courseName || "Course"}</Text>
           </View>
           <TouchableOpacity 
@@ -209,17 +210,32 @@ export default function CourseDetailScreen() {
         </View>
 
         {/* Progress Card */}
-        <View style={[styles.progressCard, { backgroundColor: colors.surface }]}>
+        <View style={[styles.progressCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
           <View style={styles.progressHeader}>
-            <Text style={[styles.progressTitle, { color: colors.foreground }]}>Your Progress</Text>
-            <Text style={[styles.progressPercentage, { color: colors.primary }]}>{progress}%</Text>
+            <View style={{ flex: 1 }}>
+              <Text style={[styles.progressTitle, { color: colors.foreground }]}>Your Progress</Text>
+              <Text style={[styles.progressSubheading, { color: colors.muted }]}>
+                Stay on top of lessons, quizzes, and downloadable activities.
+              </Text>
+            </View>
+            <View style={[styles.progressPercentageBadge, { backgroundColor: colors.primary + "14" }]}>
+              <Text style={[styles.progressPercentage, { color: colors.primary }]}>{progress}%</Text>
+            </View>
           </View>
           <View style={[styles.progressBarOuter, { backgroundColor: colors.border }]}>
             <View style={[styles.progressBarInner, { width: `${progress}%`, backgroundColor: colors.primary }]} />
           </View>
-          <Text style={[styles.progressSubtext, { color: colors.muted }]}>
-            {completedCount} of {totalActivities} activities completed
-          </Text>
+          <View style={styles.progressFooter}>
+            <Text style={[styles.progressSubtext, { color: colors.muted }]}>
+              {completedCount} of {totalActivities} activities completed
+            </Text>
+            <View style={[styles.progressStatPill, { backgroundColor: colors.background, borderColor: colors.border }]}>
+              <MaterialIcons name="fact-check" size={14} color={colors.success} />
+              <Text style={[styles.progressStatText, { color: colors.foreground }]}>
+                {totalActivities - completedCount} left
+              </Text>
+            </View>
+          </View>
         </View>
 
         {/* Quiz Button */}
@@ -231,13 +247,24 @@ export default function CourseDetailScreen() {
             router.push(`/quiz/${courseId}` as any);
           }}
           activeOpacity={0.7}
-          style={[styles.quizButton, { backgroundColor: colors.success + "15", borderColor: colors.success }]}
+          style={[styles.quizButton, { backgroundColor: colors.success + "10", borderColor: colors.success + "60" }]}
         >
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-            <MaterialIcons name="quiz" size={24} color={colors.success} />
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+            <View
+              style={{
+                width: 46,
+                height: 46,
+                borderRadius: 16,
+                backgroundColor: colors.success + "18",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <MaterialIcons name="quiz" size={24} color={colors.success} />
+            </View>
             <View style={{ flex: 1 }}>
               <Text style={[styles.quizButtonTitle, { color: colors.success }]}>Take a Quiz</Text>
-              <Text style={[styles.quizButtonSubtext, { color: colors.muted }]}>Test your knowledge</Text>
+              <Text style={[styles.quizButtonSubtext, { color: colors.muted }]}>Practice, revise, and track your understanding</Text>
             </View>
             <MaterialIcons name="chevron-right" size={24} color={colors.success} />
           </View>
@@ -286,6 +313,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   topBarTitle: { flex: 1 },
+  topBarEyebrow: { fontSize: 12, fontWeight: "700", textTransform: "uppercase", marginBottom: 4, letterSpacing: 0.5 },
   topBarText: { fontSize: 18, fontWeight: "700" },
   progressCard: { 
     marginHorizontal: 20, 
@@ -293,6 +321,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     padding: 20, 
     borderRadius: 20,
+    borderWidth: 1,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
@@ -306,6 +335,16 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   progressTitle: { fontSize: 16, fontWeight: "700" },
+  progressSubheading: { fontSize: 13, marginTop: 4, lineHeight: 18 },
+  progressPercentageBadge: {
+    minWidth: 74,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 18,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginLeft: 12,
+  },
   progressPercentage: { fontSize: 24, fontWeight: "800" },
   progressBarOuter: { 
     height: 8, 
@@ -315,6 +354,17 @@ const styles = StyleSheet.create({
   },
   progressBarInner: { height: "100%", borderRadius: 4 },
   progressSubtext: { fontSize: 13, fontWeight: "500" },
+  progressFooter: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 10, gap: 10 },
+  progressStatPill: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    borderRadius: 999,
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
+  progressStatText: { fontSize: 12, fontWeight: "700" },
   list: { paddingHorizontal: 20, paddingBottom: 32 },
   sectionHeader: { 
     flexDirection: "row", 
@@ -365,7 +415,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   loadingText: { marginTop: 12, fontSize: 14 },
-  quizButton: { marginHorizontal: 20, marginBottom: 16, padding: 16, borderRadius: 16, borderWidth: 2, shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 3 },
+  quizButton: { marginHorizontal: 20, marginBottom: 16, padding: 18, borderRadius: 20, borderWidth: 1, shadowColor: "#000", shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.12, shadowRadius: 18, elevation: 5 },
   quizButtonTitle: { fontSize: 17, fontWeight: "700" },
   quizButtonSubtext: { fontSize: 13, marginTop: 2 },
 });

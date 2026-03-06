@@ -112,6 +112,29 @@ class MoodleAPI {
     return { fullName: this.fullName || username };
   }
 
+  async validateSession(): Promise<boolean> {
+    if (!this.username || !this.password) {
+      return false;
+    }
+
+    try {
+      const response = await fetch(`${this.getProxyBaseUrl()}/api/moodle/courses`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: this.username, password: this.password }),
+      });
+
+      if (!response.ok) {
+        return false;
+      }
+
+      const data = await response.json();
+      return !data.error;
+    } catch {
+      return false;
+    }
+  }
+
   async logout(): Promise<void> {
     this.username = null;
     this.password = null;

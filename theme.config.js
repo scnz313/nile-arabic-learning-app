@@ -1,29 +1,29 @@
 /** @type {const} */
 const themeColors = {
-  // Primary brand colors - vibrant teal and gold
-  primary: { light: '#0891B2', dark: '#06B6D4' }, // Cyan 600/500
-  accent: { light: '#F59E0B', dark: '#FBBF24' }, // Amber 500/400 (gold)
+  // Cursor-inspired accent palette
+  primary: { light: '#2563EB', dark: '#5EA1FF' },
+  accent: { light: '#7C3AED', dark: '#A78BFA' },
   
   // Background colors
-  background: { light: '#F7F7F7', dark: '#0F1419' }, // Light gray / Dark
-  surface: { light: '#FFFFFF', dark: '#1A1F26' }, // White / Dark surface
+  background: { light: '#F5F7FB', dark: '#0D1117' },
+  surface: { light: '#FFFFFF', dark: '#161B22' },
   
   // Text colors
-  foreground: { light: '#1F1F1F', dark: '#ECEDEE' }, // Dark gray / Light
-  muted: { light: '#6B6B6B', dark: '#9BA1A6' }, // Medium gray
+  foreground: { light: '#111827', dark: '#E6EDF3' },
+  muted: { light: '#6B7280', dark: '#9DA7B3' },
   
   // UI colors
-  border: { light: '#E5E7EB', dark: '#334155' }, // Gray 200 / Slate 700
+  border: { light: '#E5E7EB', dark: '#2D3642' },
   
   // Status colors
-  success: { light: '#10B981', dark: '#34D399' }, // Emerald 500/400
-  warning: { light: '#F59E0B', dark: '#FBBF24' }, // Amber 500/400
-  error: { light: '#EF4444', dark: '#F87171' }, // Red 500/400
-  info: { light: '#3B82F6', dark: '#60A5FA' }, // Blue 500/400
+  success: { light: '#10B981', dark: '#34D399' },
+  warning: { light: '#F59E0B', dark: '#FBBF24' },
+  error: { light: '#EF4444', dark: '#F87171' },
+  info: { light: '#3B82F6', dark: '#60A5FA' },
   
   // Progress colors
-  progress: { light: '#10B981', dark: '#34D399' }, // Green for progress
-  progressBg: { light: '#E5E7EB', dark: '#374151' }, // Gray for progress background
+  progress: { light: '#10B981', dark: '#34D399' },
+  progressBg: { light: '#E5E7EB', dark: '#253041' },
 };
 
 module.exports = { themeColors };

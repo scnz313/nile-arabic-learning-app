@@ -1,6 +1,6 @@
 import { ScrollView, Text, View, RefreshControl, Pressable, ActivityIndicator, TextInput, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
 
@@ -16,42 +16,48 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 export default function HomeScreen() {
   const { user } = useAuthContext();
   const [courses, setCourses] = useState<MoodleCourse[]>([]);
-  const [filteredCourses, setFilteredCourses] = useState<MoodleCourse[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [lastSynced, setLastSynced] = useState<string | null>(null);
   const colors = useColors();
 
-  const loadCourses = async () => {
+  const loadCourses = useCallback(async () => {
     try {
-      const cached = await storageService.getCourses();
+      const cached = await storageService.getVisibleCoursesWithStats();
       setCourses(cached);
-      setFilteredCourses(cached);
       const lastSync = await storageService.getLastSyncTime();
-      if (lastSync) {
-        setLastSynced(new Date(lastSync).toLocaleString());
-      }
+      setLastSynced(lastSync ? new Date(lastSync).toLocaleString() : null);
     } catch (error) {
       console.error("Load courses error:", error);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    if (!query.trim()) {
-      setFilteredCourses(courses);
-      return;
+  const filteredCourses = useMemo(() => {
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+    if (!normalizedQuery) {
+      return courses;
     }
-    const lowercaseQuery = query.toLowerCase();
-    const filtered = courses.filter((course) =>
-      course.fullname.toLowerCase().includes(lowercaseQuery) ||
-      course.shortname?.toLowerCase().includes(lowercaseQuery)
+
+    return courses.filter((course) =>
+      course.fullname.toLowerCase().includes(normalizedQuery) ||
+      course.shortname?.toLowerCase().includes(normalizedQuery)
     );
-    setFilteredCourses(filtered);
-  };
+  }, [courses, searchQuery]);
+
+  const courseSummary = useMemo(() => {
+    const totalCourses = courses.length;
+    const totalActivities = courses.reduce((sum, course) => sum + (course.totalActivities || 0), 0);
+    const completedActivities = courses.reduce((sum, course) => sum + (course.completedActivities || 0), 0);
+
+    return {
+      totalCourses,
+      totalActivities,
+      completedActivities,
+    };
+  }, [courses]);
 
   const handleSync = async () => {
     setRefreshing(true);
@@ -67,12 +73,14 @@ export default function HomeScreen() {
   };
 
   useEffect(() => {
-    loadCourses();
-  }, []);
+    void loadCourses();
+  }, [loadCourses]);
 
-  useFocusEffect(() => {
-    loadCourses();
-  });
+  useFocusEffect(
+    useCallback(() => {
+      void loadCourses();
+    }, [loadCourses]),
+  );
 
   const handleCoursePress = (course: MoodleCourse) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -92,41 +100,117 @@ export default function HomeScreen() {
   return (
     <ScreenContainer>
       <ScrollView
-        contentContainerStyle={{ flexGrow: 1, paddingBottom: 32 }}
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: 144 }}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={handleSync} tintColor={colors.primary} />
         }
       >
         {/* Header Section */}
-        <View style={{ paddingHorizontal: 20, paddingTop: 16, paddingBottom: 24 }}>
-          <Text style={{ fontSize: 14, color: colors.muted, marginBottom: 4 }}>Welcome back</Text>
-          <Text style={{ fontSize: 28, fontWeight: "700", color: colors.foreground }}>
-            {user?.fullName || "Student"}
-          </Text>
-          {lastSynced && (
-            <View style={{ flexDirection: "row", alignItems: "center", marginTop: 12 }}>
-              <IconSymbol name="checkmark.circle.fill" size={16} color={colors.success} />
-              <Text style={{ fontSize: 13, color: colors.muted, marginLeft: 6 }}>
-                Last synced: {lastSynced}
-              </Text>
+        <View style={{ paddingHorizontal: 20, paddingTop: 12, paddingBottom: 20 }}>
+          <View
+            style={{
+              borderRadius: 28,
+              borderWidth: 1,
+              borderColor: colors.border,
+              backgroundColor: colors.surface,
+              padding: 22,
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 10 },
+              shadowOpacity: 0.14,
+              shadowRadius: 28,
+              elevation: 8,
+            }}
+          >
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 18 }}>
+              <View style={{ flex: 1, paddingRight: 12 }}>
+                <Text style={{ fontSize: 14, color: colors.muted, marginBottom: 6 }}>Welcome back</Text>
+                <Text style={{ fontSize: 30, fontWeight: "800", color: colors.foreground }} numberOfLines={2}>
+                  {user?.fullName || "Student"}
+                </Text>
+                <Text style={{ fontSize: 14, color: colors.muted, marginTop: 8, lineHeight: 20 }}>
+                  Continue your Arabic lessons with a cleaner, faster study flow.
+                </Text>
+              </View>
+              <View
+                style={{
+                  width: 52,
+                  height: 52,
+                  borderRadius: 18,
+                  backgroundColor: colors.primary + "18",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <MaterialIcons name="auto-awesome" size={24} color={colors.primary} />
+              </View>
             </View>
-          )}
+
+            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
+              <SummaryChip
+                label="Courses"
+                value={String(courseSummary.totalCourses)}
+                color={colors.primary}
+                icon="menu-book"
+              />
+              <SummaryChip
+                label="Completed"
+                value={`${courseSummary.completedActivities}/${courseSummary.totalActivities || 0}`}
+                color={colors.success}
+                icon="check-circle"
+              />
+              <SummaryChip
+                label="Sync"
+                value={lastSynced ? "Updated" : "Pending"}
+                color={lastSynced ? colors.success : colors.warning}
+                icon={lastSynced ? "cloud-done" : "cloud-sync"}
+              />
+            </View>
+
+            {lastSynced && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginTop: 16,
+                  paddingTop: 14,
+                  borderTopWidth: 1,
+                  borderTopColor: colors.border,
+                }}
+              >
+                <IconSymbol name="checkmark.circle.fill" size={16} color={colors.success} />
+                <Text style={{ fontSize: 13, color: colors.muted, marginLeft: 8, flex: 1 }}>
+                  Last synced: {lastSynced}
+                </Text>
+              </View>
+            )}
+          </View>
         </View>
 
         {/* Quick Actions */}
         <View style={{ paddingHorizontal: 20, marginBottom: 20, gap: 12 }}>
           {/* Search Bar */}
-          <View style={{ flexDirection: "row", alignItems: "center", backgroundColor: colors.surface, borderRadius: 12, paddingHorizontal: 16, paddingVertical: 12, borderWidth: 1, borderColor: colors.border }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              backgroundColor: colors.surface,
+              borderRadius: 18,
+              paddingHorizontal: 16,
+              paddingVertical: 14,
+              borderWidth: 1,
+              borderColor: colors.border,
+            }}
+          >
             <MaterialIcons name="search" size={20} color={colors.muted} />
             <TextInput
               value={searchQuery}
-              onChangeText={handleSearch}
+              onChangeText={setSearchQuery}
               placeholder="Search courses..."
               placeholderTextColor={colors.muted}
               style={{ flex: 1, marginLeft: 12, fontSize: 15, color: colors.foreground }}
             />
             {searchQuery.length > 0 && (
-              <TouchableOpacity onPress={() => handleSearch("")} activeOpacity={0.7}>
+              <TouchableOpacity onPress={() => setSearchQuery("")} activeOpacity={0.7}>
                 <MaterialIcons name="close" size={20} color={colors.muted} />
               </TouchableOpacity>
             )}
@@ -144,14 +228,14 @@ export default function HomeScreen() {
               alignItems: "center",
               justifyContent: "space-between",
               backgroundColor: colors.primary,
-              borderRadius: 16,
+              borderRadius: 20,
               paddingHorizontal: 20,
-              paddingVertical: 16,
+              paddingVertical: 18,
               shadowColor: "#000",
               shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.1,
-              shadowRadius: 8,
-              elevation: 3,
+              shadowOpacity: 0.16,
+              shadowRadius: 18,
+              elevation: 6,
             }}
           >
             <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
@@ -170,15 +254,24 @@ export default function HomeScreen() {
         {/* My Courses Section */}
         <View style={{ paddingHorizontal: 20 }}>
           <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-            <Text style={{ fontSize: 20, fontWeight: "700", color: colors.foreground }}>My Courses</Text>
+            <View>
+              <Text style={{ fontSize: 22, fontWeight: "800", color: colors.foreground }}>My Courses</Text>
+              <Text style={{ fontSize: 13, color: colors.muted, marginTop: 4 }}>
+                {courseSummary.totalCourses} active levels ready to study
+              </Text>
+            </View>
             <Pressable
               onPress={handleSync}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.6 : 1,
-                paddingHorizontal: 12,
-                paddingVertical: 6,
+                width: 42,
+                height: 42,
+                alignItems: "center",
+                justifyContent: "center",
                 borderRadius: 16,
                 backgroundColor: colors.surface,
+                borderWidth: 1,
+                borderColor: colors.border,
               })}
             >
               <IconSymbol name="arrow.clockwise" size={18} color={colors.primary} />
@@ -200,10 +293,12 @@ export default function HomeScreen() {
             }}>
               <IconSymbol name="book.fill" size={48} color={colors.muted} />
               <Text style={{ fontSize: 18, fontWeight: "600", color: colors.foreground, marginTop: 16 }}>
-                No courses yet
+                {searchQuery.trim() ? "No matching courses" : "No courses yet"}
               </Text>
               <Text style={{ fontSize: 14, color: colors.muted, marginTop: 8, textAlign: "center" }}>
-                Pull down to sync your courses from Nile Center
+                {searchQuery.trim()
+                  ? "Try a different search term or clear the filter."
+                  : "Pull down to sync your courses from Nile Center"}
               </Text>
             </View>
           ) : (
@@ -221,6 +316,51 @@ export default function HomeScreen() {
         </View>
       </ScrollView>
     </ScreenContainer>
+  );
+}
+
+function SummaryChip({
+  label,
+  value,
+  color,
+  icon,
+}: {
+  label: string;
+  value: string;
+  color: string;
+  icon: keyof typeof MaterialIcons.glyphMap;
+}) {
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        borderRadius: 999,
+        backgroundColor: color + "12",
+        paddingHorizontal: 12,
+        paddingVertical: 10,
+        gap: 8,
+      }}
+    >
+      <View
+        style={{
+          width: 28,
+          height: 28,
+          borderRadius: 14,
+          backgroundColor: color + "20",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <MaterialIcons name={icon} size={16} color={color} />
+      </View>
+      <View>
+        <Text style={{ fontSize: 11, color, fontWeight: "700", textTransform: "uppercase", letterSpacing: 0.4 }}>
+          {label}
+        </Text>
+        <Text style={{ fontSize: 13, fontWeight: "700", color: "#E6EDF3" }}>{value}</Text>
+      </View>
+    </View>
   );
 }
 
@@ -260,14 +400,16 @@ function CourseCard({ course, onPress, colors }: CourseCardProps) {
       onPress={onPress}
       style={({ pressed }) => ({
         backgroundColor: colors.surface,
-        borderRadius: 20,
+        borderRadius: 24,
         padding: 20,
+        borderWidth: 1,
+        borderColor: colors.border,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: pressed ? 0.08 : 0.06,
-        shadowRadius: 12,
-        elevation: 4,
-        transform: [{ scale: pressed ? 0.98 : 1 }],
+        shadowOpacity: pressed ? 0.16 : 0.1,
+        shadowRadius: 20,
+        elevation: 6,
+        transform: [{ scale: pressed ? 0.985 : 1 }],
       })}
     >
       <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
@@ -276,7 +418,7 @@ function CourseCard({ course, onPress, colors }: CourseCardProps) {
           style={{
             width: 64,
             height: 64,
-            borderRadius: 16,
+            borderRadius: 20,
             backgroundColor: levelColor.bg,
             justifyContent: "center",
             alignItems: "center",
@@ -289,35 +431,28 @@ function CourseCard({ course, onPress, colors }: CourseCardProps) {
 
         {/* Course Info */}
         <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 18, fontWeight: "700", color: colors.foreground, marginBottom: 6 }}>
+          <Text style={{ fontSize: 19, fontWeight: "800", color: colors.foreground, marginBottom: 10 }}>
             {cleanName}
           </Text>
           
-          <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 12 }}>
-            <IconSymbol name="book.fill" size={14} color={colors.muted} />
-            <Text style={{ fontSize: 13, color: colors.muted, marginLeft: 6 }}>
-              {course.totalSections || 0} sections
-            </Text>
-            <Text style={{ fontSize: 13, color: colors.muted, marginHorizontal: 8 }}>•</Text>
-            <IconSymbol name="doc.fill" size={14} color={colors.muted} />
-            <Text style={{ fontSize: 13, color: colors.muted, marginLeft: 6 }}>
-              {totalActivities} activities
-            </Text>
+          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 14 }}>
+            <InfoPill colors={colors} icon="view-module" label={`${course.totalSections || 0} sections`} />
+            <InfoPill colors={colors} icon="fact-check" label={`${totalActivities} activities`} />
           </View>
 
           {/* Progress Bar */}
           <View style={{ marginBottom: 8 }}>
-            <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 6 }}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 8 }}>
               <Text style={{ fontSize: 12, color: colors.muted }}>Progress</Text>
-              <Text style={{ fontSize: 12, fontWeight: "600", color: colors.success }}>
-                {completedCount}/{totalActivities} ({progressPercent}%)
+              <Text style={{ fontSize: 12, fontWeight: "700", color: colors.success }}>
+                {completedCount}/{totalActivities} · {progressPercent}%
               </Text>
             </View>
             <View
               style={{
-                height: 8,
-                backgroundColor: colors.surface,
-                borderRadius: 4,
+                height: 10,
+                backgroundColor: colors.background,
+                borderRadius: 999,
                 overflow: "hidden",
               }}
             >
@@ -326,7 +461,7 @@ function CourseCard({ course, onPress, colors }: CourseCardProps) {
                   height: "100%",
                   width: `${progressPercent}%`,
                   backgroundColor: colors.success,
-                  borderRadius: 4,
+                  borderRadius: 999,
                 }}
               />
             </View>
@@ -337,5 +472,34 @@ function CourseCard({ course, onPress, colors }: CourseCardProps) {
         <IconSymbol name="chevron.right" size={20} color={colors.muted} style={{ marginLeft: 8 }} />
       </View>
     </Pressable>
+  );
+}
+
+function InfoPill({
+  colors,
+  icon,
+  label,
+}: {
+  colors: ReturnType<typeof useColors>;
+  icon: keyof typeof MaterialIcons.glyphMap;
+  label: string;
+}) {
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 6,
+        borderRadius: 999,
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        backgroundColor: colors.background,
+        borderWidth: 1,
+        borderColor: colors.border,
+      }}
+    >
+      <MaterialIcons name={icon} size={14} color={colors.muted} />
+      <Text style={{ fontSize: 12, fontWeight: "600", color: colors.muted }}>{label}</Text>
+    </View>
   );
 }

@@ -15,6 +15,7 @@ import { useColors } from "@/hooks/use-colors";
 import { useAuthContext } from "@/lib/auth-context";
 import { storageService, type UserSettings } from "@/lib/storage";
 import { settingsService, type AppSettings } from "@/lib/settings-service";
+import { useThemeContext } from "@/lib/theme-provider";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 function confirmAction(title: string, message: string, onConfirm: () => void) {
@@ -32,6 +33,7 @@ export default function SettingsScreen() {
   const router = useRouter();
   const colors = useColors();
   const { user, logout } = useAuthContext();
+  const { colorScheme, setColorScheme } = useThemeContext();
 
   const [settings, setSettings] = useState<UserSettings>({
     notificationsEnabled: true,
@@ -65,6 +67,11 @@ export default function SettingsScreen() {
     setAppSettings((prev) => (prev ? { ...prev, [key]: value } : null));
   };
 
+  const updateTheme = async (darkMode: boolean) => {
+    await updateAppSetting("darkMode", darkMode);
+    setColorScheme(darkMode ? "dark" : "light");
+  };
+
   const handleLogout = () => {
     confirmAction(
       "Sign Out",
@@ -81,7 +88,7 @@ export default function SettingsScreen() {
       "Clear Cache",
       "This will remove all cached course data. You will need to sync again.",
       async () => {
-        await storageService.clearAll();
+        await storageService.clearCourseCache();
         setLastSync("");
       }
     );
@@ -89,11 +96,31 @@ export default function SettingsScreen() {
 
   return (
     <ScreenContainer>
-      <View style={styles.headerContainer}>
-        <Text style={[styles.headerTitle, { color: colors.foreground }]}>Settings</Text>
-      </View>
-
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        <View style={styles.headerContainer}>
+          <View
+            style={[
+              styles.heroCard,
+              {
+                backgroundColor: colors.surface,
+                borderColor: colors.border,
+              },
+            ]}
+          >
+            <View style={styles.heroContent}>
+              <View style={styles.heroTextWrap}>
+                <Text style={[styles.headerTitle, { color: colors.foreground }]}>Settings</Text>
+                <Text style={[styles.heroSubtitle, { color: colors.muted }]}>
+                  Tune the app, sync behavior, and your study experience.
+                </Text>
+              </View>
+              <View style={[styles.heroIconWrap, { backgroundColor: colors.primary + "16" }]}>
+                <MaterialIcons name="tune" size={24} color={colors.primary} />
+              </View>
+            </View>
+          </View>
+        </View>
+
         {/* Profile Section */}
         <View style={styles.sectionContainer}>
           <Text style={[styles.sectionLabel, { color: colors.muted }]}>PROFILE</Text>
@@ -109,6 +136,20 @@ export default function SettingsScreen() {
                   {user?.fullName || "Student"}
                 </Text>
                 <Text style={[styles.profileEmail, { color: colors.muted }]}>{user?.username || ""}</Text>
+                <View style={styles.profileBadges}>
+                  <View style={[styles.profileBadge, { backgroundColor: colors.background, borderColor: colors.border }]}>
+                    <MaterialIcons name="dark-mode" size={14} color={colors.primary} />
+                    <Text style={[styles.profileBadgeText, { color: colors.foreground }]}>
+                      {appSettings?.darkMode ?? colorScheme === "dark" ? "Dark theme" : "Light theme"}
+                    </Text>
+                  </View>
+                  <View style={[styles.profileBadge, { backgroundColor: colors.background, borderColor: colors.border }]}>
+                    <MaterialIcons name="sync" size={14} color={colors.success} />
+                    <Text style={[styles.profileBadgeText, { color: colors.foreground }]}>
+                      {settings.autoSync ? "Auto-sync on" : "Auto-sync off"}
+                    </Text>
+                  </View>
+                </View>
               </View>
             </View>
           </View>
@@ -121,7 +162,7 @@ export default function SettingsScreen() {
             <View style={[styles.settingRow, { borderBottomColor: colors.border }]}>
               <View style={styles.settingInfo}>
                 <Text style={[styles.settingLabelText, { color: colors.foreground }]}>Auto-sync courses</Text>
-                <Text style={[styles.settingSubtitle, { color: colors.muted }]}>Sync courses when app opens</Text>
+                <Text style={[styles.settingSubtitle, { color: colors.muted }]}>Sync on sign-in, return, and app close</Text>
               </View>
               <Switch
                 value={settings.autoSync}
@@ -144,6 +185,20 @@ export default function SettingsScreen() {
         <View style={styles.sectionContainer}>
           <Text style={[styles.sectionLabel, { color: colors.muted }]}>DISPLAY</Text>
           <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <View style={[styles.settingRow, { borderBottomColor: colors.border }]}>
+              <View style={styles.settingInfo}>
+                <Text style={[styles.settingLabelText, { color: colors.foreground }]}>Theme</Text>
+                <Text style={[styles.settingSubtitle, { color: colors.muted }]}>
+                  Match Cursor-style dark UI across the app
+                </Text>
+              </View>
+              <Switch
+                value={appSettings?.darkMode ?? colorScheme === "dark"}
+                onValueChange={updateTheme}
+                trackColor={{ false: colors.border, true: colors.primary }}
+                thumbColor="#FFFFFF"
+              />
+            </View>
             <View style={[styles.settingRow, { borderBottomColor: colors.border }]}>
               <View style={styles.settingInfo}>
                 <Text style={[styles.settingLabelText, { color: colors.foreground }]}>Font Size</Text>
@@ -291,7 +346,16 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   headerContainer: { paddingHorizontal: 24, paddingTop: 16, paddingBottom: 8 },
   headerTitle: { fontSize: 24, fontWeight: "700" },
-  scrollContent: { paddingBottom: 40 },
+  heroCard: {
+    borderRadius: 28,
+    borderWidth: 1,
+    padding: 22,
+  },
+  heroContent: { flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between" },
+  heroTextWrap: { flex: 1, paddingRight: 16 },
+  heroSubtitle: { fontSize: 14, marginTop: 8, lineHeight: 20 },
+  heroIconWrap: { width: 52, height: 52, borderRadius: 18, alignItems: "center", justifyContent: "center" },
+  scrollContent: { paddingBottom: 144 },
   sectionContainer: { paddingHorizontal: 16, marginBottom: 20 },
   sectionLabel: { fontSize: 12, fontWeight: "700", marginBottom: 8, paddingHorizontal: 4, letterSpacing: 0.5 },
   card: { borderRadius: 14, borderWidth: 1, overflow: "hidden" },
@@ -301,6 +365,17 @@ const styles = StyleSheet.create({
   profileInfo: { flex: 1 },
   profileName: { fontSize: 16, fontWeight: "700" },
   profileEmail: { fontSize: 14, marginTop: 2 },
+  profileBadges: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 12 },
+  profileBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    borderRadius: 999,
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
+  profileBadgeText: { fontSize: 12, fontWeight: "600" },
   settingRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: 0.5 },
   settingInfo: { flex: 1, marginRight: 12 },
   settingLabelText: { fontSize: 14, fontWeight: "600" },
