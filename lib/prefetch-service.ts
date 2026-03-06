@@ -1,6 +1,7 @@
 import { moodleAPI } from "./moodle-api";
 import { webViewCacheService } from "./webview-cache-service";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { storageService } from "./storage";
 
 const PREFETCH_QUEUE_KEY = "prefetch_queue";
 const PREFETCH_STATUS_KEY = "prefetch_status";
@@ -9,6 +10,8 @@ export interface PrefetchItem {
   courseId: string;
   activityId: string;
   activityName: string;
+  activityUrl: string;
+  modType: string;
   priority: number; // Higher = more important
   addedAt: number;
 }
@@ -32,6 +35,8 @@ class PrefetchService {
     courseId: string,
     activityId: string,
     activityName: string,
+    activityUrl: string,
+    modType: string,
     priority: number = 1
   ): Promise<void> {
     try {
@@ -48,6 +53,8 @@ class PrefetchService {
         courseId,
         activityId,
         activityName,
+        activityUrl,
+        modType,
         priority,
         addedAt: Date.now(),
       });
@@ -85,6 +92,8 @@ class PrefetchService {
           courseId,
           nextActivity.id,
           nextActivity.name,
+          nextActivity.url,
+          nextActivity.modType,
           10 // High priority for next lesson
         );
       }
@@ -194,7 +203,17 @@ class PrefetchService {
 
         try {
           // Fetch lesson content
-          const content = await moodleAPI.getActivityContent(item.courseId, item.activityId);
+          const queuedActivity =
+            item.activityUrl && item.modType
+              ? { url: item.activityUrl, modType: item.modType }
+              : await storageService.findActivity(parseInt(item.courseId, 10), item.activityId);
+
+          if (!queuedActivity?.url || !queuedActivity.modType) {
+            throw new Error("Missing activity metadata");
+          }
+
+          const content = await moodleAPI.getActivityContent(queuedActivity.url, queuedActivity.modType);
+          await storageService.cacheActivityContent(item.activityId, content);
 
           // Cache videos and media
           if (content.videoUrl) {

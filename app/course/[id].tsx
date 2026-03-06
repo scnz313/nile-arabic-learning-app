@@ -52,13 +52,7 @@ export default function CourseDetailScreen() {
   const [totalActivities, setTotalActivities] = useState(0);
   const [completedCount, setCompletedCount] = useState(0);
 
-  useFocusEffect(
-    useCallback(() => {
-      loadCourseData();
-    }, [courseId])
-  );
-
-  const loadCourseData = async () => {
+  const loadCourseData = useCallback(async () => {
     try {
       setIsLoading(true);
       const courses = await storageService.getCourses();
@@ -103,7 +97,13 @@ export default function CourseDetailScreen() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [courseId]);
+
+  useFocusEffect(
+    useCallback(() => {
+      void loadCourseData();
+    }, [loadCourseData])
+  );
 
   const handleRefresh = async () => {
     try {

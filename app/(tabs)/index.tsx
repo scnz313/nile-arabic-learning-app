@@ -1,6 +1,6 @@
 import { ScrollView, Text, View, RefreshControl, Pressable, ActivityIndicator, TextInput, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
 
@@ -16,42 +16,36 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 export default function HomeScreen() {
   const { user } = useAuthContext();
   const [courses, setCourses] = useState<MoodleCourse[]>([]);
-  const [filteredCourses, setFilteredCourses] = useState<MoodleCourse[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [lastSynced, setLastSynced] = useState<string | null>(null);
   const colors = useColors();
 
-  const loadCourses = async () => {
+  const loadCourses = useCallback(async () => {
     try {
-      const cached = await storageService.getCourses();
+      const cached = await storageService.getVisibleCoursesWithStats();
       setCourses(cached);
-      setFilteredCourses(cached);
       const lastSync = await storageService.getLastSyncTime();
-      if (lastSync) {
-        setLastSynced(new Date(lastSync).toLocaleString());
-      }
+      setLastSynced(lastSync ? new Date(lastSync).toLocaleString() : null);
     } catch (error) {
       console.error("Load courses error:", error);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    if (!query.trim()) {
-      setFilteredCourses(courses);
-      return;
+  const filteredCourses = useMemo(() => {
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+    if (!normalizedQuery) {
+      return courses;
     }
-    const lowercaseQuery = query.toLowerCase();
-    const filtered = courses.filter((course) =>
-      course.fullname.toLowerCase().includes(lowercaseQuery) ||
-      course.shortname?.toLowerCase().includes(lowercaseQuery)
+
+    return courses.filter((course) =>
+      course.fullname.toLowerCase().includes(normalizedQuery) ||
+      course.shortname?.toLowerCase().includes(normalizedQuery)
     );
-    setFilteredCourses(filtered);
-  };
+  }, [courses, searchQuery]);
 
   const handleSync = async () => {
     setRefreshing(true);
@@ -67,12 +61,14 @@ export default function HomeScreen() {
   };
 
   useEffect(() => {
-    loadCourses();
-  }, []);
+    void loadCourses();
+  }, [loadCourses]);
 
-  useFocusEffect(() => {
-    loadCourses();
-  });
+  useFocusEffect(
+    useCallback(() => {
+      void loadCourses();
+    }, [loadCourses]),
+  );
 
   const handleCoursePress = (course: MoodleCourse) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -120,13 +116,13 @@ export default function HomeScreen() {
             <MaterialIcons name="search" size={20} color={colors.muted} />
             <TextInput
               value={searchQuery}
-              onChangeText={handleSearch}
+                onChangeText={setSearchQuery}
               placeholder="Search courses..."
               placeholderTextColor={colors.muted}
               style={{ flex: 1, marginLeft: 12, fontSize: 15, color: colors.foreground }}
             />
             {searchQuery.length > 0 && (
-              <TouchableOpacity onPress={() => handleSearch("")} activeOpacity={0.7}>
+              <TouchableOpacity onPress={() => setSearchQuery("")} activeOpacity={0.7}>
                 <MaterialIcons name="close" size={20} color={colors.muted} />
               </TouchableOpacity>
             )}
@@ -200,10 +196,12 @@ export default function HomeScreen() {
             }}>
               <IconSymbol name="book.fill" size={48} color={colors.muted} />
               <Text style={{ fontSize: 18, fontWeight: "600", color: colors.foreground, marginTop: 16 }}>
-                No courses yet
+                {searchQuery.trim() ? "No matching courses" : "No courses yet"}
               </Text>
               <Text style={{ fontSize: 14, color: colors.muted, marginTop: 8, textAlign: "center" }}>
-                Pull down to sync your courses from Nile Center
+                {searchQuery.trim()
+                  ? "Try a different search term or clear the filter."
+                  : "Pull down to sync your courses from Nile Center"}
               </Text>
             </View>
           ) : (

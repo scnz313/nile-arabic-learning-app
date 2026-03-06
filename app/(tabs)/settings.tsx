@@ -15,6 +15,7 @@ import { useColors } from "@/hooks/use-colors";
 import { useAuthContext } from "@/lib/auth-context";
 import { storageService, type UserSettings } from "@/lib/storage";
 import { settingsService, type AppSettings } from "@/lib/settings-service";
+import { useThemeContext } from "@/lib/theme-provider";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 function confirmAction(title: string, message: string, onConfirm: () => void) {
@@ -32,6 +33,7 @@ export default function SettingsScreen() {
   const router = useRouter();
   const colors = useColors();
   const { user, logout } = useAuthContext();
+  const { colorScheme, setColorScheme } = useThemeContext();
 
   const [settings, setSettings] = useState<UserSettings>({
     notificationsEnabled: true,
@@ -65,6 +67,11 @@ export default function SettingsScreen() {
     setAppSettings((prev) => (prev ? { ...prev, [key]: value } : null));
   };
 
+  const updateTheme = async (darkMode: boolean) => {
+    await updateAppSetting("darkMode", darkMode);
+    setColorScheme(darkMode ? "dark" : "light");
+  };
+
   const handleLogout = () => {
     confirmAction(
       "Sign Out",
@@ -81,7 +88,7 @@ export default function SettingsScreen() {
       "Clear Cache",
       "This will remove all cached course data. You will need to sync again.",
       async () => {
-        await storageService.clearAll();
+        await storageService.clearCourseCache();
         setLastSync("");
       }
     );
@@ -121,7 +128,7 @@ export default function SettingsScreen() {
             <View style={[styles.settingRow, { borderBottomColor: colors.border }]}>
               <View style={styles.settingInfo}>
                 <Text style={[styles.settingLabelText, { color: colors.foreground }]}>Auto-sync courses</Text>
-                <Text style={[styles.settingSubtitle, { color: colors.muted }]}>Sync courses when app opens</Text>
+                <Text style={[styles.settingSubtitle, { color: colors.muted }]}>Sync on sign-in, return, and app close</Text>
               </View>
               <Switch
                 value={settings.autoSync}
@@ -144,6 +151,20 @@ export default function SettingsScreen() {
         <View style={styles.sectionContainer}>
           <Text style={[styles.sectionLabel, { color: colors.muted }]}>DISPLAY</Text>
           <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <View style={[styles.settingRow, { borderBottomColor: colors.border }]}>
+              <View style={styles.settingInfo}>
+                <Text style={[styles.settingLabelText, { color: colors.foreground }]}>Theme</Text>
+                <Text style={[styles.settingSubtitle, { color: colors.muted }]}>
+                  Match Cursor-style dark UI across the app
+                </Text>
+              </View>
+              <Switch
+                value={appSettings?.darkMode ?? colorScheme === "dark"}
+                onValueChange={updateTheme}
+                trackColor={{ false: colors.border, true: colors.primary }}
+                thumbColor="#FFFFFF"
+              />
+            </View>
             <View style={[styles.settingRow, { borderBottomColor: colors.border }]}>
               <View style={styles.settingInfo}>
                 <Text style={[styles.settingLabelText, { color: colors.foreground }]}>Font Size</Text>

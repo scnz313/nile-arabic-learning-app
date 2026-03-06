@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import type { MoodleCourse, CourseFullData, ActivityContent, MoodleSection } from "./moodle-api";
+import type { MoodleActivity, MoodleCourse, CourseFullData, ActivityContent } from "./moodle-api";
 
 const KEYS = {
   COURSES: "@nile_courses",
@@ -74,6 +74,34 @@ class StorageService {
   async getCourses(): Promise<(MoodleCourse & { hidden?: boolean })[]> {
     const data = await AsyncStorage.getItem(KEYS.COURSES);
     return data ? JSON.parse(data) : [];
+  }
+
+  async getVisibleCoursesWithStats(): Promise<
+    (MoodleCourse & {
+      hidden?: boolean;
+      totalSections: number;
+      totalActivities: number;
+      completedActivities: number;
+      lastUpdated?: number;
+    })[]
+  > {
+    const courses = await this.getCourses();
+    const visibleCourses = courses.filter((course) => !course.hidden);
+
+    return Promise.all(
+      visibleCourses.map(async (course) => {
+        const courseData = await this.getCourseData(course.id);
+        const completion = await this.getCompletionCount(course.id);
+
+        return {
+          ...course,
+          totalSections: courseData?.totalSections || 0,
+          totalActivities: completion.total,
+          completedActivities: completion.completed,
+          lastUpdated: courseData?.lastUpdated,
+        };
+      }),
+    );
   }
 
   // ─── COURSE DATA (merge: new sections/activities appended, old ones preserved) ───
@@ -185,6 +213,28 @@ class StorageService {
     return data ? JSON.parse(data) : null;
   }
 
+  async findActivity(courseId: number, activityId: string | number): Promise<MoodleActivity | null> {
+    const normalizedId = String(activityId);
+    const courseData = await this.getCourseData(courseId);
+    if (!courseData) {
+      return null;
+    }
+
+    const introActivity = courseData.intro?.activities?.find((activity) => activity.id === normalizedId);
+    if (introActivity) {
+      return introActivity;
+    }
+
+    for (const section of courseData.sections || []) {
+      const match = section.activities?.find((activity) => activity.id === normalizedId);
+      if (match) {
+        return match;
+      }
+    }
+
+    return null;
+  }
+
   // ─── ACTIVITY CONTENT CACHE (always update, never delete) ───
 
   async cacheActivityContent(activityId: string, content: ActivityContent): Promise<void> {
@@ -275,9 +325,32 @@ class StorageService {
     await AsyncStorage.multiRemove(cacheKeys);
   }
 
+  async clearCourseCache(): Promise<void> {
+    const keys = await AsyncStorage.getAllKeys();
+    const removableKeys = keys.filter(
+      (key) =>
+        key === KEYS.COURSES ||
+        key === KEYS.LAST_SYNC ||
+        key === KEYS.ARCHIVE_LOG ||
+        key.startsWith(KEYS.COURSE_DATA) ||
+        key.startsWith(KEYS.ACTIVITY_CONTENT) ||
+        key.startsWith(KEYS.COMPLETED),
+    );
+
+    await AsyncStorage.multiRemove(removableKeys);
+  }
+
   async clearAll(): Promise<void> {
     const keys = await AsyncStorage.getAllKeys();
-    const nileKeys = keys.filter((k) => k.startsWith("@nile_"));
+    const nileKeys = keys.filter(
+      (key) =>
+        key.includes("nile_") ||
+        key === "webview_cache_metadata" ||
+        key.startsWith("webview_cache_") ||
+        key.startsWith("prefetch_") ||
+        key.startsWith("background_sync_") ||
+        key === "last_background_sync",
+    );
     await AsyncStorage.multiRemove(nileKeys);
   }
 

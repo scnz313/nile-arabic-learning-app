@@ -7,6 +7,8 @@ export interface Bookmark {
   activityId: number;
   activityName: string;
   courseName: string;
+  activityUrl?: string;
+  modType?: string;
   timestamp: number;
 }
 

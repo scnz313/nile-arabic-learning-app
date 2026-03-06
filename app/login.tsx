@@ -5,7 +5,6 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
-  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -13,31 +12,23 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { ScreenContainer } from "@/components/screen-container";
+import { Colors } from "@/constants/theme";
 import { useAuthContext } from "@/lib/auth-context";
-import { useColors } from "@/hooks/use-colors";
-
-function showAlert(title: string, message: string) {
-  if (Platform.OS === "web") {
-    window.alert(`${title}\n\n${message}`);
-  } else {
-    Alert.alert(title, message);
-  }
-}
 
 export default function LoginScreen() {
   const router = useRouter();
   const { login } = useAuthContext();
-  const colors = useColors();
+  const colors = Colors.dark;
 
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleLogin = async () => {
-    if (!email.trim() || !password.trim()) {
-      setErrorMessage("Please enter both email and password.");
+    if (!username.trim() || !password.trim()) {
+      setErrorMessage("Please enter both username and password.");
       return;
     }
 
@@ -45,7 +36,7 @@ export default function LoginScreen() {
 
     try {
       setIsLoading(true);
-      await login(email.trim(), password);
+      await login(username.trim(), password);
       router.replace("/(tabs)");
     } catch (error) {
       const msg = error instanceof Error ? error.message : "Login failed. Please check your credentials.";
@@ -67,19 +58,19 @@ export default function LoginScreen() {
         >
           {/* Logo Area */}
           <View style={styles.logoContainer}>
-            <View style={[styles.logoBox, { backgroundColor: colors.primary }]}>
-              <Text style={styles.logoText}>ن</Text>
+            <View style={[styles.logoBox, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+              <Text style={[styles.logoText, { color: colors.primary }]}>N</Text>
             </View>
             <Text className="text-3xl font-bold text-foreground" style={styles.title}>
-              Nile Center
+              Welcome back
             </Text>
             <Text className="text-base text-muted" style={styles.subtitle}>
-              Sign in to access your Arabic learning courses
+              Sign in to keep courses, public quizzes, and lesson progress synced.
             </Text>
           </View>
 
           {/* Login Form */}
-          <View style={styles.formContainer}>
+          <View style={[styles.formContainer, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             {/* Error Message */}
             {errorMessage ? (
               <View style={[styles.errorBox, { backgroundColor: colors.error + "15", borderColor: colors.error + "30" }]}>
@@ -87,18 +78,17 @@ export default function LoginScreen() {
               </View>
             ) : null}
 
-            {/* Email Field */}
+            {/* Username Field */}
             <View style={styles.fieldGroup}>
               <Text className="text-sm font-semibold text-foreground" style={styles.label}>
-                Email
+                Username
               </Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.foreground }]}
-                placeholder="Enter your email"
+                style={[styles.input, { backgroundColor: colors.background, borderColor: colors.border, color: colors.foreground }]}
+                placeholder="Enter your Nile Center username"
                 placeholderTextColor={colors.muted}
-                value={email}
-                onChangeText={(text) => { setEmail(text); setErrorMessage(""); }}
-                keyboardType="email-address"
+                value={username}
+                onChangeText={(text) => { setUsername(text); setErrorMessage(""); }}
                 autoCapitalize="none"
                 autoCorrect={false}
                 editable={!isLoading}
@@ -111,7 +101,7 @@ export default function LoginScreen() {
               <Text className="text-sm font-semibold text-foreground" style={styles.label}>
                 Password
               </Text>
-              <View style={[styles.passwordRow, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+              <View style={[styles.passwordRow, { backgroundColor: colors.background, borderColor: colors.border }]}>
                 <TextInput
                   style={[styles.passwordInput, { color: colors.foreground }]}
                   placeholder="Enter your password"
@@ -155,8 +145,8 @@ export default function LoginScreen() {
             {/* Info */}
             <View style={styles.infoContainer}>
               <Text className="text-xs text-muted" style={styles.infoText}>
-                Use your Nile Center Online credentials to sign in.{"\n"}
-                Visit nilecenter.online to create an account.
+                Use your Nile Center Online credentials.{"\n"}
+                Automatic sync keeps newly public teacher quizzes available offline.
               </Text>
             </View>
           </View>
@@ -174,14 +164,21 @@ const styles = StyleSheet.create({
     width: 96,
     height: 96,
     borderRadius: 24,
+    borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 24,
   },
-  logoText: { fontSize: 48, color: "#FFFFFF", fontWeight: "700" },
+  logoText: { fontSize: 42, fontWeight: "700" },
   title: { marginBottom: 8 },
   subtitle: { textAlign: "center", paddingHorizontal: 32 },
-  formContainer: { paddingHorizontal: 24, paddingTop: 8 },
+  formContainer: {
+    marginHorizontal: 20,
+    paddingHorizontal: 24,
+    paddingVertical: 24,
+    borderRadius: 24,
+    borderWidth: 1,
+  },
   errorBox: {
     padding: 12,
     borderRadius: 12,

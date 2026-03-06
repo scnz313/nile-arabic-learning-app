@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import { ScrollView, Text, View, Dimensions } from "react-native";
+import { useCallback, useState } from "react";
+import { ScrollView, Text, View } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import { ScreenContainer } from "@/components/screen-container";
 import { progressService, type ProgressStats, type StudySession } from "@/lib/progress-service";
 import { useColors } from "@/hooks/use-colors";
@@ -11,9 +12,11 @@ export default function ProgressScreen() {
   const [sessions, setSessions] = useState<StudySession[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadProgress();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      void loadProgress();
+    }, []),
+  );
 
   const loadProgress = async () => {
     const progressStats = await progressService.getProgressStats();
@@ -153,9 +156,9 @@ export default function ProgressScreen() {
               <Text className="text-xl font-semibold text-foreground mb-4">Course Progress</Text>
               <View className="gap-4">
                 {Object.values(stats.coursesProgress).slice(0, 5).map((course) => {
-                  const percentage = Math.round(
-                    (course.completedActivities.length / course.totalActivities) * 100
-                  );
+                  const percentage = course.totalActivities > 0
+                    ? Math.round((course.completedActivities.length / course.totalActivities) * 100)
+                    : 0;
                   return (
                     <View key={course.courseId}>
                       <View className="flex-row justify-between mb-2">

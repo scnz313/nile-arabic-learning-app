@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
-import { FlatList, Text, View, TouchableOpacity, Platform } from "react-native";
+import { useCallback, useState } from "react";
+import { Alert, FlatList, Text, View, TouchableOpacity, Platform } from "react-native";
 import { useRouter } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
 import { ScreenContainer } from "@/components/screen-container";
 import { bookmarksService, type Bookmark } from "@/lib/bookmarks-service";
 import { useColors } from "@/hooks/use-colors";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { storageService } from "@/lib/storage";
 
 export default function BookmarksScreen() {
   const router = useRouter();
@@ -13,9 +15,11 @@ export default function BookmarksScreen() {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadBookmarks();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      void loadBookmarks();
+    }, []),
+  );
 
   const loadBookmarks = async () => {
     const data = await bookmarksService.getBookmarks();
@@ -31,16 +35,39 @@ export default function BookmarksScreen() {
     setBookmarks((prev) => prev.filter((b) => !(b.courseId === courseId && b.activityId === activityId)));
   };
 
-  const handleOpenLesson = (courseId: number, activityId: number) => {
+  const handleOpenLesson = async (bookmark: Bookmark) => {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    router.push(`/lesson/${activityId}?courseId=${courseId}`);
+
+    const activity =
+      bookmark.activityUrl && bookmark.modType
+        ? {
+            id: String(bookmark.activityId),
+            name: bookmark.activityName,
+            url: bookmark.activityUrl,
+            modType: bookmark.modType,
+          }
+        : await storageService.findActivity(bookmark.courseId, bookmark.activityId);
+
+    if (!activity) {
+      const message = "This lesson is no longer cached locally. Open the course and sync again to restore it.";
+      if (Platform.OS === "web") {
+        window.alert(message);
+      } else {
+        Alert.alert("Lesson unavailable", message);
+      }
+      return;
+    }
+
+    router.push(
+      `/lesson/${activity.id}?courseId=${bookmark.courseId}&modType=${activity.modType}&url=${encodeURIComponent(activity.url)}&name=${encodeURIComponent(activity.name)}` as any,
+    );
   };
 
   const renderBookmark = ({ item }: { item: Bookmark }) => (
     <TouchableOpacity
-      onPress={() => handleOpenLesson(item.courseId, item.activityId)}
+      onPress={() => void handleOpenLesson(item)}
       activeOpacity={0.7}
       className="bg-surface rounded-2xl p-5 mb-4 shadow-sm border border-border"
     >
