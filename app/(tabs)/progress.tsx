@@ -41,17 +41,47 @@ export default function ProgressScreen() {
 
   return (
     <ScreenContainer>
-      <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 40 }}>
+      <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 144 }}>
         <View className="p-6 gap-6">
           {/* Header */}
-          <View>
-            <Text className="text-3xl font-bold text-foreground">Your Progress</Text>
-            <Text className="text-base text-muted mt-2">Track your learning journey</Text>
+          <View
+            style={{
+              borderRadius: 28,
+              borderWidth: 1,
+              borderColor: colors.border,
+              backgroundColor: colors.surface,
+              padding: 24,
+            }}
+          >
+            <View className="flex-row items-start justify-between">
+              <View className="flex-1 pr-4">
+                <Text className="text-3xl font-bold text-foreground">Your Progress</Text>
+                <Text className="text-base text-muted mt-2">Track your learning journey</Text>
+              </View>
+              <View
+                style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: 20,
+                  backgroundColor: colors.primary + "16",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <MaterialIcons name="insights" size={26} color={colors.primary} />
+              </View>
+            </View>
+
+            <View className="flex-row gap-3 mt-5">
+              <HeroMetric colors={colors} label="Current streak" value={`${stats.currentStreak}d`} />
+              <HeroMetric colors={colors} label="Study time" value={`${Math.round(stats.totalStudyTime)}m`} />
+              <HeroMetric colors={colors} label="Courses" value={String(totalCourses)} />
+            </View>
           </View>
 
           {/* Stats Cards */}
           <View className="flex-row gap-3">
-            <View className="flex-1 bg-surface rounded-2xl p-5 shadow-sm">
+            <View className="flex-1 bg-surface rounded-[24px] p-5 shadow-sm border border-border">
               <MaterialIcons name="school" size={32} color={colors.primary} />
               <Text className="text-3xl font-bold text-foreground mt-3">
                 {stats.totalLessonsCompleted}
@@ -59,7 +89,7 @@ export default function ProgressScreen() {
               <Text className="text-sm text-muted mt-1">Lessons Completed</Text>
             </View>
 
-            <View className="flex-1 bg-surface rounded-2xl p-5 shadow-sm">
+            <View className="flex-1 bg-surface rounded-[24px] p-5 shadow-sm border border-border">
               <MaterialIcons name="local-fire-department" size={32} color={colors.warning} />
               <Text className="text-3xl font-bold text-foreground mt-3">
                 {stats.currentStreak}
@@ -69,7 +99,7 @@ export default function ProgressScreen() {
           </View>
 
           <View className="flex-row gap-3">
-            <View className="flex-1 bg-surface rounded-2xl p-5 shadow-sm">
+            <View className="flex-1 bg-surface rounded-[24px] p-5 shadow-sm border border-border">
               <MaterialIcons name="access-time" size={32} color={colors.success} />
               <Text className="text-3xl font-bold text-foreground mt-3">
                 {Math.round(stats.totalStudyTime)}
@@ -77,7 +107,7 @@ export default function ProgressScreen() {
               <Text className="text-sm text-muted mt-1">Minutes Studied</Text>
             </View>
 
-            <View className="flex-1 bg-surface rounded-2xl p-5 shadow-sm">
+            <View className="flex-1 bg-surface rounded-[24px] p-5 shadow-sm border border-border">
               <MaterialIcons name="menu-book" size={32} color={colors.primary} />
               <Text className="text-3xl font-bold text-foreground mt-3">{totalCourses}</Text>
               <Text className="text-sm text-muted mt-1">Active Courses</Text>
@@ -85,7 +115,7 @@ export default function ProgressScreen() {
           </View>
 
           {/* Achievements */}
-          <View className="bg-surface rounded-2xl p-5 shadow-sm">
+          <View className="bg-surface rounded-[24px] p-5 shadow-sm border border-border">
             <Text className="text-xl font-semibold text-foreground mb-4">Achievements</Text>
             <View className="gap-3">
               <View className="flex-row items-center gap-3">
@@ -117,7 +147,7 @@ export default function ProgressScreen() {
           </View>
 
           {/* Recent Activity */}
-          <View className="bg-surface rounded-2xl p-5 shadow-sm">
+          <View className="bg-surface rounded-[24px] p-5 shadow-sm border border-border">
             <Text className="text-xl font-semibold text-foreground mb-4">Recent Activity</Text>
             {sessions.length === 0 ? (
               <Text className="text-muted text-center py-4">No recent activity</Text>
@@ -152,7 +182,7 @@ export default function ProgressScreen() {
 
           {/* Course Progress */}
           {totalCourses > 0 && (
-            <View className="bg-surface rounded-2xl p-5 shadow-sm">
+            <View className="bg-surface rounded-[24px] p-5 shadow-sm border border-border">
               <Text className="text-xl font-semibold text-foreground mb-4">Course Progress</Text>
               <View className="gap-4">
                 {Object.values(stats.coursesProgress).slice(0, 5).map((course) => {
@@ -185,5 +215,36 @@ export default function ProgressScreen() {
         </View>
       </ScrollView>
     </ScreenContainer>
+  );
+}
+
+function HeroMetric({
+  colors,
+  label,
+  value,
+}: {
+  colors: ReturnType<typeof useColors>;
+  label: string;
+  value: string;
+}) {
+  return (
+    <View
+      style={{
+        flex: 1,
+        borderRadius: 18,
+        backgroundColor: colors.background,
+        borderWidth: 1,
+        borderColor: colors.border,
+        paddingHorizontal: 12,
+        paddingVertical: 10,
+      }}
+    >
+      <Text style={{ fontSize: 11, fontWeight: "700", color: colors.muted, textTransform: "uppercase" }}>
+        {label}
+      </Text>
+      <Text style={{ fontSize: 18, fontWeight: "800", color: colors.foreground, marginTop: 6 }}>
+        {value}
+      </Text>
+    </View>
   );
 }
