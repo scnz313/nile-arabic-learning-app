@@ -184,6 +184,29 @@ class MoodleAPI {
     return data;
   }
 
+  async getCourseCatalog(): Promise<{
+    totalCourses: number;
+    totalLevels: number;
+    levels: {
+      level: number;
+      totalCourses: number;
+      latestCourse: MoodleCourse & { level: number; enrolled: boolean };
+      courses: (MoodleCourse & { level: number; enrolled: boolean })[];
+    }[];
+  }> {
+    if (!this.username || !this.password) throw new Error("Not authenticated");
+
+    const response = await fetch(`${this.getProxyBaseUrl()}/api/moodle/catalog`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: this.username, password: this.password }),
+    });
+
+    const data = await response.json();
+    if (data.error) throw new Error(data.error);
+    return data;
+  }
+
   getProxyMediaUrl(url: string): string {
     if (!url) return "";
     const base = this.getProxyBaseUrl();

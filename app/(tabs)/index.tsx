@@ -8,7 +8,7 @@ import { ScreenContainer } from "@/components/screen-container";
 import { useAuthContext } from "@/lib/auth-context";
 import { storageService } from "@/lib/storage";
 import { syncService } from "@/lib/sync-service";
-import type { MoodleCourse } from "@/lib/moodle-api";
+import { moodleAPI, type MoodleCourse } from "@/lib/moodle-api";
 import { useColors } from "@/hooks/use-colors";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -21,6 +21,7 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [lastSynced, setLastSynced] = useState<string | null>(null);
+  const [catalogStatus, setCatalogStatus] = useState<string>("");
   const colors = useColors();
 
   const loadCourses = async () => {
@@ -55,12 +56,15 @@ export default function HomeScreen() {
 
   const handleSync = async () => {
     setRefreshing(true);
+    setCatalogStatus("Fetching all Arabic courses (Level 0-12)...");
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     try {
       await syncService.syncAllCourses();
       await loadCourses();
+      setCatalogStatus("");
     } catch (error) {
       console.error("Sync error:", error);
+      setCatalogStatus("Sync failed - pull to retry");
     } finally {
       setRefreshing(false);
     }
@@ -185,6 +189,14 @@ export default function HomeScreen() {
             </Pressable>
           </View>
 
+          {/* Catalog Status */}
+          {catalogStatus ? (
+            <View style={{ backgroundColor: colors.primary + "15", borderRadius: 12, padding: 12, marginBottom: 16, flexDirection: "row", alignItems: "center" }}>
+              <ActivityIndicator size="small" color={colors.primary} style={{ marginRight: 10 }} />
+              <Text style={{ fontSize: 13, color: colors.primary, flex: 1 }}>{catalogStatus}</Text>
+            </View>
+          ) : null}
+
           {/* Course Cards */}
           {filteredCourses.length === 0 ? (
             <View style={{ 
@@ -198,13 +210,28 @@ export default function HomeScreen() {
               shadowRadius: 8,
               elevation: 2,
             }}>
-              <IconSymbol name="book.fill" size={48} color={colors.muted} />
+              <IconSymbol name="book.fill" size={48} color={colors.primary} />
               <Text style={{ fontSize: 18, fontWeight: "600", color: colors.foreground, marginTop: 16 }}>
-                No courses yet
+                {searchQuery ? "No matching courses" : "Browse All Arabic Courses"}
               </Text>
               <Text style={{ fontSize: 14, color: colors.muted, marginTop: 8, textAlign: "center" }}>
-                Pull down to sync your courses from Nile Center
+                {searchQuery ? "Try a different search term" : "Pull down to load all Arabic courses (Level 0-12) from Nile Center"}
               </Text>
+              {!searchQuery && (
+                <TouchableOpacity
+                  onPress={handleSync}
+                  activeOpacity={0.7}
+                  style={{
+                    marginTop: 20,
+                    backgroundColor: colors.primary,
+                    borderRadius: 12,
+                    paddingHorizontal: 24,
+                    paddingVertical: 12,
+                  }}
+                >
+                  <Text style={{ fontSize: 15, fontWeight: "600", color: "#FFF" }}>Load All Courses</Text>
+                </TouchableOpacity>
+              )}
             </View>
           ) : (
             <View style={{ gap: 16 }}>

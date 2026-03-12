@@ -118,6 +118,87 @@ function extractContentHtml($: cheerio.CheerioAPI, selector: string): string {
   return el.html() || "";
 }
 
+const ARABIC_LEVEL_CATEGORIES: Record<number, number> = {
+  0: 302, 1: 293, 2: 313, 3: 324, 4: 289, 5: 56,
+  6: 67, 7: 78, 8: 100, 9: 111, 10: 122, 11: 132, 12: 193,
+};
+
+interface CatalogCourse {
+  id: number;
+  fullname: string;
+  shortname: string;
+  level: number;
+  url: string;
+  enrolled: boolean;
+}
+
+let catalogCache: { courses: CatalogCourse[]; expiresAt: number } | null = null;
+
+async function scrapeCourseCatalog(cookie: string, enrolledIds: Set<number>): Promise<CatalogCourse[]> {
+  if (catalogCache && catalogCache.expiresAt > Date.now()) {
+    return catalogCache.courses.map(c => ({ ...c, enrolled: enrolledIds.has(c.id) }));
+  }
+
+  const allCourses: CatalogCourse[] = [];
+  const seen = new Set<number>();
+
+  for (const [levelStr, catId] of Object.entries(ARABIC_LEVEL_CATEGORIES)) {
+    const level = parseInt(levelStr, 10);
+    try {
+      const html = await fetchWithSession(
+        `${MOODLE_BASE_URL}/course/index.php?categoryid=${catId}&perpage=200`,
+        cookie
+      );
+      const $ = cheerio.load(html);
+
+      $('a[href*="/course/view.php"]').each((_, el) => {
+        const href = $(el).attr("href") || "";
+        const text = $(el).text().trim();
+        const idMatch = href.match(/id=(\d+)/);
+        const courseId = idMatch ? parseInt(idMatch[1], 10) : 0;
+        if (courseId > 0 && !seen.has(courseId)) {
+          seen.add(courseId);
+          allCourses.push({
+            id: courseId,
+            fullname: text.length > 5 && !text.includes("Click to enter")
+              ? text
+              : `Arabic Language (MSA) Level ${String(level).padStart(2, "0")}`,
+            shortname: text.split(" - ")[0] || text,
+            level,
+            url: href,
+            enrolled: enrolledIds.has(courseId),
+          });
+        }
+      });
+    } catch (e) {
+      console.error(`Failed to scrape category ${catId} (level ${level}):`, e);
+    }
+  }
+
+  for (const course of allCourses) {
+    if (course.fullname.includes("Click to enter") || course.fullname.length <= 5) {
+      try {
+        const html = await fetchWithSession(
+          `${MOODLE_BASE_URL}/enrol/index.php?id=${course.id}`,
+          cookie
+        );
+        const enrolSection = html.match(/Enrolment options<\/h2>(.*?)(Click to enter|Continue)/s);
+        if (enrolSection) {
+          const text = enrolSection[1].replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+          const nameMatch = text.match(/(Arb-[A-Z]\d+-\w+\s*-\s*[^(]+\([^)]+\))/);
+          if (nameMatch) {
+            course.fullname = nameMatch[1].trim();
+            course.shortname = course.fullname.split(" - ")[0];
+          }
+        }
+      } catch {}
+    }
+  }
+
+  catalogCache = { courses: allCourses, expiresAt: Date.now() + 15 * 60 * 1000 };
+  return allCourses;
+}
+
 export function registerMoodleProxy(app: Express) {
   // Login endpoint
   app.post("/api/moodle/login", async (req, res) => {
@@ -178,6 +259,7 @@ export function registerMoodleProxy(app: Express) {
               fullname: text,
               shortname: text.split(" - ")[0] || text,
               url: href,
+              enrolled: true,
             });
           }
         }
@@ -187,6 +269,59 @@ export function registerMoodleProxy(app: Express) {
     } catch (error) {
       console.error("Moodle courses error:", error);
       res.status(500).json({ error: "Failed to fetch courses" });
+    }
+  });
+
+  // Browse ALL Arabic courses from catalog (levels 0-12) — uses guest access
+  app.post("/api/moodle/catalog", async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      if (!username || !password) {
+        res.status(400).json({ error: "Credentials required" });
+        return;
+      }
+
+      const cookie = await getMoodleSession(username, password);
+
+      // Get enrolled course IDs
+      const dashHtml = await fetchWithSession(`${MOODLE_BASE_URL}/my/`, cookie);
+      const $dash = cheerio.load(dashHtml);
+      const enrolledIds = new Set<number>();
+      $dash('a[href*="/course/view.php"]').each((_, el) => {
+        const href = $dash(el).attr("href") || "";
+        const idMatch = href.match(/id=(\d+)/);
+        if (idMatch) enrolledIds.add(parseInt(idMatch[1], 10));
+      });
+
+      const catalog = await scrapeCourseCatalog(cookie, enrolledIds);
+
+      // Group by level and pick the newest (highest ID) per level for the "representative" list
+      const byLevel: Record<number, CatalogCourse[]> = {};
+      for (const c of catalog) {
+        if (!byLevel[c.level]) byLevel[c.level] = [];
+        byLevel[c.level].push(c);
+      }
+
+      const levels = Object.entries(byLevel)
+        .map(([lvl, courses]) => {
+          courses.sort((a, b) => b.id - a.id);
+          return {
+            level: parseInt(lvl, 10),
+            totalCourses: courses.length,
+            latestCourse: courses[0],
+            courses,
+          };
+        })
+        .sort((a, b) => a.level - b.level);
+
+      res.json({
+        totalCourses: catalog.length,
+        totalLevels: levels.length,
+        levels,
+      });
+    } catch (error) {
+      console.error("Moodle catalog error:", error);
+      res.status(500).json({ error: "Failed to fetch course catalog" });
     }
   });
 

@@ -19,19 +19,39 @@ class SyncService {
     const result: SyncResult = { coursesUpdated: 0, newCourses: 0, newSections: 0, newActivities: 0, errors: [] };
 
     try {
-      // Fetch current courses from website
-      const courses = await moodleAPI.getUserCourses();
-      
-      // Archive-aware save: appends new courses, marks hidden ones, never deletes
-      const { added } = await storageService.saveCourses(courses);
+      // Get enrolled courses (these have full content access)
+      const enrolledCourses = await moodleAPI.getUserCourses();
+
+      // Also discover all Arabic levels from catalog
+      let catalogCourses: import("./moodle-api").MoodleCourse[] = [];
+      try {
+        const catalog = await moodleAPI.getCourseCatalog();
+        for (const levelInfo of catalog.levels) {
+          const latest = levelInfo.latestCourse;
+          const isEnrolled = enrolledCourses.some(c => c.id === latest.id);
+          if (!isEnrolled) {
+            catalogCourses.push({
+              id: latest.id,
+              fullname: latest.fullname || `Arabic Level ${String(levelInfo.level).padStart(2, "0")}`,
+              shortname: latest.shortname || latest.fullname?.split(" - ")[0] || "",
+              url: latest.url,
+            });
+          }
+        }
+      } catch (catalogErr: any) {
+        console.warn("Catalog fetch failed:", catalogErr.message);
+      }
+
+      // Merge: enrolled courses first, then catalog discoveries
+      const allCourses = [...enrolledCourses, ...catalogCourses];
+
+      const { added } = await storageService.saveCourses(allCourses);
       result.newCourses = added;
 
-      // Sync each visible course's full content
-      for (const course of courses) {
+      // Sync full content for enrolled courses only (they have access)
+      for (const course of enrolledCourses) {
         try {
           const fullData = await moodleAPI.getCourseFull(course.id);
-          
-          // Archive-aware merge: appends new sections/activities, marks hidden ones, never deletes
           const { newSections, newActivities } = await storageService.saveCourseData(course.id, fullData);
           result.coursesUpdated++;
           result.newSections += newSections;
