@@ -1,42 +1,12 @@
 {
-  "title": "Nile Center Arabic Courses - Complete Quiz & Exercise Collection",
-  "source": "nilecenter.online (Moodle LMS)",
-  "levels_covered": [
-    "Level 00",
-    "Level 01",
-    "Level 04",
-    "Level 05",
-    "Level 06"
-  ],
-  "total_activities": 200,
-  "total_formal_quizzes": 3,
-  "total_h5p_exercises": 197,
+  "title": "Nile Center Arabic Courses - Complete Quiz & Exam Collection",
+  "source": "nilecenter.online",
   "summary": {
-    "Level 00": {
-      "formal_quizzes": 1,
-      "h5p_interactive_exercises": 27,
-      "total": 28
-    },
-    "Level 01": {
-      "formal_quizzes": 1,
-      "h5p_interactive_exercises": 46,
-      "total": 47
-    },
-    "Level 04": {
-      "formal_quizzes": 0,
-      "h5p_interactive_exercises": 44,
-      "total": 44
-    },
-    "Level 05": {
-      "formal_quizzes": 0,
-      "h5p_interactive_exercises": 46,
-      "total": 46
-    },
-    "Level 06": {
-      "formal_quizzes": 1,
-      "h5p_interactive_exercises": 34,
-      "total": 35
-    }
+    "formal_quizzes": 3,
+    "unit_exams": 15,
+    "speaking_tests": 6,
+    "h5p_exercises": 197,
+    "total": 221
   },
   "levels": {
     "Level 00": {
@@ -45,257 +15,267 @@
           "name": "Test yourself",
           "section": "",
           "url": "https://nilecenter.online/mod/quiz/view.php?id=2866620",
-          "moduleId": "2866620",
+          "type": "quiz",
           "title": "Test yourself",
           "description": "Attempts allowed: 1",
-          "attemptsHtml": ""
+          "attempts_info": ""
         }
       ],
-      "h5p_interactive_exercises": [
+      "unit_exams": [
+        {
+          "name": "Test on the second part",
+          "section": "",
+          "url": "https://nilecenter.online/mod/page/view.php?id=2866481",
+          "type": "page",
+          "title": "Test on the second part",
+          "content_text": "## Test on the second part\nLast modified: Monday, 9 October 2023, 12:25 PM",
+          "embedded_links": [
+            "https://drive.google.com/file/d/1VSnJyzDtgD4F7ZOF7bvswb08VsrQJOZx/preview"
+          ]
+        },
+        {
+          "name": "Test on the third part",
+          "section": "",
+          "url": "https://nilecenter.online/mod/page/view.php?id=2866597",
+          "type": "page",
+          "title": "Test on the third part",
+          "content_text": "## Test on the third part\nLast modified: Monday, 9 October 2023, 12:26 PM",
+          "embedded_links": [
+            "https://drive.google.com/file/d/1kZ44-q12oaSSborAzLEvPcZRskeVsdIc/preview"
+          ]
+        },
+        {
+          "name": "A general test on the book",
+          "section": "",
+          "url": "https://nilecenter.online/mod/page/view.php?id=2866622",
+          "type": "page",
+          "title": "A general test on the book",
+          "content_text": "## A general test on the book\nLast modified: Monday, 9 October 2023, 12:41 PM",
+          "embedded_links": [
+            "https://drive.google.com/file/d/14kESavdFVIGYUiZbxDsqEGHkcRNmf-AC/preview",
+            "https://drive.google.com/file/d/1MW38PIjgJVWJsbO97KM0B9v3d2C3xTQH/preview"
+          ]
+        }
+      ],
+      "h5p_exercises": [
         {
           "name": "Activity :Look for the following words",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866374",
-          "moduleId": "2866374",
+          "type": "hvp",
           "title": "Activity :Look for the following words",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "Activity :Look for the following words",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866386",
-          "moduleId": "2866386",
+          "type": "hvp",
           "title": "Activity :Look for the following words",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "Activity : Look for the following words",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866399",
-          "moduleId": "2866399",
+          "type": "hvp",
           "title": "Activity : Look for the following words",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "Activity :Look for the following words",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866412",
-          "moduleId": "2866412",
+          "type": "hvp",
           "title": "Activity :Look for the following words",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "1- Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866490",
-          "moduleId": "2866490",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- Put atick (✓) or cross (x)",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866491",
-          "moduleId": "2866491",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866500",
-          "moduleId": "2866500",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- Put atick (✓) or cross (x)",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866501",
-          "moduleId": "2866501",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866510",
-          "moduleId": "2866510",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- Put atick (✓) or cross (x)",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866511",
-          "moduleId": "2866511",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866523",
-          "moduleId": "2866523",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- Put atick (✓) or cross (x)",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866524",
-          "moduleId": "2866524",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866550",
-          "moduleId": "2866550",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- Put atick (✓) or cross (x)",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866551",
-          "moduleId": "2866551",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866564",
-          "moduleId": "2866564",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- Put atick (✓) or cross (x)",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866565",
-          "moduleId": "2866565",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866576",
-          "moduleId": "2866576",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- Put atick (✓) or cross (x)",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866577",
-          "moduleId": "2866577",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2867034",
-          "moduleId": "2867034",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2867035",
-          "moduleId": "2867035",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866608",
-          "moduleId": "2866608",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- Put atick (✓) or cross (x)",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866609",
-          "moduleId": "2866609",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866619",
-          "moduleId": "2866619",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "Activity 1: Write the word that represents the image",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866625",
-          "moduleId": "2866625",
+          "type": "hvp",
           "title": "Activity 1: Write the word that represents the image",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "Activity 2: Write the word that represents the image",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866626",
-          "moduleId": "2866626",
+          "type": "hvp",
           "title": "Activity 2: Write the word that represents the image",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "Activity 3: Write the word that represents the image",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866627",
-          "moduleId": "2866627",
+          "type": "hvp",
           "title": "Activity 3: Write the word that represents the image",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "Activity 4: Write the word that represents the image",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866628",
-          "moduleId": "2866628",
+          "type": "hvp",
           "title": "Activity 4: Write the word that represents the image",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         }
-      ]
+      ],
+      "speaking_tests": []
     },
     "Level 01": {
       "formal_quizzes": [
@@ -303,1246 +283,1276 @@
           "name": "VOCABULARY 3",
           "section": "",
           "url": "https://nilecenter.online/mod/quiz/view.php?id=2866878",
-          "moduleId": "2866878",
+          "type": "quiz",
           "title": "VOCABULARY 3",
           "description": "Attempts allowed: 1\nGrade to pass: 1.75 out of 2.50",
-          "attemptsHtml": ""
+          "attempts_info": ""
         }
       ],
-      "h5p_interactive_exercises": [
+      "unit_exams": [
+        {
+          "name": "اختبار الوحدة الأولى",
+          "section": "",
+          "url": "https://nilecenter.online/mod/page/view.php?id=2866863",
+          "type": "page",
+          "title": "اختبار الوحدة الأولى",
+          "content_text": "## اختبار الوحدة الأولى\nLast modified: Friday, 8 April 2022, 2:01 AM",
+          "embedded_links": [
+            "https://drive.google.com/file/d/1KQ0XySHpTH2jQCLgOqMQgfgjLOsOveGs/preview"
+          ]
+        },
+        {
+          "name": "اختبار الوحدة الثانية",
+          "section": "",
+          "url": "https://nilecenter.online/mod/page/view.php?id=2867062",
+          "type": "page",
+          "title": "اختبار الوحدة الثانية",
+          "content_text": "## اختبار الوحدة الثانية\nLast modified: Friday, 8 April 2022, 2:03 AM",
+          "embedded_links": [
+            "https://drive.google.com/file/d/1kJjbh8l_PEwjQBVeUpmHXvszuJ-hjeah/preview"
+          ]
+        }
+      ],
+      "h5p_exercises": [
         {
           "name": "1- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866643",
-          "moduleId": "2866643",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866644",
-          "moduleId": "2866644",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866658",
-          "moduleId": "2866658",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866659",
-          "moduleId": "2866659",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "3- أسئلة حول المفردات / Questions about vocabulary",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866660",
-          "moduleId": "2866660",
+          "type": "hvp",
           "title": "3- أسئلة حول المفردات / Questions about vocabulary",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "4- لعبة لغوية /  Linguistic game",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866661",
-          "moduleId": "2866661",
+          "type": "hvp",
           "title": "4- لعبة لغوية /  Linguistic game",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "1- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866682",
-          "moduleId": "2866682",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866683",
-          "moduleId": "2866683",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866699",
-          "moduleId": "2866699",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866700",
-          "moduleId": "2866700",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866716",
-          "moduleId": "2866716",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866717",
-          "moduleId": "2866717",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866757",
-          "moduleId": "2866757",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866758",
-          "moduleId": "2866758",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "3- أسئلة حول المفردات / Questions about vocabulary",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866759",
-          "moduleId": "2866759",
+          "type": "hvp",
           "title": "3- أسئلة حول المفردات / Questions about vocabulary",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "4- لعبة لغوية /  Linguistic game",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866760",
-          "moduleId": "2866760",
+          "type": "hvp",
           "title": "4- لعبة لغوية /  Linguistic game",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "1- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866783",
-          "moduleId": "2866783",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866784",
-          "moduleId": "2866784",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866801",
-          "moduleId": "2866801",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866802",
-          "moduleId": "2866802",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866819",
-          "moduleId": "2866819",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866820",
-          "moduleId": "2866820",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866828",
-          "moduleId": "2866828",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866829",
-          "moduleId": "2866829",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866845",
-          "moduleId": "2866845",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866846",
-          "moduleId": "2866846",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866873",
-          "moduleId": "2866873",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866874",
-          "moduleId": "2866874",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "3- لعبة لغوية /  Linguistic game",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866875",
-          "moduleId": "2866875",
+          "type": "hvp",
           "title": "3- لعبة لغوية /  Linguistic game",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866893",
-          "moduleId": "2866893",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866913",
-          "moduleId": "2866913",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866914",
-          "moduleId": "2866914",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866930",
-          "moduleId": "2866930",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866931",
-          "moduleId": "2866931",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866947",
-          "moduleId": "2866947",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866948",
-          "moduleId": "2866948",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866981",
-          "moduleId": "2866981",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866982",
-          "moduleId": "2866982",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "3- أسئلة حول المفردات / Questions about vocabulary",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866983",
-          "moduleId": "2866983",
+          "type": "hvp",
           "title": "3- أسئلة حول المفردات / Questions about vocabulary",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "4- لعبة لغوية /  Linguistic game",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2866984",
-          "moduleId": "2866984",
+          "type": "hvp",
           "title": "4- لعبة لغوية /  Linguistic game",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "1- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2867001",
-          "moduleId": "2867001",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2867002",
-          "moduleId": "2867002",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2867020",
-          "moduleId": "2867020",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2867021",
-          "moduleId": "2867021",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2867049",
-          "moduleId": "2867049",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=2867050",
-          "moduleId": "2867050",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         }
-      ]
+      ],
+      "speaking_tests": []
     },
     "Level 04": {
       "formal_quizzes": [],
-      "h5p_interactive_exercises": [
+      "unit_exams": [
+        {
+          "name": "ملخص الوحدة السابعة",
+          "section": "مراجعة واختبار عام",
+          "url": "https://nilecenter.online/mod/page/view.php?id=4513779",
+          "type": "page",
+          "title": "ملخص الوحدة السابعة",
+          "content_text": "## ملخص الوحدة السابعة\nLast modified: Saturday, 9 April 2022, 1:17 PM",
+          "embedded_links": [
+            "https://drive.google.com/file/d/1ySBHr9UVFMzmIeww_WsipAOu-xfA5MJB/preview"
+          ]
+        },
+        {
+          "name": "اختبارالوحدة السابعة",
+          "section": "مراجعة واختبار عام",
+          "url": "https://nilecenter.online/mod/page/view.php?id=4513780",
+          "type": "page",
+          "title": "اختبارالوحدة السابعة",
+          "content_text": "## اختبارالوحدة السابعة\nLast modified: Saturday, 9 April 2022, 1:17 PM",
+          "embedded_links": [
+            "https://drive.google.com/file/d/1IomuPll6tBFp8ix_QHxgZXhVaHi7Lgd4/preview"
+          ]
+        },
+        {
+          "name": "ملخص الوحدة الثامنة",
+          "section": "40- ملخص عام / General summary",
+          "url": "https://nilecenter.online/mod/page/view.php?id=4513945",
+          "type": "page",
+          "title": "ملخص الوحدة الثامنة",
+          "content_text": "## ملخص الوحدة الثامنة\nLast modified: Saturday, 9 April 2022, 1:16 PM",
+          "embedded_links": [
+            "https://drive.google.com/file/d/16KVKLERQXA9ZlCHrYYAaXGrYi6nZpR6N/preview"
+          ]
+        },
+        {
+          "name": "اختبار الوحدة الثامنة",
+          "section": "40- ملخص عام / General summary",
+          "url": "https://nilecenter.online/mod/page/view.php?id=4513946",
+          "type": "page",
+          "title": "اختبار الوحدة الثامنة",
+          "content_text": "## اختبار الوحدة الثامنة\nLast modified: Saturday, 9 April 2022, 1:18 PM",
+          "embedded_links": [
+            "https://drive.google.com/file/d/14TFKH2em-WL5Um4PklcXXwcOJqHgjiEA/preview"
+          ]
+        }
+      ],
+      "h5p_exercises": [
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "02- 7A المفردات: يوم شاق جدا",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513631",
-          "moduleId": "4513631",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2-  اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop",
           "section": "02- 7A المفردات: يوم شاق جدا",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513632",
-          "moduleId": "4513632",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "3- أسئلة حول المفردات / Questions about vocabulary",
           "section": "02- 7A المفردات: يوم شاق جدا",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513633",
-          "moduleId": "4513633",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "4- لعبة لغوية /  Linguistic game",
           "section": "02- 7A المفردات: يوم شاق جدا",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513634",
-          "moduleId": "4513634",
+          "type": "hvp",
           "title": "4- لعبة لغوية /  Linguistic game",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "04- 7A الحوار: يوم شاق جدا",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513651",
-          "moduleId": "4513651",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "04- 7A الحوار: يوم شاق جدا",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513652",
-          "moduleId": "4513652",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "05- 7A القواعد: الجملة الفعلية",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513663",
-          "moduleId": "4513663",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2-  اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop",
           "section": "05- 7A القواعد: الجملة الفعلية",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513664",
-          "moduleId": "4513664",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "06- 7A القواعد: (أقسام الفعل)، ( لـ+ فعل مضارع=لأن+ جملة اسمية)",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513675",
-          "moduleId": "4513675",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop",
           "section": "06- 7A القواعد: (أقسام الفعل)، ( لـ+ فعل مضارع=لأن+ جملة اسمية)",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513676",
-          "moduleId": "4513676",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop",
           "section": "06- 7A القواعد: (أقسام الفعل)، ( لـ+ فعل مضارع=لأن+ جملة اسمية)",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513687",
-          "moduleId": "4513687",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "06- 7A القواعد: (أقسام الفعل)، ( لـ+ فعل مضارع=لأن+ جملة اسمية)",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513688",
-          "moduleId": "4513688",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "12- 7B المفردات: تلة العرائس",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513721",
-          "moduleId": "4513721",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2-  اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop",
           "section": "12- 7B المفردات: تلة العرائس",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513722",
-          "moduleId": "4513722",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "3- أسئلة حول المفردات / Questions about vocabulary",
           "section": "12- 7B المفردات: تلة العرائس",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513723",
-          "moduleId": "4513723",
+          "type": "hvp",
           "title": "3- أسئلة حول المفردات / Questions about vocabulary",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "4- لعبة لغوية /  Linguistic game",
           "section": "12- 7B المفردات: تلة العرائس",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513724",
-          "moduleId": "4513724",
+          "type": "hvp",
           "title": "4- لعبة لغوية /  Linguistic game",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "14- 7B الحوار: قلقت عليك",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513739",
-          "moduleId": "4513739",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "14- 7B الحوار: قلقت عليك",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513740",
-          "moduleId": "4513740",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "15- 7B القواعد: الفاعل والمفعول به",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513751",
-          "moduleId": "4513751",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "15- 7B القواعد: الفاعل والمفعول به",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513752",
-          "moduleId": "4513752",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "16- 7B القواعد: النفي بـ ما أو لم",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513763",
-          "moduleId": "4513763",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "16- 7B القواعد: النفي بـ ما أو لم",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513764",
-          "moduleId": "4513764",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "22- 8A المفردات: كيف الجو عندكم؟",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513797",
-          "moduleId": "4513797",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2-  اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop",
           "section": "22- 8A المفردات: كيف الجو عندكم؟",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513798",
-          "moduleId": "4513798",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "3- أسئلة حول المفردات / Questions about vocabulary",
           "section": "22- 8A المفردات: كيف الجو عندكم؟",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513799",
-          "moduleId": "4513799",
+          "type": "hvp",
           "title": "3- أسئلة حول المفردات / Questions about vocabulary",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "4- لعبة لغوية /  Linguistic game",
           "section": "22- 8A المفردات: كيف الجو عندكم؟",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513800",
-          "moduleId": "4513800",
+          "type": "hvp",
           "title": "4- لعبة لغوية /  Linguistic game",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "24- 8Aالحوار: مقابلة على الإنترنت",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513816",
-          "moduleId": "4513816",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "24- 8Aالحوار: مقابلة على الإنترنت",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513817",
-          "moduleId": "4513817",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "25- 8A القواعد: الصفة والموصوف",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513828",
-          "moduleId": "4513828",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "النشاط الثاني: ضع علامة (✓) أمام الجملة الصحيحة",
           "section": "25- 8A القواعد: الصفة والموصوف",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513829",
-          "moduleId": "4513829",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "26- 8A القواعد: نفي المضارع بـ (لن) / لكن",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513840",
-          "moduleId": "4513840",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "26- 8A القواعد: نفي المضارع بـ (لن) / لكن",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513841",
-          "moduleId": "4513841",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "26- 8A القواعد: نفي المضارع بـ (لن) / لكن",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513845",
-          "moduleId": "4513845",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "26- 8A القواعد: نفي المضارع بـ (لن) / لكن",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513846",
-          "moduleId": "4513846",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "31- 8B المفردات: في رعاية الله، اعتن بنفسك",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513880",
-          "moduleId": "4513880",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2-  اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop",
           "section": "31- 8B المفردات: في رعاية الله، اعتن بنفسك",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513881",
-          "moduleId": "4513881",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "3- أسئلة حول المفردات / Questions about vocabulary",
           "section": "31- 8B المفردات: في رعاية الله، اعتن بنفسك",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513882",
-          "moduleId": "4513882",
+          "type": "hvp",
           "title": "3- أسئلة حول المفردات / Questions about vocabulary",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "4- لعبة لغوية /  Linguistic game",
           "section": "31- 8B المفردات: في رعاية الله، اعتن بنفسك",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513883",
-          "moduleId": "4513883",
+          "type": "hvp",
           "title": "4- لعبة لغوية /  Linguistic game",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "33- 8B الحوار: صحبتك السلامة",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513898",
-          "moduleId": "4513898",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "33- 8B الحوار: صحبتك السلامة",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513899",
-          "moduleId": "4513899",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "34- 8B القواعد: الاستفهام بـ (أ، هل)",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513910",
-          "moduleId": "4513910",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "34- 8B القواعد: الاستفهام بـ (أ، هل)",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513911",
-          "moduleId": "4513911",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة / Choose the correct answer",
           "section": "35- 8B القواعد: الاستفهام بالهمزة المنفي",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513922",
-          "moduleId": "4513922",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- ضع علامة (√) أو (×) / Tick (true) or (false)",
           "section": "35- 8B القواعد: الاستفهام بالهمزة المنفي",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4513923",
-          "moduleId": "4513923",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
+        }
+      ],
+      "speaking_tests": [
+        {
+          "name": "أسئلة التحدث: تلة العرائس",
+          "section": "مراجعة واختبار عام",
+          "url": "https://nilecenter.online/mod/page/view.php?id=4513778",
+          "type": "page",
+          "title": "أسئلة التحدث: تلة العرائس",
+          "content_text": "## أسئلة التحدث: تلة العرائس\n\nLast modified: Wednesday, 3 August 2022, 4:46 PM",
+          "embedded_links": []
+        },
+        {
+          "name": "أسئلة التحدث: كيف الجو عندكم؟",
+          "section": "مراجعة واختبار عام",
+          "url": "https://nilecenter.online/mod/page/view.php?id=4513867",
+          "type": "page",
+          "title": "أسئلة التحدث: كيف الجو عندكم؟",
+          "content_text": "## أسئلة التحدث: كيف الجو عندكم؟\n\nLast modified: Saturday, 9 April 2022, 1:04 PM",
+          "embedded_links": []
+        },
+        {
+          "name": "أسئلة التحدث: في رعاية الله اعتن بنفسك",
+          "section": "40- ملخص عام / General summary",
+          "url": "https://nilecenter.online/mod/page/view.php?id=4513944",
+          "type": "page",
+          "title": "أسئلة التحدث: في رعاية الله اعتن بنفسك",
+          "content_text": "## أسئلة التحدث: في رعاية الله اعتن بنفسك\n\nLast modified: Saturday, 9 April 2022, 1:11 PM",
+          "embedded_links": []
         }
       ]
     },
     "Level 05": {
       "formal_quizzes": [],
-      "h5p_interactive_exercises": [
+      "unit_exams": [
+        {
+          "name": "الملخص",
+          "section": "18- مراجعة",
+          "url": "https://nilecenter.online/mod/page/view.php?id=4659466",
+          "type": "page",
+          "title": "الملخص",
+          "content_text": "## الملخص\nLast modified: Tuesday, 12 April 2022, 2:55 PM",
+          "embedded_links": [
+            "https://drive.google.com/file/d/1J15mvoJw3cCpVvyWx3I2NIadOQp6pWWX/preview"
+          ]
+        },
+        {
+          "name": "اختبار الوحدة الأولى",
+          "section": "19-  (2)مراجعة",
+          "url": "https://nilecenter.online/mod/page/view.php?id=4659467",
+          "type": "page",
+          "title": "اختبار الوحدة الأولى",
+          "content_text": "## اختبار الوحدة الأولى\nLast modified: Tuesday, 12 April 2022, 2:53 PM",
+          "embedded_links": [
+            "https://drive.google.com/file/d/1w8Md0fX6kKr_W4va1o6pS4zqzWnsh_KN/preview"
+          ]
+        },
+        {
+          "name": "ملخص الوحدة",
+          "section": "40- ملخص عام / General summary",
+          "url": "https://nilecenter.online/mod/page/view.php?id=4659613",
+          "type": "page",
+          "title": "ملخص الوحدة",
+          "content_text": "## ملخص الوحدة\nLast modified: Tuesday, 12 April 2022, 2:56 PM",
+          "embedded_links": [
+            "https://drive.google.com/file/d/1fy-v0jPKnRSfbdxVm86-AeYqNiokls18/preview"
+          ]
+        },
+        {
+          "name": "اختبار الوحدة الثانية",
+          "section": "40- ملخص عام / General summary",
+          "url": "https://nilecenter.online/mod/page/view.php?id=4659614",
+          "type": "page",
+          "title": "اختبار الوحدة الثانية",
+          "content_text": "## اختبار الوحدة الثانية\nLast modified: Tuesday, 12 April 2022, 2:53 PM",
+          "embedded_links": [
+            "https://drive.google.com/file/d/16-wl1uFMTV7o2Q32EYOxYIyzoPwbT2dm/preview"
+          ]
+        }
+      ],
+      "h5p_exercises": [
         {
           "name": "1-  اختر الكلمة المناسبة",
           "section": "02- 1A المفردات: في المطار",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659337",
-          "moduleId": "4659337",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2-  اسحب الكلمة وضعها في مكانها الصحيح",
           "section": "02- 1A المفردات: في المطار",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659338",
-          "moduleId": "4659338",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "3- أسئلة حول المفردات",
           "section": "02- 1A المفردات: في المطار",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659339",
-          "moduleId": "4659339",
+          "type": "hvp",
           "title": "3- أسئلة حول المفردات",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "4- لعبة لغوية",
           "section": "02- 1A المفردات: في المطار",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659340",
-          "moduleId": "4659340",
+          "type": "hvp",
           "title": "4- لعبة لغوية",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "1-  اختر علامة (✓) أو (x)",
           "section": "03-  1A الحوار/ (الجزء 1): أمام مكتب الجوازات",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659351",
-          "moduleId": "4659351",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اسحب الكلمة وضعها في مكانها الصحيح",
           "section": "03-  1A الحوار/ (الجزء 1): أمام مكتب الجوازات",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659352",
-          "moduleId": "4659352",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1-  اختر علامة (✓) أو (x)",
           "section": "04- 1A الحوار/ (الجزء 2):  في صالة الوصول",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659361",
-          "moduleId": "4659361",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اسحب الكلمة وضعها في مكانها الصحيح",
           "section": "04- 1A الحوار/ (الجزء 2):  في صالة الوصول",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659362",
-          "moduleId": "4659362",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة",
           "section": "05- 1A القواعد: الاسم الموصول (الذي- التي)",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659372",
-          "moduleId": "4659372",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2-  اختر علامة (✓) أو (x)",
           "section": "05- 1A القواعد: الاسم الموصول (الذي- التي)",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659373",
-          "moduleId": "4659373",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اختر علامة (✓) أو (x)",
           "section": "06- 1A القواعد: أن والمضارع = المصدر",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659383",
-          "moduleId": "4659383",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة",
           "section": "06- 1A القواعد: أن والمضارع = المصدر",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659384",
-          "moduleId": "4659384",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الكلمة المناسبة",
           "section": "11- 1B المفردات: في الفندق",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659409",
-          "moduleId": "4659409",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اسحب الكلمة وضعها في مكانها الصحيح",
           "section": "11- 1B المفردات: في الفندق",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659410",
-          "moduleId": "4659410",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "4- لعبة لغوية",
           "section": "11- 1B المفردات: في الفندق",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659411",
-          "moduleId": "4659411",
+          "type": "hvp",
           "title": "4- لعبة لغوية",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "3-  أسئلة حول المفردات",
           "section": "11- 1B المفردات: في الفندق",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659412",
-          "moduleId": "4659412",
+          "type": "hvp",
           "title": "3-  أسئلة حول المفردات",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "1- اختر علامة (✓) أو (x)",
           "section": "13- 1B الحوار: ألديك غرفة خالية؟",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659424",
-          "moduleId": "4659424",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2-  اختر الإجابة الصحيحة",
           "section": "13- 1B الحوار: ألديك غرفة خالية؟",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659425",
-          "moduleId": "4659425",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1-  اختر الإجابة الصحيحة",
           "section": "14- 1B القواعد: الاستفهام بالهمزة + أم",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659435",
-          "moduleId": "4659435",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اختر علامة (✓) أو (x)",
           "section": "14- 1B القواعد: الاستفهام بالهمزة + أم",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659436",
-          "moduleId": "4659436",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1-  اختر الإجابة الصحيحة",
           "section": "15- 1B القواعد: نفى الجملة الاسمية بـ ليس",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659446",
-          "moduleId": "4659446",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اختر علامة (✓) أو (x)",
           "section": "15- 1B القواعد: نفى الجملة الاسمية بـ ليس",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659447",
-          "moduleId": "4659447",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الكلمة المناسبة",
           "section": "16- 1B القراءة والفهم",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659456",
-          "moduleId": "4659456",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2-  اختر علامة (✓) أو (x)",
           "section": "16- 1B القراءة والفهم",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659457",
-          "moduleId": "4659457",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1-  اختر الكلمة المناسبة",
           "section": "22- 2A المفردات: كيف نظام السكن؟",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659484",
-          "moduleId": "4659484",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اسحب الكلمة وضعها في مكانها الصحيح",
           "section": "22- 2A المفردات: كيف نظام السكن؟",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659485",
-          "moduleId": "4659485",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "3- أسئلة حول المفردات",
           "section": "22- 2A المفردات: كيف نظام السكن؟",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659486",
-          "moduleId": "4659486",
+          "type": "hvp",
           "title": "3- أسئلة حول المفردات",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "4- لعبة لغوية",
           "section": "22- 2A المفردات: كيف نظام السكن؟",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659487",
-          "moduleId": "4659487",
+          "type": "hvp",
           "title": "4- لعبة لغوية",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "1-  اختر علامة (✓) أو (x)",
           "section": "24- 2A الحوار: أين تسكنين يا علياء؟",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659497",
-          "moduleId": "4659497",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2-  اسحب الكلمة وضعها في مكانها الصحيح",
           "section": "24- 2A الحوار: أين تسكنين يا علياء؟",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659498",
-          "moduleId": "4659498",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة",
           "section": "25- 2A القواعد: تقديم الخبر على المبتدأ",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659508",
-          "moduleId": "4659508",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2-  اختر علامة (✓) أو (x)",
           "section": "25- 2A القواعد: تقديم الخبر على المبتدأ",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659509",
-          "moduleId": "4659509",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة",
           "section": "26- 2A القواعد: مصادر الأفعال الثلاثية",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659519",
-          "moduleId": "4659519",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اختر علامة (✓) أو (x)",
           "section": "26- 2A القواعد: مصادر الأفعال الثلاثية",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659520",
-          "moduleId": "4659520",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الكلمة المناسبة",
           "section": "31- 2B المفردات: شقة للإيجار",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659543",
-          "moduleId": "4659543",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اسحب الكلمة وضعها في مكانها الصحيح",
           "section": "31- 2B المفردات: شقة للإيجار",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659544",
-          "moduleId": "4659544",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "3- أسئلة حول المفردات",
           "section": "31- 2B المفردات: شقة للإيجار",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659545",
-          "moduleId": "4659545",
+          "type": "hvp",
           "title": "3- أسئلة حول المفردات",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "4- لعبة لغوية",
           "section": "31- 2B المفردات: شقة للإيجار",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659546",
-          "moduleId": "4659546",
+          "type": "hvp",
           "title": "4- لعبة لغوية",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "1-  اختر علامة (✓) أو (x)",
           "section": "33- 2B الحوار: في مكتب العقارات",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659558",
-          "moduleId": "4659558",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اختر الإجابة الصحيحة",
           "section": "33- 2B الحوار: في مكتب العقارات",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659559",
-          "moduleId": "4659559",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة",
           "section": "34- 2B القواعد: إعراب المثنى",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659569",
-          "moduleId": "4659569",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اختر علامة (✓) أو (x)",
           "section": "34- 2B القواعد: إعراب المثنى",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659570",
-          "moduleId": "4659570",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1-  اختر الإجابة الصحيحة",
           "section": "35- 2B القواعد: مصادر الفعل الرباعي",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659579",
-          "moduleId": "4659579",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2-  اختر علامة (✓) أو (x)",
           "section": "35- 2B القواعد: مصادر الفعل الرباعي",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659580",
-          "moduleId": "4659580",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1-  اختر الإجابة الصحيحة",
           "section": "36- 2Bالقراءة والفهم",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659589",
-          "moduleId": "4659589",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اختر علامة (✓) أو (x)",
           "section": "36- 2Bالقراءة والفهم",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4659590",
-          "moduleId": "4659590",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
+        }
+      ],
+      "speaking_tests": [
+        {
+          "name": "أسئلة التحدث: في الفندق",
+          "section": "18- مراجعة",
+          "url": "https://nilecenter.online/mod/page/view.php?id=4659465",
+          "type": "page",
+          "title": "أسئلة التحدث: في الفندق",
+          "content_text": "## أسئلة التحدث: في الفندق\n\nLast modified: Tuesday, 12 April 2022, 1:36 PM",
+          "embedded_links": []
+        },
+        {
+          "name": "أسئلة التحدث: شقة للإيجار",
+          "section": "40- ملخص عام / General summary",
+          "url": "https://nilecenter.online/mod/page/view.php?id=4659612",
+          "type": "page",
+          "title": "أسئلة التحدث: شقة للإيجار",
+          "content_text": "## أسئلة التحدث: شقة للإيجار\n\nLast modified: Tuesday, 12 April 2022, 1:30 PM",
+          "embedded_links": []
         }
       ]
     },
@@ -1552,318 +1562,319 @@
           "name": "الدرس الأول: ماذا تشترون عادة؟",
           "section": "29- 4A  2 المحادثة",
           "url": "https://nilecenter.online/mod/quiz/view.php?id=4761743",
-          "moduleId": "4761743",
+          "type": "quiz",
           "title": "الدرس الأول: ماذا تشترون عادة؟",
           "description": "Attempts allowed: 1\nGrade to pass: 7.00 out of 0.00",
-          "attemptsHtml": ""
+          "attempts_info": ""
         }
       ],
-      "h5p_interactive_exercises": [
+      "unit_exams": [
+        {
+          "name": "الملخص",
+          "section": "19- مراجعة",
+          "url": "https://nilecenter.online/mod/page/view.php?id=4761673",
+          "type": "page",
+          "title": "الملخص",
+          "content_text": "## الملخص\nLast modified: Thursday, 12 May 2022, 11:23 AM",
+          "embedded_links": [
+            "https://drive.google.com/file/d/1nFgMuho2z1IpqwtK8qcBEGbmP-dxUb9y/preview"
+          ]
+        },
+        {
+          "name": "اختبار الوحدة الثالثة",
+          "section": "19- مراجعة",
+          "url": "https://nilecenter.online/mod/page/view.php?id=4761674",
+          "type": "page",
+          "title": "اختبار الوحدة الثالثة",
+          "content_text": "## اختبار الوحدة الثالثة\nLast modified: Thursday, 12 May 2022, 11:24 AM",
+          "embedded_links": [
+            "https://drive.google.com/file/d/19I1brrf-IUCbVTX-JCpcRIYK_Jhq7tOD/preview"
+          ]
+        }
+      ],
+      "h5p_exercises": [
         {
           "name": "1- اختر الكلمة المناسبة",
           "section": "02- 3A المفردات: شفاك الله وعافاك",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761555",
-          "moduleId": "4761555",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2-  اسحب الكلمة وضعها في مكانها الصحيح",
           "section": "02- 3A المفردات: شفاك الله وعافاك",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761556",
-          "moduleId": "4761556",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "3-  أسئلة حول المفردات",
           "section": "02- 3A المفردات: شفاك الله وعافاك",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761557",
-          "moduleId": "4761557",
+          "type": "hvp",
           "title": "3-  أسئلة حول المفردات",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "4- لعبة لغوية",
           "section": "02- 3A المفردات: شفاك الله وعافاك",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761558",
-          "moduleId": "4761558",
+          "type": "hvp",
           "title": "4- لعبة لغوية",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "1- اختر علامة (✓) أو (x)",
           "section": "04- 3A الحوار: شفاك الله وعافاك",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761570",
-          "moduleId": "4761570",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2-  اسحب الكلمة وضعها في مكانها الصحيح",
           "section": "04- 3A الحوار: شفاك الله وعافاك",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761571",
-          "moduleId": "4761571",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة",
           "section": "05- 3A القواعد: إن وأخواتها",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761581",
-          "moduleId": "4761581",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2-  اختر علامة (✓) أو (x)",
           "section": "05- 3A القواعد: إن وأخواتها",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761582",
-          "moduleId": "4761582",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1-  اختر الإجابة الصحيحة",
           "section": "06- 3A القواعد: لام الأمر + الفعل المضارع المجزوم",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761592",
-          "moduleId": "4761592",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اختر علامة (✓) أو (x)",
           "section": "06- 3A القواعد: لام الأمر + الفعل المضارع المجزوم",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761593",
-          "moduleId": "4761593",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الكلمة المناسبة",
           "section": "11- 3B المفردات: عند الطبيب",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761616",
-          "moduleId": "4761616",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اسحب الكلمة وضعها في مكانها الصحيح",
           "section": "11- 3B المفردات: عند الطبيب",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761617",
-          "moduleId": "4761617",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "3- أسئلة حول المفردات",
           "section": "11- 3B المفردات: عند الطبيب",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761618",
-          "moduleId": "4761618",
+          "type": "hvp",
           "title": "3- أسئلة حول المفردات",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "4-  لعبة لغوية",
           "section": "11- 3B المفردات: عند الطبيب",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761619",
-          "moduleId": "4761619",
+          "type": "hvp",
           "title": "4-  لعبة لغوية",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "1- اختر علامة (✓) أو (x)",
           "section": "14- 3B الحوار2: مم تشكو؟",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761630",
-          "moduleId": "4761630",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2-  اختر الإجابة الصحيحة",
           "section": "14- 3B الحوار2: مم تشكو؟",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761631",
-          "moduleId": "4761631",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة",
           "section": "15- 3B القواعد: كان ومازال",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761641",
-          "moduleId": "4761641",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اختر علامة (✓) أو (x)",
           "section": "15- 3B القواعد: كان ومازال",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761642",
-          "moduleId": "4761642",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة",
           "section": "16- 3B القواعد: مصادر الخماسي والسداسي",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761652",
-          "moduleId": "4761652",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اختر علامة (✓) أو (x)",
           "section": "16- 3B القواعد: مصادر الخماسي والسداسي",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761653",
-          "moduleId": "4761653",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر علامة (✓) أو (x)",
           "section": "17- 3B القراءة والفهم",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761662",
-          "moduleId": "4761662",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اختر الإجابة الصحيحة",
           "section": "17- 3B القراءة والفهم",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761663",
-          "moduleId": "4761663",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "3- أسئلة حول المفردات",
           "section": "22- 4A المفردات: ماذا تشترون عادة؟",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761688",
-          "moduleId": "4761688",
+          "type": "hvp",
           "title": "3- أسئلة حول المفردات",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "1- اختر الكلمة المناسبة",
           "section": "22- 4A المفردات: ماذا تشترون عادة؟",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761689",
-          "moduleId": "4761689",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2- اسحب الكلمة وضعها في مكانها الصحيح",
           "section": "22- 4A المفردات: ماذا تشترون عادة؟",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761690",
-          "moduleId": "4761690",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "4- لعبة لغوية",
           "section": "22- 4A المفردات: ماذا تشترون عادة؟",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761691",
-          "moduleId": "4761691",
+          "type": "hvp",
           "title": "4- لعبة لغوية",
-          "iframeSrc": "https://nilecenter.online/about:blank",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": "https://nilecenter.online/about:blank"
         },
         {
           "name": "1- اختر علامة (✓) أو (x)",
           "section": "24- 4A الحوار: استبيان حول عادات التسوق",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761702",
-          "moduleId": "4761702",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2-  اختر الإجابة الصحيحة",
           "section": "24- 4A الحوار: استبيان حول عادات التسوق",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761703",
-          "moduleId": "4761703",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة",
           "section": "25- 4A القواعد: اسم التفضيل، أما وفـ",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761712",
-          "moduleId": "4761712",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2-  اختر علامة (✓) أو (x)",
           "section": "25- 4A القواعد: اسم التفضيل، أما وفـ",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761713",
-          "moduleId": "4761713",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1- اختر الإجابة الصحيحة",
           "section": "25- 4A القواعد: اسم التفضيل، أما وفـ",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761717",
-          "moduleId": "4761717",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2-  اختر علامة (✓) أو (x)",
           "section": "25- 4A القواعد: اسم التفضيل، أما وفـ",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761718",
-          "moduleId": "4761718",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "1-  اختر الإجابة الصحيحة",
           "section": "26- 4A القواعد: اسم الفاعل من الثلاثي",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761728",
-          "moduleId": "4761728",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
         },
         {
           "name": "2-  اختر علامة (✓) أو (x)",
           "section": "26- 4A القواعد: اسم الفاعل من الثلاثي",
           "url": "https://nilecenter.online/mod/hvp/view.php?id=4761729",
-          "moduleId": "4761729",
+          "type": "hvp",
           "title": "",
-          "iframeSrc": "",
-          "type": "H5P Interactive Exercise"
+          "iframe_src": ""
+        }
+      ],
+      "speaking_tests": [
+        {
+          "name": "أسئلة التحدث: عند الطبيب",
+          "section": "19- مراجعة",
+          "url": "https://nilecenter.online/mod/page/view.php?id=4761672",
+          "type": "page",
+          "title": "أسئلة التحدث: عند الطبيب",
+          "content_text": "## أسئلة التحدث: عند الطبيب\n\nLast modified: Tuesday, 12 April 2022, 3:20 PM",
+          "embedded_links": []
         }
       ]
     }

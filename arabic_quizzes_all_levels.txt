@@ -1,1095 +1,794 @@
 ================================================================================
-NILE CENTER ARABIC COURSES - COMPLETE QUIZ & EXERCISE COLLECTION
+NILE CENTER ARABIC COURSES — COMPLETE QUIZ & EXAM COLLECTION
 Source: nilecenter.online
 ================================================================================
 
-Total Activities: 200
-Formal Quizzes: 3
-H5P Interactive Exercises: 197
-Levels Covered: Level 00, Level 01, Level 04, Level 05, Level 06
+SUMMARY
+  Formal Moodle Quizzes:     3
+  Unit/Midterm/Final Exams:  15
+  Speaking Tests:            6
+  H5P Interactive Exercises: 197
+  GRAND TOTAL:              221
 
 --------------------------------------------------------------------------------
-SUMMARY BY LEVEL
+BREAKDOWN BY LEVEL:
 --------------------------------------------------------------------------------
-  Level 00: 1 quizzes, 27 H5P exercises (28 total)
-  Level 01: 1 quizzes, 46 H5P exercises (47 total)
-  Level 04: 0 quizzes, 44 H5P exercises (44 total)
-  Level 05: 0 quizzes, 46 H5P exercises (46 total)
-  Level 06: 1 quizzes, 34 H5P exercises (35 total)
+  Level 00: 1 quizzes | 3 unit exams | 0 speaking tests | 27 H5P exercises
+  Level 01: 1 quizzes | 2 unit exams | 0 speaking tests | 46 H5P exercises
+  Level 04: 0 quizzes | 4 unit exams | 3 speaking tests | 44 H5P exercises
+  Level 05: 0 quizzes | 4 unit exams | 2 speaking tests | 46 H5P exercises
+  Level 06: 1 quizzes | 2 unit exams | 1 speaking tests | 34 H5P exercises
+
 
 ================================================================================
-LEVEL 00
+  LEVEL 00
 ================================================================================
 
---- FORMAL QUIZZES (1) ---
+  ┌─ FORMAL QUIZZES (1)
+  │
+  ├── Test yourself
+  │   Title: Test yourself
+  │   Info: Attempts allowed: 1
+  │   URL: https://nilecenter.online/mod/quiz/view.php?id=2866620
+  │
+  └───
 
-  Quiz: Test yourself
-  Title: Test yourself
-  Description: Attempts allowed: 1
-  Section: 
-  URL: https://nilecenter.online/mod/quiz/view.php?id=2866620
+  ┌─ UNIT / MIDTERM / FINAL EXAMS (3)
+  │
+  ├── Test on the second part
+  │   Title: Test on the second part
+  │   URL: https://nilecenter.online/mod/page/view.php?id=2866481
+  │   Content:
+  │   ## Test on the second part
+  │   Last modified: Monday, 9 October 2023, 12:25 PM
+  │   Embedded: https://drive.google.com/file/d/1VSnJyzDtgD4F7ZOF7bvswb08VsrQJOZx/preview
+  │
+  ├── Test on the third part
+  │   Title: Test on the third part
+  │   URL: https://nilecenter.online/mod/page/view.php?id=2866597
+  │   Content:
+  │   ## Test on the third part
+  │   Last modified: Monday, 9 October 2023, 12:26 PM
+  │   Embedded: https://drive.google.com/file/d/1kZ44-q12oaSSborAzLEvPcZRskeVsdIc/preview
+  │
+  ├── A general test on the book
+  │   Title: A general test on the book
+  │   URL: https://nilecenter.online/mod/page/view.php?id=2866622
+  │   Content:
+  │   ## A general test on the book
+  │   Last modified: Monday, 9 October 2023, 12:41 PM
+  │   Embedded: https://drive.google.com/file/d/14kESavdFVIGYUiZbxDsqEGHkcRNmf-AC/preview
+  │   Embedded: https://drive.google.com/file/d/1MW38PIjgJVWJsbO97KM0B9v3d2C3xTQH/preview
+  │
+  └───
 
---- H5P INTERACTIVE EXERCISES (27) ---
-
-  Exercise: Activity :Look for the following words
-  Title: Activity :Look for the following words
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866374
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: Activity :Look for the following words
-  Title: Activity :Look for the following words
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866386
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: Activity : Look for the following words
-  Title: Activity : Look for the following words
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866399
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: Activity :Look for the following words
-  Title: Activity :Look for the following words
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866412
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 1- Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866490
-
-  Exercise: 2- Put atick (✓) or cross (x)
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866491
-
-  Exercise: 1- Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866500
-
-  Exercise: 2- Put atick (✓) or cross (x)
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866501
-
-  Exercise: 1- Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866510
-
-  Exercise: 2- Put atick (✓) or cross (x)
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866511
-
-  Exercise: 1- Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866523
-
-  Exercise: 2- Put atick (✓) or cross (x)
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866524
-
-  Exercise: 1- Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866550
-
-  Exercise: 2- Put atick (✓) or cross (x)
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866551
-
-  Exercise: 1- Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866564
-
-  Exercise: 2- Put atick (✓) or cross (x)
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866565
-
-  Exercise: 1- Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866576
-
-  Exercise: 2- Put atick (✓) or cross (x)
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866577
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2867034
-
-  Exercise: 2- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2867035
-
-  Exercise: 1- Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866608
-
-  Exercise: 2- Put atick (✓) or cross (x)
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866609
-
-  Exercise: 1- Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866619
-
-  Exercise: Activity 1: Write the word that represents the image
-  Title: Activity 1: Write the word that represents the image
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866625
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: Activity 2: Write the word that represents the image
-  Title: Activity 2: Write the word that represents the image
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866626
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: Activity 3: Write the word that represents the image
-  Title: Activity 3: Write the word that represents the image
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866627
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: Activity 4: Write the word that represents the image
-  Title: Activity 4: Write the word that represents the image
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866628
-  Embed: https://nilecenter.online/about:blank
+  ┌─ H5P INTERACTIVE EXERCISES (27)
+  │
+  ├── Activity :Look for the following words
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866374
+  ├── Activity :Look for the following words
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866386
+  ├── Activity : Look for the following words
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866399
+  ├── Activity :Look for the following words
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866412
+  ├── 1- Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866490
+  ├── 2- Put atick (✓) or cross (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866491
+  ├── 1- Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866500
+  ├── 2- Put atick (✓) or cross (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866501
+  ├── 1- Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866510
+  ├── 2- Put atick (✓) or cross (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866511
+  ├── 1- Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866523
+  ├── 2- Put atick (✓) or cross (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866524
+  ├── 1- Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866550
+  ├── 2- Put atick (✓) or cross (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866551
+  ├── 1- Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866564
+  ├── 2- Put atick (✓) or cross (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866565
+  ├── 1- Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866576
+  ├── 2- Put atick (✓) or cross (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866577
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2867034
+  ├── 2- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2867035
+  ├── 1- Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866608
+  ├── 2- Put atick (✓) or cross (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866609
+  ├── 1- Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866619
+  ├── Activity 1: Write the word that represents the image
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866625
+  ├── Activity 2: Write the word that represents the image
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866626
+  ├── Activity 3: Write the word that represents the image
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866627
+  ├── Activity 4: Write the word that represents the image
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866628
+  │
+  └───
 
 ================================================================================
-LEVEL 01
+  LEVEL 01
 ================================================================================
 
---- FORMAL QUIZZES (1) ---
-
-  Quiz: VOCABULARY 3
-  Title: VOCABULARY 3
-  Description: Attempts allowed: 1
+  ┌─ FORMAL QUIZZES (1)
+  │
+  ├── VOCABULARY 3
+  │   Title: VOCABULARY 3
+  │   Info: Attempts allowed: 1
 Grade to pass: 1.75 out of 2.50
-  Section: 
-  URL: https://nilecenter.online/mod/quiz/view.php?id=2866878
+  │   URL: https://nilecenter.online/mod/quiz/view.php?id=2866878
+  │
+  └───
 
---- H5P INTERACTIVE EXERCISES (46) ---
+  ┌─ UNIT / MIDTERM / FINAL EXAMS (2)
+  │
+  ├── اختبار الوحدة الأولى
+  │   Title: اختبار الوحدة الأولى
+  │   URL: https://nilecenter.online/mod/page/view.php?id=2866863
+  │   Content:
+  │   ## اختبار الوحدة الأولى
+  │   Last modified: Friday, 8 April 2022, 2:01 AM
+  │   Embedded: https://drive.google.com/file/d/1KQ0XySHpTH2jQCLgOqMQgfgjLOsOveGs/preview
+  │
+  ├── اختبار الوحدة الثانية
+  │   Title: اختبار الوحدة الثانية
+  │   URL: https://nilecenter.online/mod/page/view.php?id=2867062
+  │   Content:
+  │   ## اختبار الوحدة الثانية
+  │   Last modified: Friday, 8 April 2022, 2:03 AM
+  │   Embedded: https://drive.google.com/file/d/1kJjbh8l_PEwjQBVeUpmHXvszuJ-hjeah/preview
+  │
+  └───
 
-  Exercise: 1- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866643
-
-  Exercise: 2- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866644
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866658
-
-  Exercise: 2- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866659
-
-  Exercise: 3- أسئلة حول المفردات / Questions about vocabulary
-  Title: 3- أسئلة حول المفردات / Questions about vocabulary
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866660
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 4- لعبة لغوية /  Linguistic game
-  Title: 4- لعبة لغوية /  Linguistic game
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866661
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 1- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866682
-
-  Exercise: 2- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866683
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866699
-
-  Exercise: 2- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866700
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866716
-
-  Exercise: 2- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866717
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866757
-
-  Exercise: 2- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866758
-
-  Exercise: 3- أسئلة حول المفردات / Questions about vocabulary
-  Title: 3- أسئلة حول المفردات / Questions about vocabulary
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866759
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 4- لعبة لغوية /  Linguistic game
-  Title: 4- لعبة لغوية /  Linguistic game
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866760
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 1- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866783
-
-  Exercise: 2- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866784
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866801
-
-  Exercise: 2- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866802
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866819
-
-  Exercise: 2- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866820
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866828
-
-  Exercise: 2- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866829
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866845
-
-  Exercise: 2- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866846
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866873
-
-  Exercise: 2- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866874
-
-  Exercise: 3- لعبة لغوية /  Linguistic game
-  Title: 3- لعبة لغوية /  Linguistic game
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866875
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866893
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866913
-
-  Exercise: 2- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866914
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866930
-
-  Exercise: 2- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866931
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866947
-
-  Exercise: 2- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866948
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866981
-
-  Exercise: 2- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866982
-
-  Exercise: 3- أسئلة حول المفردات / Questions about vocabulary
-  Title: 3- أسئلة حول المفردات / Questions about vocabulary
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866983
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 4- لعبة لغوية /  Linguistic game
-  Title: 4- لعبة لغوية /  Linguistic game
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2866984
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 1- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2867001
-
-  Exercise: 2- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2867002
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2867020
-
-  Exercise: 2- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2867021
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2867049
-
-  Exercise: 2- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 
-  URL: https://nilecenter.online/mod/hvp/view.php?id=2867050
+  ┌─ H5P INTERACTIVE EXERCISES (46)
+  │
+  ├── 1- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866643
+  ├── 2- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866644
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866658
+  ├── 2- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866659
+  ├── 3- أسئلة حول المفردات / Questions about vocabulary
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866660
+  ├── 4- لعبة لغوية /  Linguistic game
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866661
+  ├── 1- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866682
+  ├── 2- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866683
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866699
+  ├── 2- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866700
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866716
+  ├── 2- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866717
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866757
+  ├── 2- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866758
+  ├── 3- أسئلة حول المفردات / Questions about vocabulary
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866759
+  ├── 4- لعبة لغوية /  Linguistic game
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866760
+  ├── 1- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866783
+  ├── 2- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866784
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866801
+  ├── 2- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866802
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866819
+  ├── 2- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866820
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866828
+  ├── 2- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866829
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866845
+  ├── 2- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866846
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866873
+  ├── 2- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866874
+  ├── 3- لعبة لغوية /  Linguistic game
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866875
+  ├── اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866893
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866913
+  ├── 2- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866914
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866930
+  ├── 2- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866931
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866947
+  ├── 2- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866948
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866981
+  ├── 2- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866982
+  ├── 3- أسئلة حول المفردات / Questions about vocabulary
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866983
+  ├── 4- لعبة لغوية /  Linguistic game
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2866984
+  ├── 1- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2867001
+  ├── 2- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2867002
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2867020
+  ├── 2- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2867021
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2867049
+  ├── 2- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=2867050
+  │
+  └───
 
 ================================================================================
-LEVEL 04
+  LEVEL 04
 ================================================================================
 
---- H5P INTERACTIVE EXERCISES (44) ---
+  ┌─ UNIT / MIDTERM / FINAL EXAMS (4)
+  │
+  ├── ملخص الوحدة السابعة
+  │   Title: ملخص الوحدة السابعة
+  │   Section: مراجعة واختبار عام
+  │   URL: https://nilecenter.online/mod/page/view.php?id=4513779
+  │   Content:
+  │   ## ملخص الوحدة السابعة
+  │   Last modified: Saturday, 9 April 2022, 1:17 PM
+  │   Embedded: https://drive.google.com/file/d/1ySBHr9UVFMzmIeww_WsipAOu-xfA5MJB/preview
+  │
+  ├── اختبارالوحدة السابعة
+  │   Title: اختبارالوحدة السابعة
+  │   Section: مراجعة واختبار عام
+  │   URL: https://nilecenter.online/mod/page/view.php?id=4513780
+  │   Content:
+  │   ## اختبارالوحدة السابعة
+  │   Last modified: Saturday, 9 April 2022, 1:17 PM
+  │   Embedded: https://drive.google.com/file/d/1IomuPll6tBFp8ix_QHxgZXhVaHi7Lgd4/preview
+  │
+  ├── ملخص الوحدة الثامنة
+  │   Title: ملخص الوحدة الثامنة
+  │   Section: 40- ملخص عام / General summary
+  │   URL: https://nilecenter.online/mod/page/view.php?id=4513945
+  │   Content:
+  │   ## ملخص الوحدة الثامنة
+  │   Last modified: Saturday, 9 April 2022, 1:16 PM
+  │   Embedded: https://drive.google.com/file/d/16KVKLERQXA9ZlCHrYYAaXGrYi6nZpR6N/preview
+  │
+  ├── اختبار الوحدة الثامنة
+  │   Title: اختبار الوحدة الثامنة
+  │   Section: 40- ملخص عام / General summary
+  │   URL: https://nilecenter.online/mod/page/view.php?id=4513946
+  │   Content:
+  │   ## اختبار الوحدة الثامنة
+  │   Last modified: Saturday, 9 April 2022, 1:18 PM
+  │   Embedded: https://drive.google.com/file/d/14TFKH2em-WL5Um4PklcXXwcOJqHgjiEA/preview
+  │
+  └───
 
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 02- 7A المفردات: يوم شاق جدا
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513631
+  ┌─ SPEAKING TESTS (3)
+  │
+  ├── أسئلة التحدث: تلة العرائس
+  │   Section: مراجعة واختبار عام
+  │   URL: https://nilecenter.online/mod/page/view.php?id=4513778
+  │   Content:
+  │   ## أسئلة التحدث: تلة العرائس
+  │   
+  │   Last modified: Wednesday, 3 August 2022, 4:46 PM
+  │
+  ├── أسئلة التحدث: كيف الجو عندكم؟
+  │   Section: مراجعة واختبار عام
+  │   URL: https://nilecenter.online/mod/page/view.php?id=4513867
+  │   Content:
+  │   ## أسئلة التحدث: كيف الجو عندكم؟
+  │   
+  │   Last modified: Saturday, 9 April 2022, 1:04 PM
+  │
+  ├── أسئلة التحدث: في رعاية الله اعتن بنفسك
+  │   Section: 40- ملخص عام / General summary
+  │   URL: https://nilecenter.online/mod/page/view.php?id=4513944
+  │   Content:
+  │   ## أسئلة التحدث: في رعاية الله اعتن بنفسك
+  │   
+  │   Last modified: Saturday, 9 April 2022, 1:11 PM
+  │
+  └───
 
-  Exercise: 2-  اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
-  Title: 
-  Section: 02- 7A المفردات: يوم شاق جدا
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513632
-
-  Exercise: 3- أسئلة حول المفردات / Questions about vocabulary
-  Title: 
-  Section: 02- 7A المفردات: يوم شاق جدا
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513633
-
-  Exercise: 4- لعبة لغوية /  Linguistic game
-  Title: 4- لعبة لغوية /  Linguistic game
-  Section: 02- 7A المفردات: يوم شاق جدا
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513634
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 04- 7A الحوار: يوم شاق جدا
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513651
-
-  Exercise: 2- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 04- 7A الحوار: يوم شاق جدا
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513652
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 05- 7A القواعد: الجملة الفعلية
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513663
-
-  Exercise: 2-  اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
-  Title: 
-  Section: 05- 7A القواعد: الجملة الفعلية
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513664
-
-  Exercise: 2- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 06- 7A القواعد: (أقسام الفعل)، ( لـ+ فعل مضارع=لأن+ جملة اسمية)
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513675
-
-  Exercise: 1- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
-  Title: 
-  Section: 06- 7A القواعد: (أقسام الفعل)، ( لـ+ فعل مضارع=لأن+ جملة اسمية)
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513676
-
-  Exercise: 1- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
-  Title: 
-  Section: 06- 7A القواعد: (أقسام الفعل)، ( لـ+ فعل مضارع=لأن+ جملة اسمية)
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513687
-
-  Exercise: 2- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 06- 7A القواعد: (أقسام الفعل)، ( لـ+ فعل مضارع=لأن+ جملة اسمية)
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513688
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 12- 7B المفردات: تلة العرائس
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513721
-
-  Exercise: 2-  اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
-  Title: 
-  Section: 12- 7B المفردات: تلة العرائس
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513722
-
-  Exercise: 3- أسئلة حول المفردات / Questions about vocabulary
-  Title: 3- أسئلة حول المفردات / Questions about vocabulary
-  Section: 12- 7B المفردات: تلة العرائس
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513723
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 4- لعبة لغوية /  Linguistic game
-  Title: 4- لعبة لغوية /  Linguistic game
-  Section: 12- 7B المفردات: تلة العرائس
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513724
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 14- 7B الحوار: قلقت عليك
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513739
-
-  Exercise: 2- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 14- 7B الحوار: قلقت عليك
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513740
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 15- 7B القواعد: الفاعل والمفعول به
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513751
-
-  Exercise: 2- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 15- 7B القواعد: الفاعل والمفعول به
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513752
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 16- 7B القواعد: النفي بـ ما أو لم
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513763
-
-  Exercise: 2- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 16- 7B القواعد: النفي بـ ما أو لم
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513764
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 22- 8A المفردات: كيف الجو عندكم؟
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513797
-
-  Exercise: 2-  اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
-  Title: 
-  Section: 22- 8A المفردات: كيف الجو عندكم؟
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513798
-
-  Exercise: 3- أسئلة حول المفردات / Questions about vocabulary
-  Title: 3- أسئلة حول المفردات / Questions about vocabulary
-  Section: 22- 8A المفردات: كيف الجو عندكم؟
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513799
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 4- لعبة لغوية /  Linguistic game
-  Title: 4- لعبة لغوية /  Linguistic game
-  Section: 22- 8A المفردات: كيف الجو عندكم؟
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513800
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 24- 8Aالحوار: مقابلة على الإنترنت
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513816
-
-  Exercise: 2- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 24- 8Aالحوار: مقابلة على الإنترنت
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513817
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 25- 8A القواعد: الصفة والموصوف
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513828
-
-  Exercise: النشاط الثاني: ضع علامة (✓) أمام الجملة الصحيحة
-  Title: 
-  Section: 25- 8A القواعد: الصفة والموصوف
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513829
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 26- 8A القواعد: نفي المضارع بـ (لن) / لكن
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513840
-
-  Exercise: 2- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 26- 8A القواعد: نفي المضارع بـ (لن) / لكن
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513841
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 26- 8A القواعد: نفي المضارع بـ (لن) / لكن
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513845
-
-  Exercise: 2- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 26- 8A القواعد: نفي المضارع بـ (لن) / لكن
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513846
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 31- 8B المفردات: في رعاية الله، اعتن بنفسك
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513880
-
-  Exercise: 2-  اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
-  Title: 
-  Section: 31- 8B المفردات: في رعاية الله، اعتن بنفسك
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513881
-
-  Exercise: 3- أسئلة حول المفردات / Questions about vocabulary
-  Title: 3- أسئلة حول المفردات / Questions about vocabulary
-  Section: 31- 8B المفردات: في رعاية الله، اعتن بنفسك
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513882
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 4- لعبة لغوية /  Linguistic game
-  Title: 4- لعبة لغوية /  Linguistic game
-  Section: 31- 8B المفردات: في رعاية الله، اعتن بنفسك
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513883
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 33- 8B الحوار: صحبتك السلامة
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513898
-
-  Exercise: 2- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 33- 8B الحوار: صحبتك السلامة
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513899
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 34- 8B القواعد: الاستفهام بـ (أ، هل)
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513910
-
-  Exercise: 2- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 34- 8B القواعد: الاستفهام بـ (أ، هل)
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513911
-
-  Exercise: 1- اختر الإجابة الصحيحة / Choose the correct answer
-  Title: 
-  Section: 35- 8B القواعد: الاستفهام بالهمزة المنفي
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513922
-
-  Exercise: 2- ضع علامة (√) أو (×) / Tick (true) or (false)
-  Title: 
-  Section: 35- 8B القواعد: الاستفهام بالهمزة المنفي
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4513923
+  ┌─ H5P INTERACTIVE EXERCISES (44)
+  │
+  │  [02- 7A المفردات: يوم شاق جدا]
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513631
+  ├── 2-  اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513632
+  ├── 3- أسئلة حول المفردات / Questions about vocabulary
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513633
+  ├── 4- لعبة لغوية /  Linguistic game
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513634
+  │
+  │  [04- 7A الحوار: يوم شاق جدا]
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513651
+  ├── 2- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513652
+  │
+  │  [05- 7A القواعد: الجملة الفعلية]
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513663
+  ├── 2-  اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513664
+  │
+  │  [06- 7A القواعد: (أقسام الفعل)، ( لـ+ فعل مضارع=لأن]
+  ├── 2- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513675
+  ├── 1- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513676
+  ├── 1- اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513687
+  ├── 2- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513688
+  │
+  │  [12- 7B المفردات: تلة العرائس]
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513721
+  ├── 2-  اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513722
+  ├── 3- أسئلة حول المفردات / Questions about vocabulary
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513723
+  ├── 4- لعبة لغوية /  Linguistic game
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513724
+  │
+  │  [14- 7B الحوار: قلقت عليك]
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513739
+  ├── 2- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513740
+  │
+  │  [15- 7B القواعد: الفاعل والمفعول به]
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513751
+  ├── 2- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513752
+  │
+  │  [16- 7B القواعد: النفي بـ ما أو لم]
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513763
+  ├── 2- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513764
+  │
+  │  [22- 8A المفردات: كيف الجو عندكم؟]
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513797
+  ├── 2-  اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513798
+  ├── 3- أسئلة حول المفردات / Questions about vocabulary
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513799
+  ├── 4- لعبة لغوية /  Linguistic game
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513800
+  │
+  │  [24- 8Aالحوار: مقابلة على الإنترنت]
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513816
+  ├── 2- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513817
+  │
+  │  [25- 8A القواعد: الصفة والموصوف]
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513828
+  ├── النشاط الثاني: ضع علامة (✓) أمام الجملة الصحيحة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513829
+  │
+  │  [26- 8A القواعد: نفي المضارع بـ (لن) / لكن]
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513840
+  ├── 2- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513841
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513845
+  ├── 2- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513846
+  │
+  │  [31- 8B المفردات: في رعاية الله، اعتن بنفسك]
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513880
+  ├── 2-  اسحب الكلمة وضعها في مكانها الصحيح / Drag and Drop
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513881
+  ├── 3- أسئلة حول المفردات / Questions about vocabulary
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513882
+  ├── 4- لعبة لغوية /  Linguistic game
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513883
+  │
+  │  [33- 8B الحوار: صحبتك السلامة]
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513898
+  ├── 2- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513899
+  │
+  │  [34- 8B القواعد: الاستفهام بـ (أ، هل)]
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513910
+  ├── 2- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513911
+  │
+  │  [35- 8B القواعد: الاستفهام بالهمزة المنفي]
+  ├── 1- اختر الإجابة الصحيحة / Choose the correct answer
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513922
+  ├── 2- ضع علامة (√) أو (×) / Tick (true) or (false)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4513923
+  │
+  └───
 
 ================================================================================
-LEVEL 05
+  LEVEL 05
 ================================================================================
 
---- H5P INTERACTIVE EXERCISES (46) ---
+  ┌─ UNIT / MIDTERM / FINAL EXAMS (4)
+  │
+  ├── الملخص
+  │   Title: الملخص
+  │   Section: 18- مراجعة
+  │   URL: https://nilecenter.online/mod/page/view.php?id=4659466
+  │   Content:
+  │   ## الملخص
+  │   Last modified: Tuesday, 12 April 2022, 2:55 PM
+  │   Embedded: https://drive.google.com/file/d/1J15mvoJw3cCpVvyWx3I2NIadOQp6pWWX/preview
+  │
+  ├── اختبار الوحدة الأولى
+  │   Title: اختبار الوحدة الأولى
+  │   Section: 19-  (2)مراجعة
+  │   URL: https://nilecenter.online/mod/page/view.php?id=4659467
+  │   Content:
+  │   ## اختبار الوحدة الأولى
+  │   Last modified: Tuesday, 12 April 2022, 2:53 PM
+  │   Embedded: https://drive.google.com/file/d/1w8Md0fX6kKr_W4va1o6pS4zqzWnsh_KN/preview
+  │
+  ├── ملخص الوحدة
+  │   Title: ملخص الوحدة
+  │   Section: 40- ملخص عام / General summary
+  │   URL: https://nilecenter.online/mod/page/view.php?id=4659613
+  │   Content:
+  │   ## ملخص الوحدة
+  │   Last modified: Tuesday, 12 April 2022, 2:56 PM
+  │   Embedded: https://drive.google.com/file/d/1fy-v0jPKnRSfbdxVm86-AeYqNiokls18/preview
+  │
+  ├── اختبار الوحدة الثانية
+  │   Title: اختبار الوحدة الثانية
+  │   Section: 40- ملخص عام / General summary
+  │   URL: https://nilecenter.online/mod/page/view.php?id=4659614
+  │   Content:
+  │   ## اختبار الوحدة الثانية
+  │   Last modified: Tuesday, 12 April 2022, 2:53 PM
+  │   Embedded: https://drive.google.com/file/d/16-wl1uFMTV7o2Q32EYOxYIyzoPwbT2dm/preview
+  │
+  └───
 
-  Exercise: 1-  اختر الكلمة المناسبة
-  Title: 
-  Section: 02- 1A المفردات: في المطار
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659337
+  ┌─ SPEAKING TESTS (2)
+  │
+  ├── أسئلة التحدث: في الفندق
+  │   Section: 18- مراجعة
+  │   URL: https://nilecenter.online/mod/page/view.php?id=4659465
+  │   Content:
+  │   ## أسئلة التحدث: في الفندق
+  │   
+  │   Last modified: Tuesday, 12 April 2022, 1:36 PM
+  │
+  ├── أسئلة التحدث: شقة للإيجار
+  │   Section: 40- ملخص عام / General summary
+  │   URL: https://nilecenter.online/mod/page/view.php?id=4659612
+  │   Content:
+  │   ## أسئلة التحدث: شقة للإيجار
+  │   
+  │   Last modified: Tuesday, 12 April 2022, 1:30 PM
+  │
+  └───
 
-  Exercise: 2-  اسحب الكلمة وضعها في مكانها الصحيح
-  Title: 
-  Section: 02- 1A المفردات: في المطار
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659338
-
-  Exercise: 3- أسئلة حول المفردات
-  Title: 3- أسئلة حول المفردات
-  Section: 02- 1A المفردات: في المطار
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659339
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 4- لعبة لغوية
-  Title: 4- لعبة لغوية
-  Section: 02- 1A المفردات: في المطار
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659340
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 1-  اختر علامة (✓) أو (x)
-  Title: 
-  Section: 03-  1A الحوار/ (الجزء 1): أمام مكتب الجوازات
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659351
-
-  Exercise: 2- اسحب الكلمة وضعها في مكانها الصحيح
-  Title: 
-  Section: 03-  1A الحوار/ (الجزء 1): أمام مكتب الجوازات
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659352
-
-  Exercise: 1-  اختر علامة (✓) أو (x)
-  Title: 
-  Section: 04- 1A الحوار/ (الجزء 2):  في صالة الوصول
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659361
-
-  Exercise: 2- اسحب الكلمة وضعها في مكانها الصحيح
-  Title: 
-  Section: 04- 1A الحوار/ (الجزء 2):  في صالة الوصول
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659362
-
-  Exercise: 1- اختر الإجابة الصحيحة
-  Title: 
-  Section: 05- 1A القواعد: الاسم الموصول (الذي- التي)
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659372
-
-  Exercise: 2-  اختر علامة (✓) أو (x)
-  Title: 
-  Section: 05- 1A القواعد: الاسم الموصول (الذي- التي)
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659373
-
-  Exercise: 2- اختر علامة (✓) أو (x)
-  Title: 
-  Section: 06- 1A القواعد: أن والمضارع = المصدر
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659383
-
-  Exercise: 1- اختر الإجابة الصحيحة
-  Title: 
-  Section: 06- 1A القواعد: أن والمضارع = المصدر
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659384
-
-  Exercise: 1- اختر الكلمة المناسبة
-  Title: 
-  Section: 11- 1B المفردات: في الفندق
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659409
-
-  Exercise: 2- اسحب الكلمة وضعها في مكانها الصحيح
-  Title: 
-  Section: 11- 1B المفردات: في الفندق
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659410
-
-  Exercise: 4- لعبة لغوية
-  Title: 4- لعبة لغوية
-  Section: 11- 1B المفردات: في الفندق
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659411
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 3-  أسئلة حول المفردات
-  Title: 3-  أسئلة حول المفردات
-  Section: 11- 1B المفردات: في الفندق
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659412
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 1- اختر علامة (✓) أو (x)
-  Title: 
-  Section: 13- 1B الحوار: ألديك غرفة خالية؟
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659424
-
-  Exercise: 2-  اختر الإجابة الصحيحة
-  Title: 
-  Section: 13- 1B الحوار: ألديك غرفة خالية؟
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659425
-
-  Exercise: 1-  اختر الإجابة الصحيحة
-  Title: 
-  Section: 14- 1B القواعد: الاستفهام بالهمزة + أم
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659435
-
-  Exercise: 2- اختر علامة (✓) أو (x)
-  Title: 
-  Section: 14- 1B القواعد: الاستفهام بالهمزة + أم
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659436
-
-  Exercise: 1-  اختر الإجابة الصحيحة
-  Title: 
-  Section: 15- 1B القواعد: نفى الجملة الاسمية بـ ليس
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659446
-
-  Exercise: 2- اختر علامة (✓) أو (x)
-  Title: 
-  Section: 15- 1B القواعد: نفى الجملة الاسمية بـ ليس
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659447
-
-  Exercise: 1- اختر الكلمة المناسبة
-  Title: 
-  Section: 16- 1B القراءة والفهم
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659456
-
-  Exercise: 2-  اختر علامة (✓) أو (x)
-  Title: 
-  Section: 16- 1B القراءة والفهم
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659457
-
-  Exercise: 1-  اختر الكلمة المناسبة
-  Title: 
-  Section: 22- 2A المفردات: كيف نظام السكن؟
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659484
-
-  Exercise: 2- اسحب الكلمة وضعها في مكانها الصحيح
-  Title: 
-  Section: 22- 2A المفردات: كيف نظام السكن؟
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659485
-
-  Exercise: 3- أسئلة حول المفردات
-  Title: 3- أسئلة حول المفردات
-  Section: 22- 2A المفردات: كيف نظام السكن؟
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659486
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 4- لعبة لغوية
-  Title: 4- لعبة لغوية
-  Section: 22- 2A المفردات: كيف نظام السكن؟
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659487
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 1-  اختر علامة (✓) أو (x)
-  Title: 
-  Section: 24- 2A الحوار: أين تسكنين يا علياء؟
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659497
-
-  Exercise: 2-  اسحب الكلمة وضعها في مكانها الصحيح
-  Title: 
-  Section: 24- 2A الحوار: أين تسكنين يا علياء؟
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659498
-
-  Exercise: 1- اختر الإجابة الصحيحة
-  Title: 
-  Section: 25- 2A القواعد: تقديم الخبر على المبتدأ
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659508
-
-  Exercise: 2-  اختر علامة (✓) أو (x)
-  Title: 
-  Section: 25- 2A القواعد: تقديم الخبر على المبتدأ
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659509
-
-  Exercise: 1- اختر الإجابة الصحيحة
-  Title: 
-  Section: 26- 2A القواعد: مصادر الأفعال الثلاثية
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659519
-
-  Exercise: 2- اختر علامة (✓) أو (x)
-  Title: 
-  Section: 26- 2A القواعد: مصادر الأفعال الثلاثية
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659520
-
-  Exercise: 1- اختر الكلمة المناسبة
-  Title: 
-  Section: 31- 2B المفردات: شقة للإيجار
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659543
-
-  Exercise: 2- اسحب الكلمة وضعها في مكانها الصحيح
-  Title: 
-  Section: 31- 2B المفردات: شقة للإيجار
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659544
-
-  Exercise: 3- أسئلة حول المفردات
-  Title: 3- أسئلة حول المفردات
-  Section: 31- 2B المفردات: شقة للإيجار
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659545
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 4- لعبة لغوية
-  Title: 4- لعبة لغوية
-  Section: 31- 2B المفردات: شقة للإيجار
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659546
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 1-  اختر علامة (✓) أو (x)
-  Title: 
-  Section: 33- 2B الحوار: في مكتب العقارات
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659558
-
-  Exercise: 2- اختر الإجابة الصحيحة
-  Title: 
-  Section: 33- 2B الحوار: في مكتب العقارات
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659559
-
-  Exercise: 1- اختر الإجابة الصحيحة
-  Title: 
-  Section: 34- 2B القواعد: إعراب المثنى
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659569
-
-  Exercise: 2- اختر علامة (✓) أو (x)
-  Title: 
-  Section: 34- 2B القواعد: إعراب المثنى
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659570
-
-  Exercise: 1-  اختر الإجابة الصحيحة
-  Title: 
-  Section: 35- 2B القواعد: مصادر الفعل الرباعي
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659579
-
-  Exercise: 2-  اختر علامة (✓) أو (x)
-  Title: 
-  Section: 35- 2B القواعد: مصادر الفعل الرباعي
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659580
-
-  Exercise: 1-  اختر الإجابة الصحيحة
-  Title: 
-  Section: 36- 2Bالقراءة والفهم
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659589
-
-  Exercise: 2- اختر علامة (✓) أو (x)
-  Title: 
-  Section: 36- 2Bالقراءة والفهم
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4659590
+  ┌─ H5P INTERACTIVE EXERCISES (46)
+  │
+  │  [02- 1A المفردات: في المطار]
+  ├── 1-  اختر الكلمة المناسبة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659337
+  ├── 2-  اسحب الكلمة وضعها في مكانها الصحيح
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659338
+  ├── 3- أسئلة حول المفردات
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659339
+  ├── 4- لعبة لغوية
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659340
+  │
+  │  [03-  1A الحوار/ (الجزء 1): أمام مكتب الجوازات]
+  ├── 1-  اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659351
+  ├── 2- اسحب الكلمة وضعها في مكانها الصحيح
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659352
+  │
+  │  [04- 1A الحوار/ (الجزء 2):  في صالة الوصول]
+  ├── 1-  اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659361
+  ├── 2- اسحب الكلمة وضعها في مكانها الصحيح
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659362
+  │
+  │  [05- 1A القواعد: الاسم الموصول (الذي- التي)]
+  ├── 1- اختر الإجابة الصحيحة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659372
+  ├── 2-  اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659373
+  │
+  │  [06- 1A القواعد: أن والمضارع = المصدر]
+  ├── 2- اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659383
+  ├── 1- اختر الإجابة الصحيحة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659384
+  │
+  │  [11- 1B المفردات: في الفندق]
+  ├── 1- اختر الكلمة المناسبة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659409
+  ├── 2- اسحب الكلمة وضعها في مكانها الصحيح
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659410
+  ├── 4- لعبة لغوية
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659411
+  ├── 3-  أسئلة حول المفردات
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659412
+  │
+  │  [13- 1B الحوار: ألديك غرفة خالية؟]
+  ├── 1- اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659424
+  ├── 2-  اختر الإجابة الصحيحة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659425
+  │
+  │  [14- 1B القواعد: الاستفهام بالهمزة + أم]
+  ├── 1-  اختر الإجابة الصحيحة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659435
+  ├── 2- اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659436
+  │
+  │  [15- 1B القواعد: نفى الجملة الاسمية بـ ليس]
+  ├── 1-  اختر الإجابة الصحيحة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659446
+  ├── 2- اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659447
+  │
+  │  [16- 1B القراءة والفهم]
+  ├── 1- اختر الكلمة المناسبة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659456
+  ├── 2-  اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659457
+  │
+  │  [22- 2A المفردات: كيف نظام السكن؟]
+  ├── 1-  اختر الكلمة المناسبة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659484
+  ├── 2- اسحب الكلمة وضعها في مكانها الصحيح
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659485
+  ├── 3- أسئلة حول المفردات
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659486
+  ├── 4- لعبة لغوية
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659487
+  │
+  │  [24- 2A الحوار: أين تسكنين يا علياء؟]
+  ├── 1-  اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659497
+  ├── 2-  اسحب الكلمة وضعها في مكانها الصحيح
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659498
+  │
+  │  [25- 2A القواعد: تقديم الخبر على المبتدأ]
+  ├── 1- اختر الإجابة الصحيحة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659508
+  ├── 2-  اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659509
+  │
+  │  [26- 2A القواعد: مصادر الأفعال الثلاثية]
+  ├── 1- اختر الإجابة الصحيحة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659519
+  ├── 2- اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659520
+  │
+  │  [31- 2B المفردات: شقة للإيجار]
+  ├── 1- اختر الكلمة المناسبة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659543
+  ├── 2- اسحب الكلمة وضعها في مكانها الصحيح
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659544
+  ├── 3- أسئلة حول المفردات
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659545
+  ├── 4- لعبة لغوية
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659546
+  │
+  │  [33- 2B الحوار: في مكتب العقارات]
+  ├── 1-  اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659558
+  ├── 2- اختر الإجابة الصحيحة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659559
+  │
+  │  [34- 2B القواعد: إعراب المثنى]
+  ├── 1- اختر الإجابة الصحيحة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659569
+  ├── 2- اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659570
+  │
+  │  [35- 2B القواعد: مصادر الفعل الرباعي]
+  ├── 1-  اختر الإجابة الصحيحة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659579
+  ├── 2-  اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659580
+  │
+  │  [36- 2Bالقراءة والفهم]
+  ├── 1-  اختر الإجابة الصحيحة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659589
+  ├── 2- اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4659590
+  │
+  └───
 
 ================================================================================
-LEVEL 06
+  LEVEL 06
 ================================================================================
 
---- FORMAL QUIZZES (1) ---
-
-  Quiz: الدرس الأول: ماذا تشترون عادة؟
-  Title: الدرس الأول: ماذا تشترون عادة؟
-  Description: Attempts allowed: 1
+  ┌─ FORMAL QUIZZES (1)
+  │
+  ├── الدرس الأول: ماذا تشترون عادة؟
+  │   Title: الدرس الأول: ماذا تشترون عادة؟
+  │   Info: Attempts allowed: 1
 Grade to pass: 7.00 out of 0.00
-  Section: 29- 4A  2 المحادثة
-  URL: https://nilecenter.online/mod/quiz/view.php?id=4761743
+  │   Section: 29- 4A  2 المحادثة
+  │   URL: https://nilecenter.online/mod/quiz/view.php?id=4761743
+  │
+  └───
 
---- H5P INTERACTIVE EXERCISES (34) ---
+  ┌─ UNIT / MIDTERM / FINAL EXAMS (2)
+  │
+  ├── الملخص
+  │   Title: الملخص
+  │   Section: 19- مراجعة
+  │   URL: https://nilecenter.online/mod/page/view.php?id=4761673
+  │   Content:
+  │   ## الملخص
+  │   Last modified: Thursday, 12 May 2022, 11:23 AM
+  │   Embedded: https://drive.google.com/file/d/1nFgMuho2z1IpqwtK8qcBEGbmP-dxUb9y/preview
+  │
+  ├── اختبار الوحدة الثالثة
+  │   Title: اختبار الوحدة الثالثة
+  │   Section: 19- مراجعة
+  │   URL: https://nilecenter.online/mod/page/view.php?id=4761674
+  │   Content:
+  │   ## اختبار الوحدة الثالثة
+  │   Last modified: Thursday, 12 May 2022, 11:24 AM
+  │   Embedded: https://drive.google.com/file/d/19I1brrf-IUCbVTX-JCpcRIYK_Jhq7tOD/preview
+  │
+  └───
 
-  Exercise: 1- اختر الكلمة المناسبة
-  Title: 
-  Section: 02- 3A المفردات: شفاك الله وعافاك
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761555
+  ┌─ SPEAKING TESTS (1)
+  │
+  ├── أسئلة التحدث: عند الطبيب
+  │   Section: 19- مراجعة
+  │   URL: https://nilecenter.online/mod/page/view.php?id=4761672
+  │   Content:
+  │   ## أسئلة التحدث: عند الطبيب
+  │   
+  │   Last modified: Tuesday, 12 April 2022, 3:20 PM
+  │
+  └───
 
-  Exercise: 2-  اسحب الكلمة وضعها في مكانها الصحيح
-  Title: 
-  Section: 02- 3A المفردات: شفاك الله وعافاك
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761556
-
-  Exercise: 3-  أسئلة حول المفردات
-  Title: 3-  أسئلة حول المفردات
-  Section: 02- 3A المفردات: شفاك الله وعافاك
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761557
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 4- لعبة لغوية
-  Title: 4- لعبة لغوية
-  Section: 02- 3A المفردات: شفاك الله وعافاك
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761558
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 1- اختر علامة (✓) أو (x)
-  Title: 
-  Section: 04- 3A الحوار: شفاك الله وعافاك
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761570
-
-  Exercise: 2-  اسحب الكلمة وضعها في مكانها الصحيح
-  Title: 
-  Section: 04- 3A الحوار: شفاك الله وعافاك
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761571
-
-  Exercise: 1- اختر الإجابة الصحيحة
-  Title: 
-  Section: 05- 3A القواعد: إن وأخواتها
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761581
-
-  Exercise: 2-  اختر علامة (✓) أو (x)
-  Title: 
-  Section: 05- 3A القواعد: إن وأخواتها
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761582
-
-  Exercise: 1-  اختر الإجابة الصحيحة
-  Title: 
-  Section: 06- 3A القواعد: لام الأمر + الفعل المضارع المجزوم
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761592
-
-  Exercise: 2- اختر علامة (✓) أو (x)
-  Title: 
-  Section: 06- 3A القواعد: لام الأمر + الفعل المضارع المجزوم
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761593
-
-  Exercise: 1- اختر الكلمة المناسبة
-  Title: 
-  Section: 11- 3B المفردات: عند الطبيب
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761616
-
-  Exercise: 2- اسحب الكلمة وضعها في مكانها الصحيح
-  Title: 
-  Section: 11- 3B المفردات: عند الطبيب
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761617
-
-  Exercise: 3- أسئلة حول المفردات
-  Title: 3- أسئلة حول المفردات
-  Section: 11- 3B المفردات: عند الطبيب
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761618
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 4-  لعبة لغوية
-  Title: 4-  لعبة لغوية
-  Section: 11- 3B المفردات: عند الطبيب
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761619
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 1- اختر علامة (✓) أو (x)
-  Title: 
-  Section: 14- 3B الحوار2: مم تشكو؟
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761630
-
-  Exercise: 2-  اختر الإجابة الصحيحة
-  Title: 
-  Section: 14- 3B الحوار2: مم تشكو؟
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761631
-
-  Exercise: 1- اختر الإجابة الصحيحة
-  Title: 
-  Section: 15- 3B القواعد: كان ومازال
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761641
-
-  Exercise: 2- اختر علامة (✓) أو (x)
-  Title: 
-  Section: 15- 3B القواعد: كان ومازال
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761642
-
-  Exercise: 1- اختر الإجابة الصحيحة
-  Title: 
-  Section: 16- 3B القواعد: مصادر الخماسي والسداسي
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761652
-
-  Exercise: 2- اختر علامة (✓) أو (x)
-  Title: 
-  Section: 16- 3B القواعد: مصادر الخماسي والسداسي
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761653
-
-  Exercise: 1- اختر علامة (✓) أو (x)
-  Title: 
-  Section: 17- 3B القراءة والفهم
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761662
-
-  Exercise: 2- اختر الإجابة الصحيحة
-  Title: 
-  Section: 17- 3B القراءة والفهم
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761663
-
-  Exercise: 3- أسئلة حول المفردات
-  Title: 3- أسئلة حول المفردات
-  Section: 22- 4A المفردات: ماذا تشترون عادة؟
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761688
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 1- اختر الكلمة المناسبة
-  Title: 
-  Section: 22- 4A المفردات: ماذا تشترون عادة؟
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761689
-
-  Exercise: 2- اسحب الكلمة وضعها في مكانها الصحيح
-  Title: 
-  Section: 22- 4A المفردات: ماذا تشترون عادة؟
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761690
-
-  Exercise: 4- لعبة لغوية
-  Title: 4- لعبة لغوية
-  Section: 22- 4A المفردات: ماذا تشترون عادة؟
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761691
-  Embed: https://nilecenter.online/about:blank
-
-  Exercise: 1- اختر علامة (✓) أو (x)
-  Title: 
-  Section: 24- 4A الحوار: استبيان حول عادات التسوق
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761702
-
-  Exercise: 2-  اختر الإجابة الصحيحة
-  Title: 
-  Section: 24- 4A الحوار: استبيان حول عادات التسوق
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761703
-
-  Exercise: 1- اختر الإجابة الصحيحة
-  Title: 
-  Section: 25- 4A القواعد: اسم التفضيل، أما وفـ
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761712
-
-  Exercise: 2-  اختر علامة (✓) أو (x)
-  Title: 
-  Section: 25- 4A القواعد: اسم التفضيل، أما وفـ
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761713
-
-  Exercise: 1- اختر الإجابة الصحيحة
-  Title: 
-  Section: 25- 4A القواعد: اسم التفضيل، أما وفـ
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761717
-
-  Exercise: 2-  اختر علامة (✓) أو (x)
-  Title: 
-  Section: 25- 4A القواعد: اسم التفضيل، أما وفـ
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761718
-
-  Exercise: 1-  اختر الإجابة الصحيحة
-  Title: 
-  Section: 26- 4A القواعد: اسم الفاعل من الثلاثي
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761728
-
-  Exercise: 2-  اختر علامة (✓) أو (x)
-  Title: 
-  Section: 26- 4A القواعد: اسم الفاعل من الثلاثي
-  URL: https://nilecenter.online/mod/hvp/view.php?id=4761729
+  ┌─ H5P INTERACTIVE EXERCISES (34)
+  │
+  │  [02- 3A المفردات: شفاك الله وعافاك]
+  ├── 1- اختر الكلمة المناسبة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761555
+  ├── 2-  اسحب الكلمة وضعها في مكانها الصحيح
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761556
+  ├── 3-  أسئلة حول المفردات
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761557
+  ├── 4- لعبة لغوية
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761558
+  │
+  │  [04- 3A الحوار: شفاك الله وعافاك]
+  ├── 1- اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761570
+  ├── 2-  اسحب الكلمة وضعها في مكانها الصحيح
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761571
+  │
+  │  [05- 3A القواعد: إن وأخواتها]
+  ├── 1- اختر الإجابة الصحيحة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761581
+  ├── 2-  اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761582
+  │
+  │  [06- 3A القواعد: لام الأمر + الفعل المضارع المجزوم]
+  ├── 1-  اختر الإجابة الصحيحة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761592
+  ├── 2- اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761593
+  │
+  │  [11- 3B المفردات: عند الطبيب]
+  ├── 1- اختر الكلمة المناسبة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761616
+  ├── 2- اسحب الكلمة وضعها في مكانها الصحيح
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761617
+  ├── 3- أسئلة حول المفردات
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761618
+  ├── 4-  لعبة لغوية
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761619
+  │
+  │  [14- 3B الحوار2: مم تشكو؟]
+  ├── 1- اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761630
+  ├── 2-  اختر الإجابة الصحيحة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761631
+  │
+  │  [15- 3B القواعد: كان ومازال]
+  ├── 1- اختر الإجابة الصحيحة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761641
+  ├── 2- اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761642
+  │
+  │  [16- 3B القواعد: مصادر الخماسي والسداسي]
+  ├── 1- اختر الإجابة الصحيحة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761652
+  ├── 2- اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761653
+  │
+  │  [17- 3B القراءة والفهم]
+  ├── 1- اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761662
+  ├── 2- اختر الإجابة الصحيحة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761663
+  │
+  │  [22- 4A المفردات: ماذا تشترون عادة؟]
+  ├── 3- أسئلة حول المفردات
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761688
+  ├── 1- اختر الكلمة المناسبة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761689
+  ├── 2- اسحب الكلمة وضعها في مكانها الصحيح
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761690
+  ├── 4- لعبة لغوية
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761691
+  │
+  │  [24- 4A الحوار: استبيان حول عادات التسوق]
+  ├── 1- اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761702
+  ├── 2-  اختر الإجابة الصحيحة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761703
+  │
+  │  [25- 4A القواعد: اسم التفضيل، أما وفـ]
+  ├── 1- اختر الإجابة الصحيحة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761712
+  ├── 2-  اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761713
+  ├── 1- اختر الإجابة الصحيحة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761717
+  ├── 2-  اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761718
+  │
+  │  [26- 4A القواعد: اسم الفاعل من الثلاثي]
+  ├── 1-  اختر الإجابة الصحيحة
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761728
+  ├── 2-  اختر علامة (✓) أو (x)
+  │   URL: https://nilecenter.online/mod/hvp/view.php?id=4761729
+  │
+  └───
