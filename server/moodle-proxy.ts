@@ -123,6 +123,8 @@ const ARABIC_LEVEL_CATEGORIES: Record<number, number> = {
   6: 67, 7: 78, 8: 100, 9: 111, 10: 122, 11: 132, 12: 193,
 };
 
+const TEACHER_REFERENCE_COURSE_ID = 13849;
+
 interface CatalogCourse {
   id: number;
   fullname: string;
@@ -322,6 +324,49 @@ export function registerMoodleProxy(app: Express) {
     } catch (error) {
       console.error("Moodle catalog error:", error);
       res.status(500).json({ error: "Failed to fetch course catalog" });
+    }
+  });
+
+  // Get full curriculum structure from the teacher reference course (guest-accessible)
+  app.post("/api/moodle/curriculum", async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      if (!username || !password) {
+        res.status(400).json({ error: "Credentials required" });
+        return;
+      }
+
+      const cookie = await getMoodleSession(username, password);
+      const html = await fetchWithSession(
+        `${MOODLE_BASE_URL}/course/view.php?id=${TEACHER_REFERENCE_COURSE_ID}&expandall=1`,
+        cookie
+      );
+      const $ = cheerio.load(html);
+
+      const sections: { name: string; level: number }[] = [];
+      let currentLevel = -1;
+
+      $("li.section").each((_, sectionEl) => {
+        const $sec = $(sectionEl);
+        const name = $sec.find("h3.sectionname, span.sectionname, .section-title").first().text().trim();
+        if (!name) return;
+
+        const levelMatch = name.match(/^Level\s+(\d+)/i);
+        if (levelMatch) {
+          currentLevel = parseInt(levelMatch[1], 10);
+        }
+
+        sections.push({ name, level: currentLevel });
+      });
+
+      res.json({
+        courseId: TEACHER_REFERENCE_COURSE_ID,
+        totalSections: sections.length,
+        sections,
+      });
+    } catch (error) {
+      console.error("Moodle curriculum error:", error);
+      res.status(500).json({ error: "Failed to fetch curriculum" });
     }
   });
 
