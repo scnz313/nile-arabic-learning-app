@@ -327,7 +327,8 @@ export function registerMoodleProxy(app: Express) {
     }
   });
 
-  // Get full curriculum structure from the teacher reference course (guest-accessible)
+  // Get full curriculum + activities from the teacher reference course (guest-accessible)
+  // This course contains Level 00 and Level 01 content with quizzes, H5P, videos, etc.
   app.post("/api/moodle/curriculum", async (req, res) => {
     try {
       const { username, password } = req.body;
@@ -337,32 +338,59 @@ export function registerMoodleProxy(app: Express) {
       }
 
       const cookie = await getMoodleSession(username, password);
-      const html = await fetchWithSession(
+
+      // Get expandall page for section names
+      const mainHtml = await fetchWithSession(
         `${MOODLE_BASE_URL}/course/view.php?id=${TEACHER_REFERENCE_COURSE_ID}&expandall=1`,
         cookie
       );
-      const $ = cheerio.load(html);
+      const $main = cheerio.load(mainHtml);
 
-      const sections: { name: string; level: number }[] = [];
-      let currentLevel = -1;
-
-      $("li.section").each((_, sectionEl) => {
-        const $sec = $(sectionEl);
-        const name = $sec.find("h3.sectionname, span.sectionname, .section-title").first().text().trim();
-        if (!name) return;
-
-        const levelMatch = name.match(/^Level\s+(\d+)/i);
-        if (levelMatch) {
-          currentLevel = parseInt(levelMatch[1], 10);
-        }
-
-        sections.push({ name, level: currentLevel });
+      const sectionNames: string[] = [];
+      $main("h3.sectionname, span.sectionname").each((_, el) => {
+        const name = $main(el).text().trim();
+        if (name) sectionNames.push(name);
       });
+
+      // Scrape section 1 (Level 00 content) and section 37 (Level 01 content) for activities
+      const allSections: any[] = [];
+
+      for (const sectionNum of [1, 37]) {
+        const secHtml = await fetchWithSession(
+          `${MOODLE_BASE_URL}/course/view.php?id=${TEACHER_REFERENCE_COURSE_ID}&section=${sectionNum}`,
+          cookie
+        );
+        const $sec = cheerio.load(secHtml);
+        const activities: any[] = [];
+
+        $sec("li.activity").each((_, actEl) => {
+          const $act = $sec(actEl);
+          const activity = parseActivity($sec, $act);
+          if (activity) activities.push(activity);
+        });
+
+        allSections.push({
+          name: sectionNum === 1 ? "Level 00" : "Level 01",
+          sectionNum,
+          activities,
+        });
+      }
+
+      const totalActivities = allSections.reduce((sum, s) => sum + s.activities.length, 0);
+      const quizCount = allSections.reduce((sum, s) =>
+        sum + s.activities.filter((a: any) => a.modType === "quiz").length, 0);
+      const hvpCount = allSections.reduce((sum, s) =>
+        sum + s.activities.filter((a: any) => a.modType === "hvp").length, 0);
 
       res.json({
         courseId: TEACHER_REFERENCE_COURSE_ID,
-        totalSections: sections.length,
-        sections,
+        courseName: "Arabic Levels for New Teachers",
+        sectionNames,
+        totalSections: sectionNames.length,
+        totalActivities,
+        quizzes: quizCount,
+        h5pExercises: hvpCount,
+        sections: allSections,
       });
     } catch (error) {
       console.error("Moodle curriculum error:", error);
