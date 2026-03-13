@@ -69,4 +69,35 @@ describe("prefetchService", () => {
 
     expect(getActivityContent).toHaveBeenCalledWith("https://example.com/next", "book");
   });
+
+  it("prefetches the first section activity after an intro activity", async () => {
+    getCourseFull.mockResolvedValue({
+      intro: {
+        activities: [
+          { id: "intro-1", name: "Intro", modType: "page", url: "https://example.com/intro-1" },
+        ],
+      },
+      sections: [
+        {
+          activities: [
+            { id: "section-1", name: "Lesson 1", modType: "page", url: "https://example.com/section-1" },
+          ],
+        },
+      ],
+    });
+    getActivityContent.mockResolvedValue({
+      type: "page",
+      title: "Lesson 1",
+      images: [],
+    });
+
+    const { prefetchService } = await import("../prefetch-service");
+    await prefetchService.prefetchNextLesson("42", "intro-1");
+
+    for (let attempt = 0; attempt < 50 && getActivityContent.mock.calls.length === 0; attempt += 1) {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    }
+
+    expect(getActivityContent).toHaveBeenCalledWith("https://example.com/section-1", "page");
+  });
 });

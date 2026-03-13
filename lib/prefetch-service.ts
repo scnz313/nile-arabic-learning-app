@@ -79,7 +79,10 @@ class PrefetchService {
     try {
       // Get course data
       const courseData = await moodleAPI.getCourseFull(parseInt(courseId));
-      const activities = courseData.sections.flatMap((section: any) => section.activities || []);
+      const activities = [
+        ...(courseData.intro?.activities || []),
+        ...courseData.sections.flatMap((section: any) => section.activities || []),
+      ];
       
       // Find current activity index
       const currentIndex = activities.findIndex((a: any) => a.id === currentActivityId);
