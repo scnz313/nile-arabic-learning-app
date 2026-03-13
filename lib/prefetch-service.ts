@@ -9,6 +9,8 @@ export interface PrefetchItem {
   courseId: string;
   activityId: string;
   activityName: string;
+  activityUrl?: string;
+  modType?: string;
   priority: number; // Higher = more important
   addedAt: number;
 }
@@ -32,7 +34,9 @@ class PrefetchService {
     courseId: string,
     activityId: string,
     activityName: string,
-    priority: number = 1
+    priority: number = 1,
+    activityUrl?: string,
+    modType?: string
   ): Promise<void> {
     try {
       const queue = await this.getPrefetchQueue();
@@ -48,6 +52,8 @@ class PrefetchService {
         courseId,
         activityId,
         activityName,
+        activityUrl,
+        modType,
         priority,
         addedAt: Date.now(),
       });
@@ -73,7 +79,10 @@ class PrefetchService {
     try {
       // Get course data
       const courseData = await moodleAPI.getCourseFull(parseInt(courseId));
-      const activities = courseData.sections.flatMap((section: any) => section.activities || []);
+      const activities = [
+        ...(courseData.intro?.activities || []),
+        ...courseData.sections.flatMap((section: any) => section.activities || []),
+      ];
       
       // Find current activity index
       const currentIndex = activities.findIndex((a: any) => a.id === currentActivityId);
@@ -85,7 +94,9 @@ class PrefetchService {
           courseId,
           nextActivity.id,
           nextActivity.name,
-          10 // High priority for next lesson
+          10, // High priority for next lesson
+          nextActivity.url,
+          nextActivity.modType
         );
       }
     } catch (error) {
@@ -193,8 +204,27 @@ class PrefetchService {
         this.currentDownload = key;
 
         try {
+          let activityUrl = item.activityUrl;
+          let modType = item.modType;
+
+          if (!activityUrl || !modType) {
+            const courseData = await moodleAPI.getCourseFull(parseInt(item.courseId, 10));
+            const activities = [
+              ...(courseData.intro?.activities || []),
+              ...courseData.sections.flatMap((section) => section.activities || []),
+            ];
+            const activity = activities.find((candidate) => candidate.id === item.activityId);
+
+            activityUrl = activity?.url;
+            modType = activity?.modType;
+          }
+
+          if (!activityUrl || !modType) {
+            throw new Error(`Missing activity metadata for ${key}`);
+          }
+
           // Fetch lesson content
-          const content = await moodleAPI.getActivityContent(item.courseId, item.activityId);
+          const content = await moodleAPI.getActivityContent(activityUrl, modType);
 
           // Cache videos and media
           if (content.videoUrl) {
