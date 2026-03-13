@@ -1,5 +1,6 @@
 import type { Express } from "express";
 import * as cheerio from "cheerio";
+import { createHash } from "node:crypto";
 
 const MOODLE_BASE_URL = "https://nilecenter.online";
 
@@ -11,10 +12,61 @@ interface MoodleSession {
 
 const sessionCache = new Map<string, MoodleSession>();
 
-async function getMoodleSession(username: string, password: string): Promise<string> {
-  const cached = sessionCache.get(username);
+export function buildSessionCacheKey(username: string, password: string): string {
+  return createHash("sha256").update(`${username}\0${password}`).digest("hex");
+}
+
+function clearUserSessions(username: string) {
+  for (const [cacheKey, session] of sessionCache.entries()) {
+    if (session.username === username) {
+      sessionCache.delete(cacheKey);
+    }
+  }
+}
+
+export function isLoginPageHtml(html: string): boolean {
+  const normalized = html.toLowerCase();
+  return (
+    normalized.includes('id="login"') ||
+    normalized.includes('name="logintoken"') ||
+    normalized.includes("/login/index.php")
+  );
+}
+
+function extractFullName(html: string, fallback: string): string {
+  const $ = cheerio.load(html);
+  return $(".usertext").first().text().trim() || fallback;
+}
+
+export function isAuthErrorMessage(message: string): boolean {
+  const normalized = message.toLowerCase();
+  return (
+    normalized.includes("invalid username/email or password") ||
+    normalized.includes("session expired")
+  );
+}
+
+async function fetchDashboardHtml(cookie: string): Promise<string> {
+  return fetchWithSession(`${MOODLE_BASE_URL}/my/`, cookie);
+}
+
+async function getMoodleSession(
+  username: string,
+  password: string,
+): Promise<{ cookie: string; dashboardHtml: string; fullName: string }> {
+  const cacheKey = buildSessionCacheKey(username, password);
+  const cached = sessionCache.get(cacheKey);
   if (cached && cached.expiresAt > Date.now()) {
-    return cached.cookie;
+    const dashboardHtml = await fetchDashboardHtml(cached.cookie);
+    if (!isLoginPageHtml(dashboardHtml)) {
+      return {
+        cookie: cached.cookie,
+        dashboardHtml,
+        fullName: extractFullName(dashboardHtml, username),
+      };
+    }
+
+    sessionCache.delete(cacheKey);
   }
 
   const loginPageRes = await fetch(`${MOODLE_BASE_URL}/login/index.php`);
@@ -65,13 +117,21 @@ async function getMoodleSession(username: string, password: string): Promise<str
     }
   }
 
-  sessionCache.set(username, {
+  const dashboardHtml = await fetchDashboardHtml(sessionCookie);
+  if (isLoginPageHtml(dashboardHtml)) {
+    clearUserSessions(username);
+    throw new Error("Invalid username/email or password");
+  }
+
+  const fullName = extractFullName(dashboardHtml, username);
+  clearUserSessions(username);
+  sessionCache.set(cacheKey, {
     cookie: sessionCookie,
     username,
     expiresAt: Date.now() + 30 * 60 * 1000,
   });
 
-  return sessionCookie;
+  return { cookie: sessionCookie, dashboardHtml, fullName };
 }
 
 async function fetchWithSession(url: string, cookie: string): Promise<string> {
@@ -128,15 +188,7 @@ export function registerMoodleProxy(app: Express) {
         return;
       }
 
-      const cookie = await getMoodleSession(username, password);
-      const dashboardHtml = await fetchWithSession(`${MOODLE_BASE_URL}/my/`, cookie);
-      const $ = cheerio.load(dashboardHtml);
-      const fullName = $(".usertext").first().text().trim() || username;
-
-      if (!fullName || dashboardHtml.includes('id="login"')) {
-        res.status(401).json({ error: "Invalid username or password" });
-        return;
-      }
+      const { cookie, fullName } = await getMoodleSession(username, password);
 
       res.json({
         success: true,
@@ -145,7 +197,8 @@ export function registerMoodleProxy(app: Express) {
       });
     } catch (error) {
       console.error("Moodle login error:", error);
-      res.status(500).json({ error: "Failed to connect to Moodle" });
+      const message = error instanceof Error ? error.message : "Failed to connect to Moodle";
+      res.status(isAuthErrorMessage(message) ? 401 : 500).json({ error: message });
     }
   });
 
@@ -158,8 +211,13 @@ export function registerMoodleProxy(app: Express) {
         return;
       }
 
-      const cookie = await getMoodleSession(username, password);
-      const html = await fetchWithSession(`${MOODLE_BASE_URL}/my/`, cookie);
+      const { cookie, dashboardHtml } = await getMoodleSession(username, password);
+      const html = dashboardHtml;
+      if (isLoginPageHtml(html)) {
+        clearUserSessions(username);
+        res.status(401).json({ error: "Session expired. Please sign in again." });
+        return;
+      }
       const $ = cheerio.load(html);
 
       const courses: any[] = [];
@@ -186,7 +244,8 @@ export function registerMoodleProxy(app: Express) {
       res.json({ courses });
     } catch (error) {
       console.error("Moodle courses error:", error);
-      res.status(500).json({ error: "Failed to fetch courses" });
+      const message = error instanceof Error ? error.message : "Failed to fetch courses";
+      res.status(isAuthErrorMessage(message) ? 401 : 500).json({ error: message });
     }
   });
 
@@ -199,13 +258,18 @@ export function registerMoodleProxy(app: Express) {
         return;
       }
 
-      const cookie = await getMoodleSession(username, password);
+      const { cookie } = await getMoodleSession(username, password);
 
       // First get the course page to find section tabs
       const courseHtml = await fetchWithSession(
         `${MOODLE_BASE_URL}/course/view.php?id=${courseId}`,
         cookie
       );
+      if (isLoginPageHtml(courseHtml)) {
+        clearUserSessions(username);
+        res.status(401).json({ error: "Session expired. Please sign in again." });
+        return;
+      }
       const $course = cheerio.load(courseHtml);
 
       // Find the Lessons tab section ID
@@ -345,20 +409,40 @@ export function registerMoodleProxy(app: Express) {
         }
       }
 
-      // If still no sections with activities, expand all and parse
-      if (sectionsWithActivities.length === 0 || sectionsWithActivities.every(s => s.activities.length === 0)) {
-        // Try fetching with expand=1 or similar
+      // Merge with the expanded course view so hidden/restricted assessments
+      // (for example midterm/final quizzes) are still discovered and archived.
+      let mergedSections = sectionsWithActivities;
+      try {
         const expandHtml = await fetchWithSession(
           `${MOODLE_BASE_URL}/course/view.php?id=${courseId}&expandall=1`,
           cookie
         );
         const $expand = cheerio.load(expandHtml);
+        const expandedSections = parseAllSections($expand);
+        if (expandedSections.length > 0) {
+          mergedSections = mergeSectionsByNameAndActivityId(mergedSections, expandedSections);
+        }
 
-        // Parse all sections from expanded view
-        const allSections = parseAllSections($expand);
-        if (allSections.length > 0) {
-          sectionsWithActivities.length = 0;
-          sectionsWithActivities.push(...allSections);
+        const standaloneQuizzes = collectStandaloneQuizActivities(
+          [$course, $lessons, $expand],
+          mergedSections,
+        );
+        if (standaloneQuizzes.length > 0) {
+          mergedSections = mergeSectionsByNameAndActivityId(mergedSections, [
+            {
+              name: "Assessments",
+              activities: standaloneQuizzes,
+            },
+          ]);
+        }
+      } catch (expandError) {
+        console.warn("Expanded course parsing failed:", expandError);
+      }
+
+      if (mergedSections.length === 0 || mergedSections.every((section) => (section.activities?.length || 0) === 0)) {
+        const fallbackSections = parseAllSections($course);
+        if (fallbackSections.length > 0) {
+          mergedSections = mergeSectionsByNameAndActivityId(mergedSections, fallbackSections);
         }
       }
 
@@ -373,13 +457,14 @@ export function registerMoodleProxy(app: Express) {
         courseId,
         tabs,
         intro: introSection,
-        sections: sectionsWithActivities,
-        totalSections: sectionsWithActivities.length,
-        totalActivities: sectionsWithActivities.reduce((sum: number, s: any) => sum + (s.activities?.length || 0), 0),
+        sections: mergedSections,
+        totalSections: mergedSections.length,
+        totalActivities: mergedSections.reduce((sum: number, s: any) => sum + (s.activities?.length || 0), 0),
       });
     } catch (error) {
       console.error("Moodle course-full error:", error);
-      res.status(500).json({ error: "Failed to fetch course contents" });
+      const message = error instanceof Error ? error.message : "Failed to fetch course contents";
+      res.status(isAuthErrorMessage(message) ? 401 : 500).json({ error: message });
     }
   });
 
@@ -392,8 +477,13 @@ export function registerMoodleProxy(app: Express) {
         return;
       }
 
-      const cookie = await getMoodleSession(username, password);
+      const { cookie } = await getMoodleSession(username, password);
       const html = await fetchWithSession(makeAbsoluteUrl(activityUrl), cookie);
+      if (isLoginPageHtml(html)) {
+        clearUserSessions(username);
+        res.status(401).json({ error: "Session expired. Please sign in again." });
+        return;
+      }
       const $ = cheerio.load(html);
 
       let content: any = {};
@@ -548,7 +638,8 @@ export function registerMoodleProxy(app: Express) {
       res.json(content);
     } catch (error) {
       console.error("Moodle activity content error:", error);
-      res.status(500).json({ error: "Failed to fetch activity content" });
+      const message = error instanceof Error ? error.message : "Failed to fetch activity content";
+      res.status(isAuthErrorMessage(message) ? 401 : 500).json({ error: message });
     }
   });
 
@@ -617,6 +708,7 @@ function parseActivity($: cheerio.CheerioAPI, $act: any): any | null {
     modType,
     url: makeAbsoluteUrl(href),
     icon: makeAbsoluteUrl(iconSrc),
+    hidden: isHiddenMoodleItem($, $act),
   };
 }
 
@@ -633,7 +725,7 @@ function extractIntroSection($: cheerio.CheerioAPI): any {
   return intro;
 }
 
-function parseAllSections($: cheerio.CheerioAPI): any[] {
+export function parseAllSections($: cheerio.CheerioAPI): any[] {
   const sections: any[] = [];
   
   $("li.section").each((_, sectionEl) => {
@@ -652,4 +744,158 @@ function parseAllSections($: cheerio.CheerioAPI): any[] {
   });
 
   return sections;
+}
+
+function isHiddenMoodleItem($: cheerio.CheerioAPI, $el: any): boolean {
+  const className = (($el.attr("class") || "") as string).toLowerCase();
+  if (
+    className.includes("dimmed") ||
+    className.includes("hidden") ||
+    className.includes("stealth")
+  ) {
+    return true;
+  }
+
+  const availabilityText = $el
+    .find(".availabilityinfo, .availabilityinfoisrestricted, .availabilityconditions, .dimmed_text")
+    .text()
+    .trim()
+    .toLowerCase();
+
+  return /hidden|restricted|not available|available from/.test(availabilityText);
+}
+
+function getActivityIdentity(activity: { id?: string; url?: string }): string {
+  return activity.id || activity.url || "";
+}
+
+function mergeActivityLists(existingActivities: any[] = [], incomingActivities: any[] = []): any[] {
+  const mergedActivities = [...existingActivities];
+  const activityIndex = new Map<string, number>();
+
+  mergedActivities.forEach((activity, index) => {
+    const key = getActivityIdentity(activity);
+    if (key) {
+      activityIndex.set(key, index);
+    }
+  });
+
+  for (const activity of incomingActivities) {
+    const key = getActivityIdentity(activity);
+    if (!key) {
+      continue;
+    }
+
+    const existingIndex = activityIndex.get(key);
+    if (existingIndex === undefined) {
+      mergedActivities.push(activity);
+      activityIndex.set(key, mergedActivities.length - 1);
+      continue;
+    }
+
+    mergedActivities[existingIndex] = {
+      ...mergedActivities[existingIndex],
+      ...activity,
+    };
+  }
+
+  return mergedActivities;
+}
+
+export function mergeSectionsByNameAndActivityId(existingSections: any[] = [], incomingSections: any[] = []): any[] {
+  const mergedSections = existingSections.map((section) => ({
+    ...section,
+    activities: [...(section.activities || [])],
+  }));
+  const sectionIndex = new Map<string, number>();
+
+  mergedSections.forEach((section, index) => {
+    if (section.name) {
+      sectionIndex.set(section.name, index);
+    }
+  });
+
+  for (const section of incomingSections) {
+    if (!section?.name) {
+      continue;
+    }
+
+    const existingIndex = sectionIndex.get(section.name);
+    if (existingIndex === undefined) {
+      mergedSections.push({
+        ...section,
+        activities: [...(section.activities || [])],
+      });
+      sectionIndex.set(section.name, mergedSections.length - 1);
+      continue;
+    }
+
+    mergedSections[existingIndex] = {
+      ...mergedSections[existingIndex],
+      ...section,
+      activities: mergeActivityLists(
+        mergedSections[existingIndex].activities || [],
+        section.activities || [],
+      ),
+    };
+  }
+
+  return mergedSections;
+}
+
+function parseQuizLink($: cheerio.CheerioAPI, element: any): any | null {
+  const $el = $(element);
+  const $activityContainer = $el.is("li.activity") ? $el : $el.closest("li.activity");
+  if ($activityContainer.length) {
+    return parseActivity($, $activityContainer);
+  }
+
+  const href = $el.attr("href") || "";
+  if (!href.includes("/mod/quiz/")) {
+    return null;
+  }
+
+  const instanceName = $el.find("span.instancename").first();
+  const accessHide = instanceName.find(".accesshide").text().trim();
+  const rawName = instanceName.length ? instanceName.text().trim() : $el.text().trim();
+  const name = accessHide ? rawName.replace(accessHide, "").trim() : rawName;
+  if (!name) {
+    return null;
+  }
+
+  const idFromHref = href.match(/id=(\d+)/)?.[1] || "";
+
+  return {
+    id: idFromHref,
+    name,
+    modType: "quiz",
+    url: makeAbsoluteUrl(href),
+    icon: "",
+    hidden: isHiddenMoodleItem($, $el),
+  };
+}
+
+function collectStandaloneQuizActivities(documents: cheerio.CheerioAPI[], sections: any[]): any[] {
+  const knownActivityIds = new Set(
+    sections.flatMap((section) => (section.activities || []).map((activity: any) => getActivityIdentity(activity))),
+  );
+  const quizActivities = new Map<string, any>();
+
+  for (const $ of documents) {
+    $('li.activity.modtype_quiz, a[href*="/mod/quiz/view.php"]').each((_, element) => {
+      const activity = parseQuizLink($, element);
+      if (!activity) {
+        return;
+      }
+
+      const key = getActivityIdentity(activity);
+      if (!key || knownActivityIds.has(key) || quizActivities.has(key)) {
+        return;
+      }
+
+      quizActivities.set(key, activity);
+    });
+  }
+
+  return [...quizActivities.values()];
 }

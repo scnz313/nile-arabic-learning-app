@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import type { MoodleCourse, CourseFullData, ActivityContent, MoodleSection } from "./moodle-api";
+import type { MoodleActivity, MoodleCourse, CourseFullData, ActivityContent } from "./moodle-api";
 
 const KEYS = {
   COURSES: "@nile_courses",
@@ -29,6 +29,22 @@ const DEFAULT_SETTINGS: UserSettings = {
   autoSync: true,
   theme: "auto",
 };
+
+function normalizeSectionForStorage(section: any, fallbackHidden: boolean = false) {
+  const sectionHidden = section?.hidden ?? fallbackHidden;
+  const firstSeen = section?.firstSeen ?? Date.now();
+
+  return {
+    ...section,
+    activities: (section?.activities || []).map((activity: any) => ({
+      ...activity,
+      hidden: activity?.hidden ?? sectionHidden,
+      firstSeen: activity?.firstSeen ?? Date.now(),
+    })),
+    hidden: sectionHidden,
+    firstSeen,
+  };
+}
 
 class StorageService {
   // ─── COURSES (append-only: new courses are added, old ones never removed) ───
@@ -76,6 +92,34 @@ class StorageService {
     return data ? JSON.parse(data) : [];
   }
 
+  async getVisibleCoursesWithStats(): Promise<
+    (MoodleCourse & {
+      hidden?: boolean;
+      totalSections: number;
+      totalActivities: number;
+      completedActivities: number;
+      lastUpdated?: number;
+    })[]
+  > {
+    const courses = await this.getCourses();
+    const visibleCourses = courses.filter((course) => !course.hidden);
+
+    return Promise.all(
+      visibleCourses.map(async (course) => {
+        const courseData = await this.getCourseData(course.id);
+        const completion = await this.getCompletionCount(course.id);
+
+        return {
+          ...course,
+          totalSections: courseData?.totalSections || 0,
+          totalActivities: completion.total,
+          completedActivities: completion.completed,
+          lastUpdated: courseData?.lastUpdated,
+        };
+      }),
+    );
+  }
+
   // ─── COURSE DATA (merge: new sections/activities appended, old ones preserved) ───
 
   async saveCourseData(courseId: number, newData: CourseFullData): Promise<{ newSections: number; newActivities: number }> {
@@ -87,12 +131,8 @@ class StorageService {
       // First time — save everything
       const enriched: CourseFullData = {
         ...newData,
-        sections: newData.sections.map((s) => ({
-          ...s,
-          activities: s.activities.map((a) => ({ ...a, hidden: false, firstSeen: Date.now() })),
-          hidden: false,
-          firstSeen: Date.now(),
-        })),
+        intro: normalizeSectionForStorage(newData.intro, false),
+        sections: newData.sections.map((section) => normalizeSectionForStorage(section, false)),
         lastUpdated: Date.now(),
       };
       await AsyncStorage.setItem(KEYS.COURSE_DATA + courseId, JSON.stringify(enriched));
@@ -114,23 +154,23 @@ class StorageService {
 
       if (!existingSection) {
         // Brand new section — add it
-        mergedSections.push({
-          ...newSection,
-          activities: newSection.activities.map((a) => ({ ...a, hidden: false, firstSeen: Date.now() })),
-          hidden: false,
-          firstSeen: Date.now(),
-        });
+        mergedSections.push(normalizeSectionForStorage(newSection, false));
         newSections++;
         newActivities += newSection.activities.length;
         await this.addArchiveLog(courseId, "new_section", `New section: ${newSection.name}`);
       } else {
         // Existing section — merge activities
         const existingActivityIds = new Set(existingSection.activities.map((a: any) => a.id));
-        existingSection.hidden = false; // Mark as visible again
+        existingSection.hidden = newSection.hidden ?? false;
+        existingSection.firstSeen = existingSection.firstSeen ?? Date.now();
 
         for (const activity of newSection.activities) {
           if (!existingActivityIds.has(activity.id)) {
-            existingSection.activities.push({ ...activity, hidden: false, firstSeen: Date.now() });
+            existingSection.activities.push({
+              ...activity,
+              hidden: activity.hidden ?? false,
+              firstSeen: Date.now(),
+            });
             newActivities++;
             await this.addArchiveLog(courseId, "new_activity", `New activity: ${activity.name} in ${newSection.name}`);
           } else {
@@ -139,7 +179,9 @@ class StorageService {
             if (idx >= 0) {
               existingSection.activities[idx].name = activity.name;
               existingSection.activities[idx].url = activity.url;
-              existingSection.activities[idx].hidden = false;
+              existingSection.activities[idx].modType = activity.modType;
+              existingSection.activities[idx].icon = activity.icon;
+              existingSection.activities[idx].hidden = activity.hidden ?? false;
             }
           }
         }
@@ -169,7 +211,16 @@ class StorageService {
     const merged: CourseFullData = {
       ...existing,
       tabs: newData.tabs,
-      intro: newData.intro || existing.intro,
+      intro: newData.intro
+        ? normalizeSectionForStorage(
+            {
+              ...existing.intro,
+              ...newData.intro,
+              activities: newData.intro.activities || existing.intro?.activities || [],
+            },
+            false,
+          )
+        : existing.intro,
       sections: mergedSections,
       totalSections: mergedSections.length,
       totalActivities,
@@ -183,6 +234,28 @@ class StorageService {
   async getCourseData(courseId: number): Promise<(CourseFullData & { lastUpdated?: number }) | null> {
     const data = await AsyncStorage.getItem(KEYS.COURSE_DATA + courseId);
     return data ? JSON.parse(data) : null;
+  }
+
+  async findActivity(courseId: number, activityId: string | number): Promise<MoodleActivity | null> {
+    const normalizedId = String(activityId);
+    const courseData = await this.getCourseData(courseId);
+    if (!courseData) {
+      return null;
+    }
+
+    const introActivity = courseData.intro?.activities?.find((activity) => activity.id === normalizedId);
+    if (introActivity) {
+      return introActivity;
+    }
+
+    for (const section of courseData.sections || []) {
+      const match = section.activities?.find((activity) => activity.id === normalizedId);
+      if (match) {
+        return match;
+      }
+    }
+
+    return null;
   }
 
   // ─── ACTIVITY CONTENT CACHE (always update, never delete) ───
@@ -275,9 +348,32 @@ class StorageService {
     await AsyncStorage.multiRemove(cacheKeys);
   }
 
+  async clearCourseCache(): Promise<void> {
+    const keys = await AsyncStorage.getAllKeys();
+    const removableKeys = keys.filter(
+      (key) =>
+        key === KEYS.COURSES ||
+        key === KEYS.LAST_SYNC ||
+        key === KEYS.ARCHIVE_LOG ||
+        key.startsWith(KEYS.COURSE_DATA) ||
+        key.startsWith(KEYS.ACTIVITY_CONTENT) ||
+        key.startsWith(KEYS.COMPLETED),
+    );
+
+    await AsyncStorage.multiRemove(removableKeys);
+  }
+
   async clearAll(): Promise<void> {
     const keys = await AsyncStorage.getAllKeys();
-    const nileKeys = keys.filter((k) => k.startsWith("@nile_"));
+    const nileKeys = keys.filter(
+      (key) =>
+        key.includes("nile_") ||
+        key === "webview_cache_metadata" ||
+        key.startsWith("webview_cache_") ||
+        key.startsWith("prefetch_") ||
+        key.startsWith("background_sync_") ||
+        key === "last_background_sync",
+    );
     await AsyncStorage.multiRemove(nileKeys);
   }
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -19,6 +19,7 @@ export default function QuizScreen() {
   const router = useRouter();
   const colors = useColors();
   const { courseId } = useLocalSearchParams<{ courseId: string }>();
+  const numericCourseId = parseInt(courseId || "0", 10);
   
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -28,18 +29,21 @@ export default function QuizScreen() {
   const [loading, setLoading] = useState(true);
   const [startTime] = useState(Date.now());
 
-  useEffect(() => {
-    loadQuiz();
-  }, []);
+  const loadQuiz = useCallback(async () => {
+    try {
+      const quiz = await quizService.generateQuiz(numericCourseId, undefined, 10);
+      setQuestions(quiz);
+    } finally {
+      setLoading(false);
+    }
+  }, [numericCourseId]);
 
-  const loadQuiz = async () => {
-    const quiz = await quizService.generateQuiz(parseInt(courseId), undefined, 10);
-    setQuestions(quiz);
-    setLoading(false);
-  };
+  useEffect(() => {
+    void loadQuiz();
+  }, [loadQuiz]);
 
   const currentQuestion = questions[currentIndex];
-  const progress = ((currentIndex + 1) / questions.length) * 100;
+  const progress = questions.length > 0 ? ((currentIndex + 1) / questions.length) * 100 : 0;
 
   const handleAnswer = (answer: string) => {
     if (Platform.OS !== "web") {
@@ -81,7 +85,7 @@ export default function QuizScreen() {
 
     const quizResult: QuizResult = {
       id: Date.now().toString(),
-      courseId: parseInt(courseId),
+      courseId: numericCourseId,
       questions,
       answers,
       score,
@@ -251,6 +255,25 @@ export default function QuizScreen() {
       <ScreenContainer className="items-center justify-center">
         <ActivityIndicator size="large" color={colors.primary} />
         <Text className="text-muted mt-4">Loading quiz...</Text>
+      </ScreenContainer>
+    );
+  }
+
+  if (!questions.length) {
+    return (
+      <ScreenContainer className="items-center justify-center px-6">
+        <MaterialIcons name="quiz" size={48} color={colors.muted} />
+        <Text className="text-foreground text-xl font-semibold mt-4">Quiz unavailable</Text>
+        <Text className="text-muted text-center mt-2">
+          Sync your course content and try again.
+        </Text>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          activeOpacity={0.7}
+          className="bg-primary rounded-xl px-6 py-3 mt-6"
+        >
+          <Text className="text-white font-semibold">Back to Course</Text>
+        </TouchableOpacity>
       </ScreenContainer>
     );
   }

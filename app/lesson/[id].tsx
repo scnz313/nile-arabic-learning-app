@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   StyleSheet,
   Platform,
+  TextInput,
   useWindowDimensions,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -20,7 +21,6 @@ import WebView from "react-native-webview";
 import { VideoView, useVideoPlayer } from "expo-video";
 import * as Haptics from "expo-haptics";
 import { LoadingSkeleton } from "@/components/loading-skeleton";
-import { TextInput } from "react-native";
 import { bookmarksService } from "@/lib/bookmarks-service";
 import { notesService, type Note } from "@/lib/notes-service";
 import { progressService } from "@/lib/progress-service";
@@ -101,6 +101,36 @@ function AudioPlayerCard({ src, colors, proxyMedia }: { src: string; colors: any
         <MaterialIcons name={isPlaying ? "pause" : "play-arrow"} size={22} color="#FFF" />
       </View>
     </TouchableOpacity>
+  );
+}
+
+function NativeVideoPlayer({
+  videoUrl,
+  title,
+  colors,
+}: {
+  videoUrl: string;
+  title: string;
+  colors: any;
+}) {
+  const player = useVideoPlayer(videoUrl, (instance) => {
+    instance.loop = false;
+  });
+
+  return (
+    <View style={[styles.videoPlayerContainer, { borderColor: colors.border }]}>
+      <VideoView
+        style={styles.videoPlayer}
+        player={player}
+        allowsFullscreen
+        allowsPictureInPicture
+        contentFit="contain"
+      />
+      <View style={styles.videoInfo}>
+        <MaterialIcons name="play-circle-filled" size={18} color="#DC2626" />
+        <Text style={[styles.videoInfoText, { color: colors.foreground }]}>{title}</Text>
+      </View>
+    </View>
   );
 }
 
@@ -311,6 +341,8 @@ export default function LessonScreen() {
         activityId: parseInt(activityId),
         activityName,
         courseName: `Course ${courseId}`,
+        activityUrl,
+        modType,
       });
       setIsBookmarked(true);
     }
@@ -446,7 +478,8 @@ export default function LessonScreen() {
 
   const handleMarkComplete = async () => {
     await storageService.markActivityComplete(courseId, activityId);
-    await progressService.updateCourseProgress(courseId, parseInt(activityId), 100);
+    const courseData = await storageService.getCourseData(courseId);
+    await progressService.updateCourseProgress(courseId, parseInt(activityId), courseData?.totalActivities || 0);
     setIsCompleted(true);
     
     // Prefetch next lesson in background
@@ -585,23 +618,11 @@ export default function LessonScreen() {
                 </View>
               </View>
             ) : (
-              <View style={[styles.videoPlayerContainer, { borderColor: colors.border }]}>
-                <VideoView
-                  style={styles.videoPlayer}
-                  player={useVideoPlayer(videoUrl, (player) => {
-                    player.loop = false;
-                  })}
-                  allowsFullscreen
-                  allowsPictureInPicture
-                  contentFit="contain"
-                />
-                <View style={styles.videoInfo}>
-                  <MaterialIcons name="play-circle-filled" size={18} color="#DC2626" />
-                  <Text style={[styles.videoInfoText, { color: colors.foreground }]}>
-                    {content.title || activityName}
-                  </Text>
-                </View>
-              </View>
+              <NativeVideoPlayer
+                videoUrl={videoUrl}
+                title={content.title || activityName}
+                colors={colors}
+              />
             )}
           </View>
         ) : null}

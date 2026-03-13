@@ -1,4 +1,4 @@
-import { moodleAPI, type CourseFullData } from "./moodle-api";
+import { moodleAPI, type CourseFullData, type MoodleActivity } from "./moodle-api";
 import { storageService } from "./storage";
 
 export interface SyncResult {
@@ -11,6 +11,38 @@ export interface SyncResult {
 
 class SyncService {
   private isSyncing = false;
+
+  private collectQuizActivities(courseData: CourseFullData): MoodleActivity[] {
+    const allActivities = [
+      ...(courseData.intro?.activities || []),
+      ...courseData.sections.flatMap((section) => section.activities || []),
+    ];
+    const quizzes = allActivities.filter((activity) => activity.modType === "quiz" && activity.url);
+    const seen = new Set<string>();
+
+    return quizzes.filter((activity) => {
+      const key = activity.id || activity.url;
+      if (!key || seen.has(key)) {
+        return false;
+      }
+
+      seen.add(key);
+      return true;
+    });
+  }
+
+  private async cacheCourseQuizzes(courseData: CourseFullData, resultErrors?: string[]): Promise<void> {
+    const quizActivities = this.collectQuizActivities(courseData);
+
+    for (const quizActivity of quizActivities) {
+      try {
+        const content = await moodleAPI.getActivityContent(quizActivity.url, quizActivity.modType);
+        await storageService.cacheActivityContent(quizActivity.id, content);
+      } catch (error: any) {
+        resultErrors?.push(`Failed to cache quiz ${quizActivity.name}: ${error.message}`);
+      }
+    }
+  }
 
   async syncAllCourses(): Promise<SyncResult> {
     if (this.isSyncing) return { coursesUpdated: 0, newCourses: 0, newSections: 0, newActivities: 0, errors: ["Sync already in progress"] };
@@ -33,6 +65,10 @@ class SyncService {
           
           // Archive-aware merge: appends new sections/activities, marks hidden ones, never deletes
           const { newSections, newActivities } = await storageService.saveCourseData(course.id, fullData);
+          const mergedCourseData = await storageService.getCourseData(course.id);
+          if (mergedCourseData) {
+            await this.cacheCourseQuizzes(mergedCourseData, result.errors);
+          }
           result.coursesUpdated++;
           result.newSections += newSections;
           result.newActivities += newActivities;
@@ -55,6 +91,12 @@ class SyncService {
     try {
       const fullData = await moodleAPI.getCourseFull(courseId);
       await storageService.saveCourseData(courseId, fullData);
+      const mergedCourseData = await storageService.getCourseData(courseId);
+      if (mergedCourseData) {
+        await this.cacheCourseQuizzes(mergedCourseData);
+        return mergedCourseData;
+      }
+
       return fullData;
     } catch (err: any) {
       console.error("Sync single course error:", err);

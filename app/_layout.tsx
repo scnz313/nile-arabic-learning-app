@@ -1,11 +1,11 @@
 import "@/global.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Stack } from "expo-router";
+import { Stack, useRouter, useSegments } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
-import { Platform } from "react-native";
+import { ActivityIndicator, Platform, View } from "react-native";
 import "@/lib/_core/nativewind-pressable";
 import { ThemeProvider } from "@/lib/theme-provider";
 import {
@@ -18,8 +18,9 @@ import type { EdgeInsets, Metrics, Rect } from "react-native-safe-area-context";
 
 import { trpc, createTRPCClient } from "@/lib/trpc";
 import { initManusRuntime, subscribeSafeAreaInsets } from "@/lib/_core/manus-runtime";
-import { AuthProvider } from "@/lib/auth-context";
+import { AuthProvider, useAuthContext } from "@/lib/auth-context";
 import { ErrorBoundary } from "@/components/error-boundary";
+import { useColors } from "@/hooks/use-colors";
 
 const DEFAULT_WEB_INSETS: EdgeInsets = { top: 0, right: 0, bottom: 0, left: 0 };
 const DEFAULT_WEB_FRAME: Rect = { x: 0, y: 0, width: 0, height: 0 };
@@ -27,6 +28,58 @@ const DEFAULT_WEB_FRAME: Rect = { x: 0, y: 0, width: 0, height: 0 };
 export const unstable_settings = {
   anchor: "(tabs)",
 };
+
+function AppNavigator() {
+  const router = useRouter();
+  const segments = useSegments();
+  const colors = useColors();
+  const { isAuthenticated, isLoading } = useAuthContext();
+
+  useEffect(() => {
+    if (isLoading) {
+      return;
+    }
+
+    const rootSegment = segments[0];
+    const isAuthRoute = rootSegment === "login" || rootSegment === "oauth";
+
+    if (!isAuthenticated && !isAuthRoute) {
+      router.replace("/login");
+      return;
+    }
+
+    if (isAuthenticated && rootSegment === "login") {
+      router.replace("/(tabs)");
+    }
+  }, [isAuthenticated, isLoading, router, segments]);
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.background }}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
+
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="(tabs)" />
+      <Stack.Screen
+        name="login"
+        options={{ presentation: "fullScreenModal", gestureEnabled: false }}
+      />
+      <Stack.Screen
+        name="course/[id]"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="lesson/[id]"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name="oauth/callback" />
+    </Stack>
+  );
+}
 
 export default function RootLayout() {
   const initialInsets = initialWindowMetrics?.insets ?? DEFAULT_WEB_INSETS;
@@ -81,22 +134,7 @@ export default function RootLayout() {
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
           <QueryClientProvider client={queryClient}>
             <AuthProvider>
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="(tabs)" />
-              <Stack.Screen
-                name="login"
-                options={{ presentation: "fullScreenModal", gestureEnabled: false }}
-              />
-              <Stack.Screen
-                name="course/[id]"
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="lesson/[id]"
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen name="oauth/callback" />
-            </Stack>
+              <AppNavigator />
             </AuthProvider>
             <StatusBar style="auto" />
           </QueryClientProvider>

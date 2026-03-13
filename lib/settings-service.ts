@@ -15,7 +15,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   fontSize: "medium",
   showDiacritics: true,
   audioPlaybackSpeed: 1.0,
-  darkMode: false,
+  darkMode: true,
   studyReminders: false,
 };
 
